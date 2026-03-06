@@ -1,15 +1,22 @@
 #pragma once
 
+#include "core/asset/value_storage.h"
 #include "core/assert.h"
 
 #include <memory>
 
 namespace otb
 {
+class Entity;
+
 class Component
 {
   public:
+    virtual ValueStorage serialize() const;
+
     virtual ~Component() = default;
+
+    Entity* entity;
 };
 
 using ComponentPtr = std::weak_ptr<Component>;

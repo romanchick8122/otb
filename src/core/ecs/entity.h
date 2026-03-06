@@ -31,6 +31,10 @@ class Entity final
         }
         return nullptr;
     }
+
+    ValueStorage serialize() const;
+    void deserialize(const ValueStorage&);
+
   private:
     Entity(World*);
 

@@ -6,18 +6,14 @@
 
 namespace otb
 {
-class CameraComponent : public Component
+class TransformComponent : public Component
 {
   public:
-    CameraComponent();
-
     ValueStorage serialize() const override;
     static Component* deserialize(const ValueStorage&);
 
-    ~CameraComponent() override = default;
-  private:
-    Camera camera { 0 };
+    ~TransformComponent() override = default;
 
-    friend class RenderControlSystem;
+    Transform transform;
 };
 }

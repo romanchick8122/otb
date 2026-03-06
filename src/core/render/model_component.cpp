@@ -2,13 +2,21 @@
 
 namespace otb
 {
-ModelComponent::ModelComponent(const char* file_path)
-    : model(LoadModel(file_path))
+ModelComponent::ModelComponent(InternedString asset_path)
+    : asset(AssetUtils::get_asset<ModelAsset>(asset_path))
 {
 }
 
-ModelComponent::~ModelComponent()
+ValueStorage ModelComponent::serialize() const
 {
-    UnloadModel(model);
+    return std::string(asset->path.c_str());
+}
+
+Component* ModelComponent::deserialize(const ValueStorage& vs)
+{
+    const auto str_ptr = std::get_if<std::string>(&vs.storage);
+    OTB_ASSERT(str_ptr != nullptr);
+
+    return new ModelComponent(InternedString{str_ptr->c_str()});
 }
 }

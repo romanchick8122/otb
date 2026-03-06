@@ -1,45 +1,35 @@
 #include "core/ecs/world.h"
 
+#include "core/static_initialize.h"
+
 #include "game/world_creator.h"
 
 #include "raylib.h"
-
-#include <chrono>
 
 int main()
 {
     using namespace otb;
 
+    otb::run_static_initializer();
+
     InitWindow(2000, 1000, "otb");
     SetTargetFPS(60);
 
     std::unique_ptr<World> world = game::create_world();
+    world->fixed_frame_time = 1 / 60.f;
+    world->max_fixed_frames = 2;
 
-    std::chrono::high_resolution_clock clock;
-
-    static const float target_fixed_frame_time = 1 / 30.f;
-    static const uint32_t max_fixed_frames = 2;
-
-    auto prev_time = clock.now();
-
-    float accumulated_time = 0.0f;
+    int frame = 0;
 
     while (!WindowShouldClose())
     {
-        const float frame_time = [&prev_time, &clock] {
-            const auto current_time = clock.now();
-            const auto time_delta = current_time - prev_time;
-            prev_time = current_time;
-            return std::chrono::nanoseconds(time_delta).count() / 1e9f;
-        }();
+        world->update();
+        frame++;
 
-        accumulated_time += frame_time;
-        for (uint32_t i = 0; accumulated_time > 0.f && i < max_fixed_frames; ++i)
+        if (frame == 100)
         {
-            world->fixed_update();
-            accumulated_time -= target_fixed_frame_time;
+            world->serialize().save({ OTB_ASSETS_DIRECTORY"/world.vs" });
         }
-        world->normal_update(frame_time);
     }
     CloseWindow();
 

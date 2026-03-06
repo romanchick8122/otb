@@ -3,6 +3,7 @@
 #include "core/ecs/entity.h"
 #include "core/ecs/component.h"
 
+#include <chrono>
 #include <functional>
 #include <optional>
 #include <memory>
@@ -16,6 +17,11 @@ class World final
 {
   public:
     World();
+
+    float fixed_frame_time;
+    size_t max_fixed_frames;
+
+    void update();
 
     void fixed_update();
     void normal_update(float dt);
@@ -36,7 +42,15 @@ class World final
     template<class T>
     ComponentIterator<T> components_end();
 
+    ValueStorage serialize() const;
+    void deserialize(const ValueStorage&);
+
   private:
+    float accumulated_time = 0.f;
+    
+    std::chrono::high_resolution_clock clock;
+    decltype(clock.now()) previous_update_time;
+
     std::vector<std::unique_ptr<Entity>> entities;
     std::unordered_map<std::type_index, std::vector<ComponentPtr>> components;
 
@@ -46,7 +60,14 @@ class World final
     friend class Entity;
 
     void register_component(const std::shared_ptr<Component>&);
+
+  public:
+    static void register_component_type(const char*, Component*(*)(const ValueStorage&), std::type_index);
+    static InternedString get_component_type_name(Component*);
+    static Component* deserialize_component(InternedString, const ValueStorage&);
 };
 }
+
+#define REGISTER_COMPONENT_TYPE(T) ::otb::World::register_component_type(#T, T::deserialize, std::type_index(typeid(T)));
 
 #include "world_impl.h"

@@ -1,6 +1,8 @@
 #pragma once
 
 #include "core/ecs/component.h"
+#include "core/interned_string.h"
+#include "core/render/model_asset.h"
 
 #include "raylib.h"
 
@@ -9,12 +11,13 @@ namespace otb
 class ModelComponent : public Component
 {
   public:
-    ModelComponent(const char* file_path);
+    ModelComponent(InternedString asset_path);
 
-    ~ModelComponent() override;
+    ValueStorage serialize() const override;
+    static Component* deserialize(const ValueStorage&);
 
   private:
-    Model model;
+    Asset<ModelAsset> asset;
 
     friend class MeshSystem;
 };
