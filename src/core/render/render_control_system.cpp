@@ -17,7 +17,6 @@ void RenderControlSystem::render_begin(World* world, float)
     CameraComponent* camera = world->get_world_entity()->get_component<CameraComponent>();
     OTB_ASSERT(camera != nullptr);
 
-    UpdateCamera(&camera->camera, CAMERA_THIRD_PERSON);
     BeginMode3D(camera->camera);
 }
 

@@ -15,9 +15,7 @@ class CameraComponent : public Component
     static Component* deserialize(const ValueStorage&);
 
     ~CameraComponent() override = default;
-  private:
-    Camera camera { 0 };
 
-    friend class RenderControlSystem;
+    Camera camera { 0 };
 };
 }

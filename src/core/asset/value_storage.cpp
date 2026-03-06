@@ -73,12 +73,17 @@ ValueStorage load_impl(std::fstream& source)
         const size_t depth = i / 2;
         OTB_ASSERT(depth <= temporary.size());
 
+        std::string_view line_view(line.c_str() + depth * 2);
+        if (line_view.starts_with("//"))
+        {
+            continue;
+        }
+
         while (depth < temporary.size())
         {
             finish_value();
         }
 
-        std::string_view line_view(line.c_str() + depth * 2);
         if (!preprocessed)
         {
             preprocessed = true;

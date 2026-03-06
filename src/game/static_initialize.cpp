@@ -1,0 +1,15 @@
+#include "static_initialize.h"
+
+#include "core/ecs/world.h"
+
+#include "game/character/character_component.h"
+#include "game/character/input_receiver_component.h"
+
+namespace game
+{
+void run_static_initializer()
+{
+    REGISTER_COMPONENT_TYPE(CharacterComponent);
+    REGISTER_COMPONENT_TYPE(InputReceiverComponent);
+}
+}
