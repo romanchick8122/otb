@@ -20,4 +20,14 @@ Matrix TransformUtils::get_transform_matrix(const Transform& transform)
         0, 0, 0, 1
     };
 }
+
+Vector3 TransformUtils::apply_transform(const Transform& transform, const Vector3& point)
+{
+    return transform.translation + Vector3RotateByQuaternion(Vector3Multiply(point, transform.scale), transform.rotation);
+}
+
+Vector3 TransformUtils::apply_inverse_transform(const Transform& transform, const Vector3& point)
+{
+    return Vector3Divide(Vector3RotateByQuaternion((point - transform.translation), QuaternionInvert(transform.rotation)), transform.scale);
+}
 }

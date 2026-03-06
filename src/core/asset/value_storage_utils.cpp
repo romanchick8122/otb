@@ -2,6 +2,8 @@
 
 #include "core/assert.h"
 
+#include <sstream>
+
 namespace otb
 {
 ValueStorage ValueStorageUtils::serialize(int v)
@@ -16,7 +18,9 @@ ValueStorage ValueStorageUtils::serialize(float v)
 
 ValueStorage ValueStorageUtils::serialize(Vector3 v)
 {
-    return ValueStorage::ArrayType{{ serialize(v.x), serialize(v.y), serialize(v.z) }};
+    std::stringstream ss;
+    ss << v.x << " " << v.y << " " << v.z;
+    return ss.str();
 }
 
 template<> int ValueStorageUtils::deserialize<int>(const ValueStorage& vs)
@@ -33,9 +37,10 @@ template<> float ValueStorageUtils::deserialize<float>(const ValueStorage& vs)
 
 template<> Vector3 ValueStorageUtils::deserialize<Vector3>(const ValueStorage& vs)
 {
-    OTB_ASSERT(std::holds_alternative<ValueStorage::ArrayType>(vs.storage));
-    const auto& arr = std::get<ValueStorage::ArrayType>(vs.storage);
-    OTB_ASSERT(arr.size() == 3);
-    return { deserialize<float>(arr[0]), deserialize<float>(arr[1]), deserialize<float>(arr[2]) };
+    OTB_ASSERT(std::holds_alternative<std::string>(vs.storage));
+    std::stringstream ss(std::get<std::string>(vs.storage));
+    Vector3 result;
+    ss >> result.x >> result.y >> result.z;
+    return result;
 }
 }

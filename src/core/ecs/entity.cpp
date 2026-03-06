@@ -23,20 +23,35 @@ ComponentPtr Entity::add_component(Component* component)
     return ComponentPtr(it->second);
 }
 
+namespace
+{
+    static const InternedString COMPONENTS_FIELD { "components" };
+    static const InternedString NAME_FIELD { "name" };
+}
+
 ValueStorage Entity::serialize() const
 {
-    ValueStorage::DictType result;
+    ValueStorage::DictType components_vs;
     for (const auto& [ctype, component] : components)
     {
-        result.emplace(World::get_component_type_name(component.get()), component->serialize());
+        components_vs.emplace(World::get_component_type_name(component.get()), component->serialize());
     }
-    return result;
+    return ValueStorage::DictType {
+        { NAME_FIELD, std::string{name.c_str()} },
+        { COMPONENTS_FIELD, std::move(components_vs) },
+    };
 }
 
 void Entity::deserialize(const ValueStorage& vs)
 {
     OTB_ASSERT(std::holds_alternative<ValueStorage::DictType>(vs.storage));
-    const auto& component_descriptors = std::get<ValueStorage::DictType>(vs.storage);
+    const auto& dict = std::get<ValueStorage::DictType>(vs.storage);
+
+    name = InternedString{ std::get<std::string>(dict.at(NAME_FIELD).storage).c_str() };
+
+    const auto& components_vs = dict.at(COMPONENTS_FIELD);
+    OTB_ASSERT(std::holds_alternative<ValueStorage::DictType>(components_vs.storage));
+    const auto& component_descriptors = std::get<ValueStorage::DictType>(components_vs.storage);
     for (const auto& [key, desc] : component_descriptors)
     {
         add_component(World::deserialize_component(key, desc));

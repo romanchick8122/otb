@@ -6,6 +6,7 @@
 #include "core/world/transform_component.h"
 
 #include "raylib.h"
+#include "raymath.h"
 
 namespace otb
 {
@@ -17,8 +18,12 @@ void MeshSystem::render_meshes(World* world, float)
         OTB_ASSERT(transform_component != nullptr);
 
         const Model& model = it->asset->model;
-        for (int i = 0; i < model.meshCount; i++)
-            DrawMesh(model.meshes[i], model.materials[0], TransformUtils::get_transform_matrix(transform_component->transform));
+        Vector3 axis;
+        float angle;
+
+        QuaternionToAxisAngle(transform_component->transform.rotation, &axis, &angle);
+
+        DrawModelEx(model, transform_component->transform.translation, axis, angle / DEG2RAD, transform_component->transform.scale, WHITE);
     }
 }
 }

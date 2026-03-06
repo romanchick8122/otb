@@ -1,6 +1,16 @@
 #include "character_component.h"
 
 #include "core/asset/value_storage_utils.h"
+#include "core/ecs/entity.h"
+#include "core/math/transform_utils.h"
+#include "core/world/physics/velocity_component.h"
+#include "core/world/transform_component.h"
+
+#include "game/surface/surface_component.h"
+
+#include "raymath.h"
+
+#include <array>
 
 namespace game
 {
@@ -27,7 +37,7 @@ otb::Component* CharacterComponent::deserialize(const otb::ValueStorage& vs)
     OTB_ASSERT(std::holds_alternative<ValueStorage::DictType>(vs.storage));
     const auto& dict = std::get<ValueStorage::DictType>(vs.storage);
 
-    const auto result = new CharacterComponent();
+    auto result = new CharacterComponent();
     result->camera_follow_distance = ValueStorageUtils::deserialize<float>(dict.at(CAMERA_FOLLOW_DISATNCE_FIELD));
     result->camera_follow_offset = ValueStorageUtils::deserialize<float>(dict.at(CAMERA_FOLLOW_OFFSET_FIELD));
     return result;

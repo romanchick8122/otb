@@ -1,100 +1,64 @@
 !<DICT>
   entities: !<ARRAY>
-    // World
     !<DICT>
-      CameraComponent: !<DICT>
-        position: !<ARRAY>
-          !<VALUE> -10.000000
-          !<VALUE> 3.000000
-          !<VALUE> 0.000000
-        target: !<ARRAY>
-          !<VALUE> 1.480374
-          !<VALUE> 2.000000
-          !<VALUE> -0.052396
-        projection: !<VALUE> 0
-        up: !<ARRAY>
-          !<VALUE> 0.000000
-          !<VALUE> 1.000000
-          !<VALUE> 0.000000
-        fovy: !<VALUE> 90.000000
-    // Character
+      name: !<VALUE> _world
+      components: !<DICT>
+        CameraComponent: !<DICT>
+          position: !<VALUE> 0 0 0
+          target: !<VALUE> 0 0 0
+          projection: !<VALUE> 0
+          up: !<VALUE> 0 1 0
+          fovy: !<VALUE> 90.000000
     !<DICT>
-      ModelComponent: !<VALUE> /cube.glb
-      TransformComponent: !<DICT>
-        translation: !<ARRAY>
-          !<VALUE> 0.000000
-          !<VALUE> 0.000000
-          !<VALUE> 0.000000
-        scale: !<ARRAY>
-          !<VALUE> 1.000000
-          !<VALUE> 1.000000
-          !<VALUE> 1.000000
-        rotation: !<ARRAY>
-          !<VALUE> 0.000000
-          !<VALUE> 0.000000
-          !<VALUE> 0.000000
-      CharacterComponent: !<DICT>
-        camera_follow_offset: !<VALUE> 3.000000
-        camera_follow_distance: !<VALUE> 10.000000
-      InputReceiverComponent: !<VALUE> RUNTIME
-    // Pillars
+      name: !<VALUE> character
+      components: !<DICT>
+        ModelComponent: !<VALUE> /cube.glb
+        TransformComponent: !<DICT>
+          translation: !<VALUE> 0 1 0
+          scale: !<VALUE> 0.1 0.1 0.1
+          rotation: !<VALUE> 0 0 0
+        CharacterComponent: !<DICT>
+          camera_follow_offset: !<VALUE> 3.000000
+          camera_follow_distance: !<VALUE> 7.000000
+        InputReceiverComponent: !<VALUE> RUNTIME
     !<DICT>
-      ModelComponent: !<VALUE> /cube.glb
-      TransformComponent: !<DICT>
-        translation: !<ARRAY>
-          !<VALUE> 10.000000
-          !<VALUE> 0.000000
-          !<VALUE> 0.000000
-        rotation: !<ARRAY>
-          !<VALUE> 0.000000
-          !<VALUE> 0.000000
-          !<VALUE> 0.000000
-        scale: !<ARRAY>
-          !<VALUE> 1.000000
-          !<VALUE> 10.000000
-          !<VALUE> 1.000000
+      name: !<VALUE> pillar_0
+      components: !<DICT>
+        ModelComponent: !<VALUE> /cube.glb
+        TransformComponent: !<DICT>
+          translation: !<VALUE> 10 0 0
+          scale: !<VALUE> 1 10 1
+          rotation: !<VALUE> 0 0 0
     !<DICT>
-      ModelComponent: !<VALUE> /cube.glb
-      TransformComponent: !<DICT>
-        translation: !<ARRAY>
-          !<VALUE> -10.000000
-          !<VALUE> 0.000000
-          !<VALUE> 0.000000
-        scale: !<ARRAY>
-          !<VALUE> 1.000000
-          !<VALUE> 10.000000
-          !<VALUE> 1.000000
-        rotation: !<ARRAY>
-          !<VALUE> 0.000000
-          !<VALUE> 0.000000
-          !<VALUE> 0.000000
+      name: !<VALUE> pillar_1
+      components: !<DICT>
+        ModelComponent: !<VALUE> /cube.glb
+        TransformComponent: !<DICT>
+          translation: !<VALUE> -10 0 0
+          scale: !<VALUE> 1 10 1
+          rotation: !<VALUE> 0 0 0
     !<DICT>
-      ModelComponent: !<VALUE> /cube.glb
-      TransformComponent: !<DICT>
-        translation: !<ARRAY>
-          !<VALUE> 0.000000
-          !<VALUE> 0.000000
-          !<VALUE> 10.000000
-        rotation: !<ARRAY>
-          !<VALUE> 0.000000
-          !<VALUE> 0.000000
-          !<VALUE> 0.000000
-        scale: !<ARRAY>
-          !<VALUE> 1.000000
-          !<VALUE> 10.000000
-          !<VALUE> 1.000000
+      name: !<VALUE> pillar_2
+      components: !<DICT>
+        ModelComponent: !<VALUE> /cube.glb
+        TransformComponent: !<DICT>
+          translation: !<VALUE> 0 0 10
+          scale: !<VALUE> 1 10 1
+          rotation: !<VALUE> 0 0 0
     !<DICT>
-      ModelComponent: !<VALUE> /cube.glb
-      TransformComponent: !<DICT>
-        translation: !<ARRAY>
-          !<VALUE> 0.000000
-          !<VALUE> 0.000000
-          !<VALUE> -10.000000
-        rotation: !<ARRAY>
-          !<VALUE> 0.000000
-          !<VALUE> 0.000000
-          !<VALUE> 0.000000
-        scale: !<ARRAY>
-          !<VALUE> 1.000000
-          !<VALUE> 10.000000
-          !<VALUE> 1.000000
+      name: !<VALUE> pillar_3
+      components: !<DICT>
+        ModelComponent: !<VALUE> /cube.glb
+        TransformComponent: !<DICT>
+          translation: !<VALUE> 0 0 -10
+          scale: !<VALUE> 1 10 1
+          rotation: !<VALUE> 0 0 0
+    !<DICT>
+      name: !<VALUE> floor
+      components: !<DICT>
+        SurfaceComponent: !<DICT>
+          asset_path: !<VALUE> /white.png
+        TransformComponent: !<DICT>
+          translation: !<VALUE> 0 0 0
+          scale: !<VALUE> 30 1 30
+          rotation: !<VALUE> 0 0 0

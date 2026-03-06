@@ -35,6 +35,8 @@ class Entity final
     ValueStorage serialize() const;
     void deserialize(const ValueStorage&);
 
+    InternedString name = InternedString { "" };
+
   private:
     Entity(World*);
 

@@ -11,4 +11,6 @@ otb::Component* InputReceiverComponent::deserialize(const otb::ValueStorage&)
 {
   return new InputReceiverComponent();
 }
+
+const otb::InternedString InputReceiverComponent::ActionNames::jump { "jump" };
 }

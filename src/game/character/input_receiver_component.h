@@ -4,6 +4,8 @@
 
 #include "raylib.h"
 
+#include <unordered_set>
+
 namespace game
 {
 class InputReceiverComponent : public otb::Component
@@ -17,6 +19,11 @@ class InputReceiverComponent : public otb::Component
     Vector2 analog_input;
     float rotation_input;
 
-    std::vector<otb::InternedString> extra_actions;
+    std::unordered_set<otb::InternedString> extra_actions;
+
+    struct ActionNames
+    {
+        static const otb::InternedString jump;
+    };
 };
 }

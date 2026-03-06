@@ -15,12 +15,13 @@ class World::ComponentIterator
         : v(_v)
         , pos(_pos)
     {
-        skip_bad();
+        if (v != nullptr)
+            skip_bad();
     };
 
     friend bool operator==(const ComponentIterator<T>& l, const ComponentIterator<T>& r)
     {
-        return l.v == r.v && ((l.pos >= l.v->size() && r.pos >= r.v->size()) || (l.pos == r.pos));
+        return l.v == r.v && (l.v == nullptr || (l.pos >= l.v->size() && r.pos >= r.v->size()) || (l.pos == r.pos));
     }
 
     void skip_bad()
