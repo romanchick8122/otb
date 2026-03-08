@@ -11,7 +11,7 @@
           fovy: !<VALUE> 90.000000
         BoxSingleComponent: !<DICT>
           gravity: !<VALUE> 9.8
-          air_drag_coefficient: !<VALUE> 0.5
+          air_drag_coefficient: !<VALUE> 0.3
     !<DICT>
       name: !<VALUE> character
       components: !<DICT>
@@ -30,36 +30,36 @@
       name: !<VALUE> pillar_0
       components: !<DICT>
         BoxComponent: !<DICT>
-          type: !<VALUE> DYNAMIC
+          type: !<VALUE> STATIC
         TransformComponent: !<DICT>
-          translation: !<VALUE> 10 12 0
+          translation: !<VALUE> 10 5 0
           scale: !<VALUE> 1 10 1
           rotation: !<VALUE> 0 0 0
     !<DICT>
       name: !<VALUE> pillar_1
       components: !<DICT>
         BoxComponent: !<DICT>
-          type: !<VALUE> DYNAMIC
+          type: !<VALUE> STATIC
         TransformComponent: !<DICT>
-          translation: !<VALUE> -10 12 0
+          translation: !<VALUE> -10 5 0
           scale: !<VALUE> 1 10 1
           rotation: !<VALUE> 0 0 0
     !<DICT>
       name: !<VALUE> pillar_2
       components: !<DICT>
         BoxComponent: !<DICT>
-          type: !<VALUE> DYNAMIC
+          type: !<VALUE> STATIC
         TransformComponent: !<DICT>
-          translation: !<VALUE> 0 12 10
+          translation: !<VALUE> 0 5 10
           scale: !<VALUE> 1 10 1
           rotation: !<VALUE> 0 0 0
     !<DICT>
       name: !<VALUE> pillar_3
       components: !<DICT>
         BoxComponent: !<DICT>
-          type: !<VALUE> DYNAMIC
+          type: !<VALUE> STATIC
         TransformComponent: !<DICT>
-          translation: !<VALUE> 0 12 -10
+          translation: !<VALUE> 0 5 -10
           scale: !<VALUE> 1 10 1
           rotation: !<VALUE> 0 0 0
     !<DICT>

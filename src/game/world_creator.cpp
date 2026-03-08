@@ -30,6 +30,7 @@ std::unique_ptr<otb::World> create_world()
     world->add_fixed_system(InputSystem::apply_input);
 
     world->add_fixed_system(BoxSystem::find_collision_chain);
+    world->add_fixed_system(BoxSystem::push_back_chain);
     world->add_fixed_system(BoxSystem::update_chain);
     
     world->add_fixed_system(BoxSystem::update_from_velocity);

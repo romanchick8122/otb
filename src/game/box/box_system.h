@@ -16,6 +16,7 @@ struct BoxSystem
 {
     static void create_components(otb::World*);
     static void find_collision_chain(otb::World*);
+    static void push_back_chain(otb::World*);
     static void update_chain(otb::World*);
     static void update_from_velocity(otb::World*);
 };
@@ -37,6 +38,8 @@ class BoxSingleComponent : public otb::Component
         otb::Entity* entity;
         Vector3 displacement;
         otb::TransformComponent* transform_component;
+        size_t parent_index;
+        bool filtered = false;
     };
 
     std::vector<Entry> chain; 

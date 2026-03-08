@@ -16,7 +16,7 @@ namespace game
 {
 namespace
 {
-    static constexpr float eps = 0.001f;
+    static constexpr float eps = 0.00001f;
 }
 
 void BoxSystem::create_components(otb::World* world)
@@ -99,13 +99,13 @@ void BoxSystem::find_collision_chain(otb::World* world)
     BoxSingleComponent* box_sc = world->get_world_entity()->get_component<BoxSingleComponent>();
     OTB_ASSERT(box_sc != nullptr);
 
-
     const CharacterComponent* character_sc = &*world->components_begin<CharacterComponent>();
 
     box_sc->chain.emplace_back(BoxSingleComponent::Entry{
         .entity = character_sc->entity,
         .displacement = character_sc->entity->get_component<VelocityComponent>()->velocity * world->fixed_frame_time,
         .transform_component = character_sc->entity->get_component<TransformComponent>(),
+        .parent_index = std::string::npos,
     });
     box_sc->chain.back().displacement.y = 0; // Gravity is processed separately
 
@@ -166,9 +166,55 @@ void BoxSystem::find_collision_chain(otb::World* world)
                 .entity = it->entity,
                 .displacement = {displacement_x, 0, displacement_z},
                 .transform_component = candidate_transform,
+                .parent_index = unprocessed_i,
             });
         }
     }
+}
+
+void BoxSystem::push_back_chain(otb::World* world)
+{
+    using namespace otb;
+
+    BoxSingleComponent* box_sc = world->get_world_entity()->get_component<BoxSingleComponent>();
+    OTB_ASSERT(box_sc != nullptr);
+
+    box_sc->chain[0].displacement = {}; // Character is moved by velocity
+
+    if (box_sc->chain.size() <= 1)
+    {
+        return; // Nothing is pushed
+    }
+
+    bool block_x = false;
+    bool block_z = false;
+
+    for (size_t i = 0; i < box_sc->chain.size(); ++i)
+    {
+        if (box_sc->chain[i].parent_index != std::string::npos && box_sc->chain[box_sc->chain[i].parent_index].filtered)
+        {
+            box_sc->chain[i].filtered = true;
+            continue;
+        }
+
+        if (box_sc->chain[i].entity->get_component<BoxComponent>()->type == BoxComponent::BoxType::STATIC)
+        {
+            for (size_t pb = box_sc->chain[i].parent_index; pb != std::string::npos; pb = box_sc->chain[pb].parent_index)
+            {
+                box_sc->chain[pb].displacement -= box_sc->chain[i].displacement;
+            }
+            block_x |= box_sc->chain[i].displacement.x != 0;
+            block_z |= box_sc->chain[i].displacement.z != 0;
+            box_sc->chain[i].displacement = {};
+            box_sc->chain[i].filtered = true;
+        }
+    }
+    
+    VelocityComponent* character_velocity = box_sc->chain[0].entity->get_component<VelocityComponent>();
+    if (block_x)
+        character_velocity->velocity.x = 0;
+    if (block_z)
+        character_velocity->velocity.z = 0;
 }
 
 void BoxSystem::update_chain(otb::World* world)
@@ -176,7 +222,6 @@ void BoxSystem::update_chain(otb::World* world)
     using namespace otb;
 
     BoxSingleComponent* box_sc = world->get_world_entity()->get_component<BoxSingleComponent>();
-    box_sc->chain[0].displacement = {}; // Character is moving via velocity.
 
     for (BoxSingleComponent::Entry& e : box_sc->chain)
     {
