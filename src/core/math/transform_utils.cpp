@@ -1,5 +1,7 @@
 #include "transform_utils.h"
 
+#include "core/assert.h"
+
 #include "raymath.h"
 
 namespace otb
@@ -29,5 +31,14 @@ Vector3 TransformUtils::apply_transform(const Transform& transform, const Vector
 Vector3 TransformUtils::apply_inverse_transform(const Transform& transform, const Vector3& point)
 {
     return Vector3Divide(Vector3RotateByQuaternion((point - transform.translation), QuaternionInvert(transform.rotation)), transform.scale);
+}
+
+BoundingBox TransformUtils::get_box(const Transform& transform)
+{
+    OTB_ASSERT(transform.rotation == QuaternionIdentity());
+    return {
+        transform.translation - transform.scale / 2.f,
+        transform.translation + transform.scale / 2.f,
+    };
 }
 }

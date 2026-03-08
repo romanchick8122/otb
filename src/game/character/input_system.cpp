@@ -44,6 +44,10 @@ void InputSystem::collect_input_kb_mouse(otb::World* world)
     {
         extra_actions.insert(InputReceiverComponent::ActionNames::jump);
     }
+    if (IsKeyDown(KEY_ONE))
+    {
+        extra_actions.insert(InputReceiverComponent::ActionNames::ability_1);
+    }
 
     for(auto it = world->components_begin<InputReceiverComponent>(); it != world->components_end<InputReceiverComponent>(); ++it)
     {

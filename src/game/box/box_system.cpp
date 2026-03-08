@@ -109,6 +109,20 @@ void BoxSystem::find_collision_chain(otb::World* world)
     });
     box_sc->chain.back().displacement.y = 0; // Gravity is processed separately
 
+    // Attachment requested components
+    {
+        for (BoxComponent* attached_component : box_sc->attached_components)
+        {
+            box_sc->chain.emplace_back(BoxSingleComponent::Entry{
+                .entity = attached_component->entity,
+                .displacement = box_sc->chain[0].displacement,
+                .transform_component = attached_component->entity->get_component<TransformComponent>(),
+                .parent_index = 0,
+            });
+        }
+        box_sc->attached_components.clear();
+    }
+
     static constexpr auto sign = [](const float v) {
         if (v < eps && v > -eps)
             return 0;
@@ -256,5 +270,10 @@ otb::Component* BoxSingleComponent::deserialize(const otb::ValueStorage& vs)
     result->gravity = ValueStorageUtils::deserialize<float>(dict.at(GRAVITY_FIELD));
     result->air_drag_coefficient = ValueStorageUtils::deserialize<float>(dict.at(AIR_DRAG_COEFFICIENT_FIELD));
     return result;
+}
+
+void BoxSingleComponent::request_one_frame_attachment(BoxComponent* other_box)
+{
+    attached_components.emplace_back(other_box);
 }
 }

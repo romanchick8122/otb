@@ -12,6 +12,8 @@ class TransformComponent;
 
 namespace game
 {
+class BoxComponent;
+
 struct BoxSystem
 {
     static void create_components(otb::World*);
@@ -32,6 +34,8 @@ class BoxSingleComponent : public otb::Component
 
     ~BoxSingleComponent() override = default;
 
+    void request_one_frame_attachment(BoxComponent*);
+
   private:
     struct Entry
     {
@@ -42,7 +46,8 @@ class BoxSingleComponent : public otb::Component
         bool filtered = false;
     };
 
-    std::vector<Entry> chain; 
+    std::vector<Entry> chain;
+    std::vector<BoxComponent*> attached_components;
 
     friend class BoxSystem;
 };

@@ -24,6 +24,7 @@ class InputReceiverComponent : public otb::Component
     struct ActionNames
     {
         static const otb::InternedString jump;
+        static const otb::InternedString ability_1;
     };
 };
 }
