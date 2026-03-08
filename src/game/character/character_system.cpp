@@ -1,7 +1,8 @@
-#include "camera_system.h"
+#include "character_system.h"
 
 #include "core/ecs/world.h"
 #include "core/render/camera_component.h"
+#include "core/world/physics/velocity_component.h"
 #include "core/world/transform_component.h"
 
 #include "game/character/character_component.h"
@@ -10,7 +11,7 @@
 
 namespace game
 {
-void CameraSystem::character_follow_camera(otb::World* world, float)
+void CharacterSystem::character_follow_camera(otb::World* world, float)
 {
     using namespace otb;
 

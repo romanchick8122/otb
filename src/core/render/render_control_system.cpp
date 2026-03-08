@@ -12,7 +12,7 @@ namespace otb
 void RenderControlSystem::render_begin(World* world, float)
 {
     BeginDrawing();
-    ClearBackground(BLACK);
+    ClearBackground(DARKGRAY);
 
     CameraComponent* camera = world->get_world_entity()->get_component<CameraComponent>();
     OTB_ASSERT(camera != nullptr);

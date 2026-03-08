@@ -16,9 +16,11 @@ class CharacterComponent : public otb::Component
 
     ~CharacterComponent() override = default;
 
+    // Serializable
     float camera_follow_distance = 0.f;
     float camera_follow_offset = 0.f;
-
+    
+    // Runtime
     bool is_on_surface = false;
   private:
 };

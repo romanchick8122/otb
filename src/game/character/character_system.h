@@ -7,7 +7,7 @@ class World;
 
 namespace game
 {
-struct CameraSystem
+struct CharacterSystem
 {
     static void character_follow_camera(otb::World*, float);
 };

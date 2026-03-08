@@ -17,6 +17,6 @@ Component* ModelComponent::deserialize(const ValueStorage& vs)
     const auto str_ptr = std::get_if<std::string>(&vs.storage);
     OTB_ASSERT(str_ptr != nullptr);
 
-    return new ModelComponent(InternedString{str_ptr->c_str()});
+    return new ModelComponent(InternedString(str_ptr->c_str()));
 }
 }

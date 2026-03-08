@@ -81,9 +81,8 @@ void InputSystem::apply_input(otb::World* world)
         const Quaternion added_rotation = QuaternionFromAxisAngle({0, 1, 0}, it->rotation_input);
         transform_component->transform.rotation = QuaternionMultiply(transform_component->transform.rotation, added_rotation);
 
-        if (it->extra_actions.contains(InputReceiverComponent::ActionNames::jump) && character_component->is_on_surface)
+        if (it->extra_actions.contains(InputReceiverComponent::ActionNames::jump) && velocity_component->velocity.y == 0)
         {
-            character_component->is_on_surface = false;
             velocity_component->velocity += Vector3RotateByQuaternion({0, jump_power, 0}, transform_component->transform.rotation);
         }
     }

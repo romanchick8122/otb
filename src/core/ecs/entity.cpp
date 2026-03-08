@@ -47,7 +47,7 @@ void Entity::deserialize(const ValueStorage& vs)
     OTB_ASSERT(std::holds_alternative<ValueStorage::DictType>(vs.storage));
     const auto& dict = std::get<ValueStorage::DictType>(vs.storage);
 
-    name = InternedString{ std::get<std::string>(dict.at(NAME_FIELD).storage).c_str() };
+    name = InternedString(std::get<std::string>(dict.at(NAME_FIELD).storage).c_str());
 
     const auto& components_vs = dict.at(COMPONENTS_FIELD);
     OTB_ASSERT(std::holds_alternative<ValueStorage::DictType>(components_vs.storage));
