@@ -27,7 +27,7 @@ class OTBWorldExportOperator(bpy.types.Operator, ExportHelper):
             f.write(f"        TransformComponent: !<DICT>\n")
             f.write(f"          translation: !<VALUE> {obj.location.x} {obj.location.z} {obj.location.y}\n")
             f.write(f"          rotation: !<VALUE> {obj.rotation_euler.x} {obj.rotation_euler.z} {obj.rotation_euler.y}\n")
-            f.write(f"          scale: !<VALUE> {obj.scale.x * 2} {obj.scale.z * 2} {obj.scale.y * 2}\n")
+            f.write(f"          scale: !<VALUE> {abs(obj.scale.x * 2)} {abs(obj.scale.z * 2)} {abs(obj.scale.y * 2)}\n")
         with open(self.filepath, "w") as f:
             for obj in bpy.data.objects:
                 if obj.name[:4] == "OTB_":
