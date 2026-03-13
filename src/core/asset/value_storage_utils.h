@@ -11,6 +11,7 @@ struct ValueStorageUtils
     static ValueStorage serialize(int);
     static ValueStorage serialize(float);
     static ValueStorage serialize(Vector3);
+    static ValueStorage serialize(const Transform&);
 
     template<class T>
     static T deserialize(const ValueStorage&);
@@ -18,5 +19,6 @@ struct ValueStorageUtils
     template<> int deserialize<int>(const ValueStorage&);
     template<> float deserialize<float>(const ValueStorage&);
     template<> Vector3 deserialize<Vector3>(const ValueStorage&);
+    template<> Transform deserialize<Transform>(const ValueStorage&);
 };
 }

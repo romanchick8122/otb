@@ -10,6 +10,38 @@
 
 namespace otb
 {
+void MeshSystem::update_animations(World* world, float dt)
+{
+    for (auto it = world->components_begin<ModelComponent>(); it != world->components_end<ModelComponent>(); ++it)
+    {
+        if (it->requested_animation_index == std::string::npos)
+        {
+            continue;
+        }
+        const ModelAnimation& anim = it->asset->animations[it->requested_animation_index];
+        it->animation_time += it->animation_speed * dt;
+        if (it->animation_time >= anim.keyframeCount || it->animation_time < 0.f)
+        {
+            if (it->looping_requested)
+            {
+                if (it->animation_time < 0)
+                {
+                    it->animation_time += anim.keyframeCount;
+                }
+                else
+                {
+                    it->animation_time -= anim.keyframeCount;
+                }
+            }
+            else
+            {
+                it->animation_time = 0.f;
+                it->requested_animation_index = std::string::npos;
+            }
+        }
+    }
+}
+
 void MeshSystem::render_meshes(World* world, float)
 {
     for (auto it = world->components_begin<ModelComponent>(); it != world->components_end<ModelComponent>(); ++it)
@@ -23,7 +55,23 @@ void MeshSystem::render_meshes(World* world, float)
 
         QuaternionToAxisAngle(transform_component->transform.rotation, &axis, &angle);
 
-        DrawModelEx(model, transform_component->transform.translation, axis, angle / DEG2RAD, transform_component->transform.scale, WHITE);
+        if (it->model_space_collider.translation.y != 0) {
+            int x = 0;
+            ++x;
+        }
+
+        if (it->requested_animation_index != std::string::npos)
+        {
+            UpdateModelAnimation(model, it->asset->animations[it->requested_animation_index], it->animation_time);
+        }
+
+        DrawModelEx(
+            model,
+            transform_component->transform.translation + it->model_space_collider.translation,
+            axis,
+            angle / DEG2RAD,
+            transform_component->transform.scale * it->model_space_collider.scale,
+            WHITE);
     }
 }
 }
