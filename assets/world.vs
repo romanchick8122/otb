@@ -23,8 +23,8 @@
           scale: !<VALUE> 0.5 0.5 0.5
           rotation: !<VALUE> 0 0 0
         CharacterComponent: !<DICT>
-          camera_follow_offset: !<VALUE> 3.000000
-          camera_follow_distance: !<VALUE> 7.000000
+          camera_follow_offset: !<VALUE> 2.000000
+          camera_follow_distance: !<VALUE> 3.000000
         InputReceiverComponent: !<VALUE> RUNTIME
     !<DICT>
       name: !<VALUE> pillar_0
