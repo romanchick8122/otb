@@ -1,0 +1,7 @@
+Параметры в графе "Dimensions"
+Для изменения размеров надо вводить константу и умножать/делить на нее.
+carton_box: universal
+grey_box: universal
+blue_box: universal
+office_box: x:3.17m; y:2m; z:1.65;
+kettle_box: x:2m; y:2m; z:2.5;
