@@ -122,8 +122,16 @@ void CharacterSystem::update_state(otb::World* world)
             {
                 if (velocity_component->velocity.y == 0)
                 {
-                    it->movement_state = CharacterComponent::MovementState::GROUNDED;
+                    it->movement_state = CharacterComponent::MovementState::LANDING;
                     model_component->request_animation(IDLE_ANIMATION, true);
+                }
+                break;
+            }
+            case CharacterComponent::MovementState::LANDING:
+            {
+                if (model_component->get_playing_animation() == IDLE_ANIMATION)
+                {
+                    it->movement_state = CharacterComponent::MovementState::GROUNDED;
                 }
                 break;
             }

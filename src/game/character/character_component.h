@@ -25,6 +25,7 @@ class CharacterComponent : public otb::Component
         GROUNDED,
         PREPARING_JUMP,
         FLYING,
+        LANDING,
     } movement_state;
 
     float extra_jump_delay = 0;
