@@ -93,7 +93,7 @@ void InputSystem::apply_input(otb::World* world)
 {
     using namespace otb;
 
-    static constexpr float movement_speed = 10.f;
+    static constexpr float movement_speed = 600.f;
     static constexpr float jump_power = 10.f;
 
     for(auto it = world->components_begin<InputReceiverComponent>(); it != world->components_end<InputReceiverComponent>(); ++it)

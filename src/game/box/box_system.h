@@ -21,6 +21,8 @@ struct BoxSystem
     static void push_back_chain(otb::World*);
     static void update_chain(otb::World*);
     static void update_from_velocity(otb::World*);
+
+    static void late_update_velocity(otb::World*);
 };
 
 class BoxSingleComponent : public otb::Component
