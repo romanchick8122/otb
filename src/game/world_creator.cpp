@@ -11,7 +11,6 @@
 #include "game/box/box_system.h"
 #include "game/character/character_system.h"
 #include "game/character/input_system.h"
-#include "game/surface/surface_system.h"
 
 namespace game
 {
@@ -27,7 +26,9 @@ std::unique_ptr<otb::World> create_world()
     // -------- FIXED --------
     world->add_fixed_system(BoxSystem::create_components);
 
+    world->add_fixed_system(InputSystem::clear_input);
     world->add_fixed_system(InputSystem::collect_input_kb_mouse);
+    world->add_fixed_system(InputSystem::update_action_queue);
     world->add_fixed_system(InputSystem::apply_input);
 
     world->add_fixed_system(BoxAttachmentSystem::process_ability_activation);
@@ -40,7 +41,9 @@ std::unique_ptr<otb::World> create_world()
     
     world->add_fixed_system(BoxSystem::update_from_velocity);
 
+    world->add_fixed_system(CharacterSystem::update_state);
     // -------- NORMAL -------
+    world->add_normal_system(MeshSystem::update_animations);
     world->add_normal_system(CharacterSystem::character_follow_camera);
     world->add_normal_system(RenderControlSystem::render_begin);
     world->add_normal_system(MeshSystem::render_meshes);

@@ -19,6 +19,10 @@ class InputReceiverComponent : public otb::Component
     Vector2 analog_input;
     float rotation_input;
 
+    struct ActionQueue {
+        std::vector<std::pair<otb::InternedString, float>> delays;
+        void request(otb::InternedString action, float delay);
+    } action_queue;
     std::unordered_set<otb::InternedString> extra_actions;
 
     struct ActionNames

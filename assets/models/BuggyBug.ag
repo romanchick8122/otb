@@ -1,0 +1,32 @@
+!<DICT>
+  Idle: !<DICT>
+    Jump: !<VALUE> 0.2
+    WalkingCycle: !<VALUE> 0.5
+    IdleAction: !<VALUE> 0.2
+  Jump: !<DICT>
+    Flying: !<VALUE> -1
+  Flying: !<DICT>
+    Flying->Landing: !<VALUE> -1
+  Flying->Landing: !<DICT>
+    Landing: !<VALUE> 0.1
+  Landing: !<DICT>
+    Neutral: !<VALUE> -1
+  WakingUp: !<DICT>
+    Neutral: !<VALUE> -1
+  WalkingCycle: !<DICT>
+    Idle: !<VALUE> 0.5
+    Jump: !<VALUE> 0.2
+  Neutral: !<DICT>
+    Idle: !<VALUE> -1
+    WalkingCycle: !<VALUE> 0.3
+    Jump: !<VALUE> -1
+    Throw: !<VALUE> -1
+    HeadUp: !<VALUE> -1
+  HeadUp: !<DICT>
+    PushCycle: !<VALUE> -1
+  PushCycle: !<DICT>
+    Neutral: !<VALUE> 0.5
+  Throw: !<DICT>
+    PullCycle: !<VALUE> -1
+  PullCycle: !<DICT>
+    Neutral: !<VALUE> 0.3
