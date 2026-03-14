@@ -6,7 +6,6 @@
 #include "game/box/box_system.h"
 #include "game/character/character_component.h"
 #include "game/character/input_receiver_component.h"
-#include "game/surface/surface_component.h"
 
 namespace game
 {
@@ -16,6 +15,5 @@ void run_static_initializer()
     REGISTER_COMPONENT_TYPE(BoxSingleComponent);
     REGISTER_COMPONENT_TYPE(CharacterComponent);
     REGISTER_COMPONENT_TYPE(InputReceiverComponent);
-    REGISTER_COMPONENT_TYPE(SurfaceComponent);
 }
 }

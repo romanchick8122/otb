@@ -19,9 +19,15 @@ class CharacterComponent : public otb::Component
     // Serializable
     float camera_follow_distance = 0.f;
     float camera_follow_offset = 0.f;
-    
+
     // Runtime
-    bool is_on_surface = false;
+    enum class MovementState {
+        GROUNDED,
+        PREPARING_JUMP,
+        FLYING,
+    } movement_state;
+
+    float extra_jump_delay = 0;
   private:
 };
 }

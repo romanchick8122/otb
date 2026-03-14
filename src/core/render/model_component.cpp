@@ -54,12 +54,35 @@ Component* ModelComponent::deserialize(const ValueStorage& vs)
 
 void ModelComponent::request_animation(InternedString animation_name, bool request_looping)
 {
-    requested_animation_index = asset->animation_lookup[animation_name];
+    OTB_ASSERT(asset->animation_lookup.find(animation_name) != asset->animation_lookup.end());
+    if (asset->anim_graph.animation_transitions.empty() || playing_animation_index == std::string::npos)
+    {
+        playing_animation_index = asset->animation_lookup[animation_name];
+    }
+    else
+    {
+        const size_t animation_target = asset->animation_lookup[animation_name];
+        if (request_animation_index != animation_target)
+        {
+            playing_transition = asset->anim_graph.directions[playing_animation_index][animation_target].transition;
+            transition_time = 0;
+        }
+        request_animation_index = animation_target;
+    }
     looping_requested = request_looping;
 }
 
 void ModelComponent::set_animation_speed(float speed)
 {
     animation_speed = speed;
+}
+
+InternedString ModelComponent::get_playing_animation() const
+{
+    if (playing_animation_index == std::string::npos)
+    {
+        return InternedString::get_empty();
+    }
+    return asset->animation_names[playing_animation_index];
 }
 }

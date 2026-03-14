@@ -110,7 +110,7 @@ ValueStorage load_impl(std::fstream& source)
     {
         finish_value();
     }
-
+    OTB_ASSERT(temporary.size() == 1);
     return temporary.back();
 }
 void save_to(std::fstream& target, const ValueStorage& v, size_t depth, std::optional<const char*> key)

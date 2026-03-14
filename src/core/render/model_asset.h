@@ -17,8 +17,25 @@ class ModelAsset : public AssetBase
 
     Model model;
     ModelAnimation* animations;
-    int animation_count;
+    size_t animation_count;
 
-    std::unordered_map<otb::InternedString, int> animation_lookup;
+    struct AnimationGraph
+    {
+        struct Transition
+        {
+            size_t target;
+            float transition_time;
+        };
+        std::vector<std::vector<Transition>> animation_transitions;
+        struct DirectionEntry
+        {
+            const Transition* transition;
+            size_t path_length;
+        };
+        std::vector<std::vector<DirectionEntry>> directions;
+    } anim_graph;
+
+    std::unordered_map<otb::InternedString, size_t> animation_lookup;
+    std::vector<otb::InternedString> animation_names;
 };
 }

@@ -22,6 +22,7 @@ using Asset = std::shared_ptr<T>;
 
 struct AssetUtils
 {
+    static InternedString get_sibling_asset(InternedString asset_path, const std::string& ext);
     static std::string get_asset_file_path(InternedString asset_path);
 
     template<class T>
