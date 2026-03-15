@@ -11,6 +11,7 @@
 #include "game/box/box_system.h"
 #include "game/character/character_system.h"
 #include "game/character/input_system.h"
+#include "game/ui/hud_system.h"
 
 namespace game
 {
@@ -47,9 +48,16 @@ std::unique_ptr<otb::World> create_world()
     // -------- NORMAL -------
     world->add_normal_system(MeshSystem::update_animations);
     world->add_normal_system(CharacterSystem::update_camera);
+
     world->add_normal_system(RenderControlSystem::render_begin);
+
     world->add_normal_system(MeshSystem::render_meshes);
     world->add_normal_system(BoxAttachmentSystem::debug_draw);
+
+    world->add_normal_system(RenderControlSystem::render_stop_3d_start_2d);
+
+    world->add_normal_system(HudSystem::render_hud);
+
     world->add_normal_system(RenderControlSystem::render_end);
 
     return std::unique_ptr<World>(world);

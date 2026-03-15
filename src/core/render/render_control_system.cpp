@@ -20,9 +20,13 @@ void RenderControlSystem::render_begin(World* world, float)
     BeginMode3D(camera->camera);
 }
 
-void RenderControlSystem::render_end(World*, float)
+void RenderControlSystem::render_stop_3d_start_2d(World*, float)
 {
     EndMode3D();
+}
+
+void RenderControlSystem::render_end(World*, float)
+{
     EndDrawing();
 }
 }
