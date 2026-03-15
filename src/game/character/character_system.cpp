@@ -101,7 +101,7 @@ namespace
         CharacterComponent* character_component;
         const InputReceiverComponent* input_receiver_component;
         otb::ModelComponent* model_component;
-        const otb::TransformComponent* transform_component;
+        otb::TransformComponent* transform_component;
         otb::VelocityComponent* velocity_component;
     };
 

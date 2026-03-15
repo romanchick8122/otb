@@ -6,9 +6,7 @@
   Jump: !<DICT>
     Flying: !<VALUE> -1
   Flying: !<DICT>
-    Flying->Landing: !<VALUE> -1
-  Flying->Landing: !<DICT>
-    Landing: !<VALUE> 0.1
+    Landing: !<VALUE> 0.2
   Landing: !<DICT>
     Neutral: !<VALUE> -1
   WakingUp: !<DICT>

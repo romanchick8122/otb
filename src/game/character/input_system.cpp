@@ -11,6 +11,8 @@
 #include "raylib.h"
 #include "raymath.h"
 
+#include <array>
+
 namespace game
 {
 void InputSystem::clear_input(otb::World* world)
@@ -93,29 +95,50 @@ void InputSystem::apply_input(otb::World* world)
 {
     using namespace otb;
 
-    static constexpr float movement_speed = 10.f;
-    static constexpr float jump_power = 10.f;
+    static constexpr float MOVEMENT_SPEED = 10.f;
+    
+    static std::array<bool, std::to_underlying(CharacterComponent::MovementState::COUNT)> apply_movement;
+    static std::array<bool, std::to_underlying(CharacterComponent::MovementState::COUNT)> apply_rotation;
+
+    apply_movement[std::to_underlying(CharacterComponent::MovementState::GROUNDED)] = true;
+    apply_movement[std::to_underlying(CharacterComponent::MovementState::FLYING)] = true;
+
+    apply_rotation[std::to_underlying(CharacterComponent::MovementState::GROUNDED)] = true;
+    apply_rotation[std::to_underlying(CharacterComponent::MovementState::PREPARING_JUMP)] = true;
+    apply_rotation[std::to_underlying(CharacterComponent::MovementState::FLYING)] = true;
+
 
     for(auto it = world->components_begin<InputReceiverComponent>(); it != world->components_end<InputReceiverComponent>(); ++it)
     {
         CharacterComponent* character_component = it->entity->get_component<CharacterComponent>();
         if (character_component == nullptr)
             continue;
-
         auto* velocity_component = it->entity->get_component<VelocityComponent>();
-        if (velocity_component == nullptr)
+        if (velocity_component == nullptr) [[unlikely]]
         {
             velocity_component = new VelocityComponent();
             velocity_component->apply_gravity = true;
             it->entity->add_component(velocity_component);
         }
+
         auto* transform_component = it->entity->get_component<TransformComponent>();
 
-        const Vector3 oriented_move_vector = Vector3RotateByQuaternion({it->analog_input.x, 0, it->analog_input.y}, transform_component->transform.rotation);
-        velocity_component->velocity += Vector3Scale(oriented_move_vector, movement_speed);
-        
-        const Quaternion added_rotation = QuaternionFromAxisAngle({0, 1, 0}, it->rotation_input * world->fixed_frame_time);
-        transform_component->transform.rotation = QuaternionMultiply(transform_component->transform.rotation, added_rotation);
+        if (apply_movement[std::to_underlying(character_component->movement_state)])
+        {
+            const Vector3 oriented_move_vector = Vector3RotateByQuaternion(
+                {it->analog_input.x, 0, it->analog_input.y},
+                transform_component->transform.rotation
+            );
+            velocity_component->velocity += Vector3Scale(oriented_move_vector, MOVEMENT_SPEED);
+        }
+        if (apply_rotation[std::to_underlying(character_component->movement_state)])
+        {
+            const Quaternion added_rotation = QuaternionFromAxisAngle(
+                {0, 1, 0},
+                it->rotation_input * world->fixed_frame_time
+            );
+            transform_component->transform.rotation = QuaternionMultiply(transform_component->transform.rotation, added_rotation);
+        }
     }
 }
 }

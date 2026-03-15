@@ -27,6 +27,8 @@ class CharacterComponent : public otb::Component
         PREPARING_JUMP,
         FLYING,
         LANDING,
+
+        COUNT,
     } movement_state = MovementState::WAKING_UP;
 
     float extra_jump_delay = 0;
