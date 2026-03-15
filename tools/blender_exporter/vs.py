@@ -84,5 +84,3 @@ def save(obj: any, filename: str):
             else:
                 assert(False)
         save_impl(obj, 0, None)
-
-save(load("C:/Users/Raman Svistunou/Documents/Git/otb/assets/Lvl1.vs"), "test.vs")
