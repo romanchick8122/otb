@@ -9,6 +9,7 @@ class OTBWorldImportOperator(bpy.types.Operator, ImportHelper):
     filename_ext = ".vs"
     def execute(self, context):
         World = load(self.filepath)
+        bpy.context.scene["_world"] = World["entities"][0]["components"]
         for obj in World["entities"]:
             if obj != World["entities"][0]:
                 translation = obj["components"]["TransformComponent"]["translation"].split()
@@ -21,5 +22,4 @@ class OTBWorldImportOperator(bpy.types.Operator, ImportHelper):
                 )     
                 context.object["model"] = obj["components"]["ModelComponent"]
                 context.object.name = obj["name"]
-        print(World)
         return {'FINISHED'}

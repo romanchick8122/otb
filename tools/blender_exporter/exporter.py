@@ -43,7 +43,14 @@ class OTBWorldExportOperator(bpy.types.Operator, ExportHelper):
                 components["ModelComponent"] = "/cube.glb"
             else: components["ModelComponent"] = obj.get("model")
             return components
-        World = {"entities":[{
+        World = {"entities":[]}
+        if bpy.context.scene["_world"] is not None:
+            World["entities"].append({
+                "name": "_world",
+                "components": bpy.context.scene["_world"].to_dict()
+            })
+        else:
+            World["entities"].append({
             "name": "_world",
             "components":{
                 "CameraComponent":{
@@ -58,8 +65,11 @@ class OTBWorldExportOperator(bpy.types.Operator, ExportHelper):
                     "air_drag_coefficient": "0.3"
                 }
             }
-        }]}
+            })
+        
         for obj in bpy.data.objects:
+            with bpy.context.temp_override(object=obj):
+                bpy.ops.object.origin_set(type="ORIGIN_GEOMETRY")
             if obj.name[:3] == "OTB":
                 World["entities"].append({"name":obj.name, "components": add_box_components(obj)})
             elif obj.name.lower() == "man": 
