@@ -7,6 +7,8 @@
 
 #include "raylib.h"
 
+#include <array>
+
 int main()
 {
     using namespace otb;
@@ -14,7 +16,9 @@ int main()
     otb::run_static_initializer();
     game::run_static_initializer();
 
-    InitWindow(2000, 1000, "otb");
+    static constexpr std::array<int, 2> DEFAULT_WINDOW_SIZE{800, 600};
+
+    InitWindow(DEFAULT_WINDOW_SIZE[0], DEFAULT_WINDOW_SIZE[1], "otb");
     SetTargetFPS(60);
 
     std::unique_ptr<World> world = game::create_world();
@@ -23,6 +27,11 @@ int main()
 
     while (!WindowShouldClose())
     {
+ 		if (IsKeyPressed(KEY_ENTER) && (IsKeyDown(KEY_LEFT_ALT) || IsKeyDown(KEY_RIGHT_ALT)))
+ 		{
+            ToggleBorderlessWindowed();
+ 		}
+
         world->update();
     }
     CloseWindow();

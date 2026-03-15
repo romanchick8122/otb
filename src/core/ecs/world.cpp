@@ -21,7 +21,7 @@ void World::update()
         const auto current_time = clock.now();
         const auto time_delta = current_time - previous_update_time;
         previous_update_time = current_time;
-        return std::chrono::nanoseconds(time_delta).count() / 1e9f;
+        return std::min(std::chrono::nanoseconds(time_delta).count() / 1e9f, 1.f);
     }();
 
     accumulated_time += frame_time;
