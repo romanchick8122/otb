@@ -54,9 +54,9 @@ void InputSystem::collect_input_kb_mouse(otb::World* world)
     {
         actions.emplace_back(InputReceiverComponent::ActionNames::jump, 0.0f);
     }
-    if (IsKeyDown(KEY_ONE))
+    if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
     {
-        actions.emplace_back(InputReceiverComponent::ActionNames::ability_1, 0.f);
+        actions.emplace_back(InputReceiverComponent::ActionNames::ability, 0.f);
     }
     if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT))
     {

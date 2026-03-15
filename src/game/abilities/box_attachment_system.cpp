@@ -3,6 +3,7 @@
 #include "core/ecs/world.h"
 #include "core/ecs/component.h"
 #include "core/math/transform_utils.h"
+#include "core/render/camera_component.h"
 #include "core/world/transform_component.h"
 
 #include "game/box/box_component.h"
@@ -20,8 +21,8 @@ struct BoxAttachmentAbilityComponent : public otb::Component
 {
     ~BoxAttachmentAbilityComponent() = default;
 
-    bool prev_frame_button_active = false;
     BoxComponent* attached_box = nullptr;
+    Vector3 local_space_attachment_position = {};
 };
 }
 
@@ -29,8 +30,8 @@ void BoxAttachmentSystem::process_ability_activation(otb::World* world)
 {
     using namespace otb;
 
+    const auto* character_component = &*world->components_begin<CharacterComponent>();
     const auto* character_input_receiver = world->components_begin<CharacterComponent>()->entity->get_component<InputReceiverComponent>();
-
     BoxAttachmentAbilityComponent* ability = character_input_receiver->entity->get_component<BoxAttachmentAbilityComponent>();
     if (ability == nullptr) [[unlikely]]
     {
@@ -38,18 +39,10 @@ void BoxAttachmentSystem::process_ability_activation(otb::World* world)
         character_input_receiver->entity->add_component(ability);
     }
 
-    if (character_input_receiver->extra_actions.count(InputReceiverComponent::ActionNames::ability_1) == 0)
-    {
-        ability->prev_frame_button_active = false;
-        return;
-    }
-
-    if (ability->prev_frame_button_active)
+    if (character_input_receiver->extra_actions.count(InputReceiverComponent::ActionNames::ability) == 0)
     {
         return;
     }
-
-    ability->prev_frame_button_active = true;
 
     // Detach
     if (ability->attached_box != nullptr)
@@ -58,11 +51,16 @@ void BoxAttachmentSystem::process_ability_activation(otb::World* world)
         return;
     }
 
+    if (character_component->movement_state != CharacterComponent::MovementState::AIMING)
+    {
+        return;
+    }
+
     // Attach
-    TransformComponent* character_transform = character_input_receiver->entity->get_component<TransformComponent>();
-    const Ray character_look_ray {
-        .position = character_transform->transform.translation,
-        .direction = Vector3RotateByQuaternion(Vector3{1, 0, 0}, character_transform->transform.rotation),
+    const otb::CameraComponent* camera = world->get_world_entity()->get_component<CameraComponent>();
+    const Ray camera_ray {
+        .position = camera->camera.position,
+        .direction = Vector3Normalize(camera->camera.target - camera->camera.position),
     };
 
     std::pair<RayCollision, BoxComponent*> best_hit{ {}, nullptr };
@@ -74,7 +72,7 @@ void BoxAttachmentSystem::process_ability_activation(otb::World* world)
         }
 
         const BoundingBox box = TransformUtils::get_box(box_it->entity->get_component<TransformComponent>()->transform);
-        RayCollision collision = GetRayCollisionBox(character_look_ray, box);
+        RayCollision collision = GetRayCollisionBox(camera_ray, box);
         if (!collision.hit)
         {
             continue;
@@ -84,9 +82,10 @@ void BoxAttachmentSystem::process_ability_activation(otb::World* world)
             best_hit = { collision, &*box_it};
         }
     }
-    if (best_hit.second != nullptr)
+    if (best_hit.second != nullptr && best_hit.second->type == BoxComponent::BoxType::DYNAMIC)
     {
         ability->attached_box = best_hit.second;
+        ability->local_space_attachment_position = TransformUtils::apply_inverse_transform(best_hit.second->entity->get_component<TransformComponent>()->transform, best_hit.first.point);
     }
 }
 
@@ -119,7 +118,7 @@ void BoxAttachmentSystem::debug_draw(otb::World* world, float)
     }
 
     const Vector3 from = ability->entity->get_component<TransformComponent>()->transform.translation;
-    const Vector3 to = ability->attached_box->entity->get_component<TransformComponent>()->transform.translation;
+    const Vector3 to = TransformUtils::apply_transform(ability->attached_box->entity->get_component<TransformComponent>()->transform, ability->local_space_attachment_position);
     DrawLine3D(from, to, YELLOW);
 }
 }
