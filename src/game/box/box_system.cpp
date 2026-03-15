@@ -17,7 +17,6 @@ namespace game
 namespace
 {
     static constexpr float eps = 0.00001f;
-    static constexpr bool PROTOTYPE_SNAPPY_MOVEMENT = true;
 }
 
 void BoxSystem::create_components(otb::World* world)
@@ -89,23 +88,12 @@ void BoxSystem::update_from_velocity(otb::World* world)
             box_velocity->velocity.y = 0;
         }
         box_transform->transform.translation += box_velocity->velocity * world->fixed_frame_time;
-        if (PROTOTYPE_SNAPPY_MOVEMENT)
-        {
-            box_velocity->velocity.y *= velocity_multiplier;
-        }
-        else
-        {
-            box_velocity->velocity *= velocity_multiplier;
-        }
+        box_velocity->velocity.y *= velocity_multiplier;
     }
 }
 
 void BoxSystem::late_update_velocity(otb::World* world)
 {
-    if (!PROTOTYPE_SNAPPY_MOVEMENT)
-    {
-        return;
-    }
     for (auto it = world->components_begin<BoxComponent>(); it != world->components_end<BoxComponent>(); ++it)
     {
         if (auto* vc = it->entity->get_component<otb::VelocityComponent>();

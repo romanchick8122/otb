@@ -1,7 +1,7 @@
 !<DICT>
   Idle: !<DICT>
     Jump: !<VALUE> 0.2
-    WalkingCycle: !<VALUE> 0.5
+    WalkingCycle: !<VALUE> 0.2
     IdleAction: !<VALUE> 0.2
   Jump: !<DICT>
     Flying: !<VALUE> -1
@@ -14,7 +14,7 @@
   WakingUp: !<DICT>
     Neutral: !<VALUE> -1
   WalkingCycle: !<DICT>
-    Idle: !<VALUE> 0.5
+    Idle: !<VALUE> 0.2
     Jump: !<VALUE> 0.2
   Neutral: !<DICT>
     Idle: !<VALUE> -1

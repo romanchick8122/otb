@@ -93,7 +93,7 @@ void InputSystem::apply_input(otb::World* world)
 {
     using namespace otb;
 
-    static constexpr float movement_speed = 600.f;
+    static constexpr float movement_speed = 10.f;
     static constexpr float jump_power = 10.f;
 
     for(auto it = world->components_begin<InputReceiverComponent>(); it != world->components_end<InputReceiverComponent>(); ++it)
@@ -112,7 +112,7 @@ void InputSystem::apply_input(otb::World* world)
         auto* transform_component = it->entity->get_component<TransformComponent>();
 
         const Vector3 oriented_move_vector = Vector3RotateByQuaternion({it->analog_input.x, 0, it->analog_input.y}, transform_component->transform.rotation);
-        velocity_component->velocity += Vector3Scale(oriented_move_vector, world->fixed_frame_time * movement_speed);
+        velocity_component->velocity += Vector3Scale(oriented_move_vector, movement_speed);
         
         const Quaternion added_rotation = QuaternionFromAxisAngle({0, 1, 0}, it->rotation_input * world->fixed_frame_time);
         transform_component->transform.rotation = QuaternionMultiply(transform_component->transform.rotation, added_rotation);
