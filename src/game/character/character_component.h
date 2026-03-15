@@ -27,9 +27,17 @@ class CharacterComponent : public otb::Component
         PREPARING_JUMP,
         FLYING,
         LANDING,
-
+        AIMING,
         COUNT,
     } movement_state = MovementState::WAKING_UP;
+
+    struct StateDataAIMING {
+        Vector2 aim_direction;
+    };
+    std::variant<
+        std::monostate,
+        StateDataAIMING
+    > state_data;
 
     float extra_jump_delay = 0;
   private:

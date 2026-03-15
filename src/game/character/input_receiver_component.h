@@ -17,7 +17,7 @@ class InputReceiverComponent : public otb::Component
     ~InputReceiverComponent() override = default;
 
     Vector2 analog_input;
-    float rotation_input;
+    Vector2 secondary_analog_input;
 
     struct ActionQueue {
         std::vector<std::pair<otb::InternedString, float>> delays;
@@ -27,6 +27,7 @@ class InputReceiverComponent : public otb::Component
 
     struct ActionNames
     {
+        static const otb::InternedString aim;
         static const otb::InternedString jump;
         static const otb::InternedString ability_1;
     };

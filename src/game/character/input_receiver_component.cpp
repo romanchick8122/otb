@@ -12,8 +12,9 @@ otb::Component* InputReceiverComponent::deserialize(const otb::ValueStorage&)
     return new InputReceiverComponent();
 }
 
-const otb::InternedString InputReceiverComponent::ActionNames::jump("jump");
 const otb::InternedString InputReceiverComponent::ActionNames::ability_1("ability_1");
+const otb::InternedString InputReceiverComponent::ActionNames::aim("aim");
+const otb::InternedString InputReceiverComponent::ActionNames::jump("jump");
 
 void InputReceiverComponent::ActionQueue::request(otb::InternedString action, float delay)
 {

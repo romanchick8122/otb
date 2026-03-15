@@ -11,20 +11,16 @@
 
 #include "raymath.h"
 
+#include <iostream>
+
 namespace game
 {
 void CharacterSystem::update_camera(otb::World* world, float dt)
 {
     using namespace otb;
 
-    Camera3D desired_camera = [world]
+    static constexpr auto get_camera_behind_back = [](const CharacterComponent* character)
     {
-        CharacterComponent* character = nullptr;
-        for (auto it = world->components_begin<CharacterComponent>(); it != world->components_end<CharacterComponent>(); ++it)
-        {
-            OTB_ASSERT(character == nullptr);
-            character = &*it;
-        }
         const Transform& character_transform = character->entity->get_component<TransformComponent>()->transform;
         Vector3 desired_position =
             character_transform.translation +
@@ -37,13 +33,48 @@ void CharacterSystem::update_camera(otb::World* world, float dt)
             .fovy = 90,
             .projection = CAMERA_PERSPECTIVE,
         };
+    };
+    static constexpr auto get_first_person_camera = [](const CharacterComponent* character)
+    {
+        OTB_ASSERT(std::holds_alternative<CharacterComponent::StateDataAIMING>(character->state_data));
+        const auto& state_data = std::get<CharacterComponent::StateDataAIMING>(character->state_data);
+        const Transform& character_transform = character->entity->get_component<TransformComponent>()->transform;
+        const Vector3 character_forward = Vector3RotateByQuaternion({1, 0, 0}, character_transform.rotation);
+        const Vector3 camera_forward = Vector3RotateByQuaternion(Vector3RotateByQuaternion({1, 0, 0}, QuaternionFromEuler(0, state_data.aim_direction.x, state_data.aim_direction.y)), character_transform.rotation);
+        const Vector3 desired_position = character_transform.translation + character_forward * character_transform.scale.x * 0.5f;
+        return Camera3D {
+            .position = desired_position,
+            .target = desired_position + camera_forward,
+            .up = {0, 1, 0},
+            .fovy = 90,
+            .projection = CAMERA_PERSPECTIVE,
+        };
+    };
+
+    const Camera3D desired_camera = [world]
+    {
+        CharacterComponent* character = nullptr;
+        for (auto it = world->components_begin<CharacterComponent>(); it != world->components_end<CharacterComponent>(); ++it)
+        {
+            OTB_ASSERT(character == nullptr);
+            character = &*it;
+        }
+
+        if (character->movement_state == CharacterComponent::MovementState::AIMING)
+        {
+            return get_first_person_camera(character);
+        }
+        else
+        {
+            return get_camera_behind_back(character);
+        }
     }();
-    
+
     CameraComponent* camera = world->get_world_entity()->get_component<otb::CameraComponent>();
 
-    static constexpr float MAX_CAMERA_SPEED = 50.f;                  // m/s
-    static constexpr float MAX_CAMERA_ANGULAR_SPEED = 3.f;          // rad/s
-    static constexpr float MAX_CAMERA_FOVY_CHANGE = 30.f;   // deg/s
+    static constexpr float MAX_CAMERA_SPEED = 50.f;                 // m/s
+    static constexpr float MAX_CAMERA_ANGULAR_SPEED = .5f;          // rad/s
+    static constexpr float MAX_CAMERA_FOVY_CHANGE = 30.f;           // deg/s
 
     // POSITION
     {
@@ -65,7 +96,7 @@ void CharacterSystem::update_camera(otb::World* world, float dt)
         {
             const Quaternion old_camera_rotation = QuaternionFromVector3ToVector3({1, 0, 0}, old_camera_forward);
             const Quaternion new_camera_rotation = QuaternionFromVector3ToVector3({1, 0, 0}, new_camera_forward);
-            const float lerp_coefficient = std::min(angle_between_targets / (MAX_CAMERA_ANGULAR_SPEED * dt), 1.f);
+            const float lerp_coefficient = std::min(angle_between_targets / MAX_CAMERA_ANGULAR_SPEED / dt, 1.f);
             const Quaternion tmp_camera_rotation = QuaternionSlerp(old_camera_rotation, new_camera_rotation, lerp_coefficient);
             camera->camera.target = camera->camera.position + Vector3RotateByQuaternion({1, 0, 0}, tmp_camera_rotation);
         }
@@ -95,6 +126,9 @@ namespace
     static constexpr float WALKING_SPEED = 3.36408f;
     static constexpr float WALKING_ANIM_EPS = 0.7f;
 
+    static constexpr Vector2 AIM_LIMIT_MIN { -1.f, -0.5f };
+    static constexpr Vector2 AIM_LIMIT_MAX { 1.f, 0.5f };
+
     struct StateUpdateContext
     {
         otb::World* world;
@@ -104,6 +138,19 @@ namespace
         otb::TransformComponent* transform_component;
         otb::VelocityComponent* velocity_component;
     };
+
+    void set_state(StateUpdateContext& ctx, CharacterComponent::MovementState new_state)
+    {
+        ctx.character_component->movement_state = new_state;
+        switch (ctx.character_component->movement_state) {
+            case CharacterComponent::MovementState::AIMING:
+                ctx.character_component->state_data = CharacterComponent::StateDataAIMING{};
+                break;
+            default:
+                ctx.character_component->state_data = std::monostate{};
+                break;
+        }
+    }
 
     void update_state_WAKING_UP(StateUpdateContext& ctx)
     {
@@ -119,7 +166,7 @@ namespace
         }
         else if (ctx.model_component->get_playing_animation() == IDLE_ANIMATION)
         {
-            ctx.character_component->movement_state = CharacterComponent::MovementState::GROUNDED;
+            set_state(ctx, CharacterComponent::MovementState::GROUNDED);
         }
     }
 
@@ -127,10 +174,14 @@ namespace
     {
         if (ctx.input_receiver_component->extra_actions.contains(InputReceiverComponent::ActionNames::jump))
         {
-            ctx.character_component->movement_state = CharacterComponent::MovementState::PREPARING_JUMP;
+            set_state(ctx, CharacterComponent::MovementState::PREPARING_JUMP);
             ctx.character_component->extra_jump_delay = JUMP_ANIMATION_DELAY;
             ctx.model_component->request_animation(FLYING_ANIMATION, true);
             ctx.model_component->set_animation_speed(GLOBAL_ANIMATION_SPEED);
+        }
+        else if (ctx.input_receiver_component->extra_actions.contains(InputReceiverComponent::ActionNames::aim))
+        {
+            set_state(ctx, CharacterComponent::MovementState::AIMING);
         }
         else
         {
@@ -159,7 +210,7 @@ namespace
             }
             else
             {
-                ctx.character_component->movement_state = CharacterComponent::MovementState::FLYING;
+                set_state(ctx, CharacterComponent::MovementState::FLYING);
                 ctx.character_component->extra_jump_delay = -1;
                 ctx.velocity_component->velocity.y = JUMP_SPEED;
             }
@@ -170,7 +221,7 @@ namespace
     {
         if (ctx.velocity_component->velocity.y == 0)
         {
-            ctx.character_component->movement_state = CharacterComponent::MovementState::LANDING;
+            set_state(ctx, CharacterComponent::MovementState::LANDING);
             ctx.model_component->request_animation(IDLE_ANIMATION, true);
         }
     }
@@ -179,8 +230,23 @@ namespace
     {
         if (ctx.model_component->get_playing_animation() == IDLE_ANIMATION)
         {
-            ctx.character_component->movement_state = CharacterComponent::MovementState::GROUNDED;
+            set_state(ctx, CharacterComponent::MovementState::GROUNDED);
         }
+    }
+
+    void update_state_AIMING(StateUpdateContext& ctx)
+    {
+        if (!ctx.input_receiver_component->extra_actions.contains(InputReceiverComponent::ActionNames::aim))
+        {
+            set_state(ctx, CharacterComponent::MovementState::GROUNDED);
+            return;
+        }
+        OTB_ASSERT(std::holds_alternative<CharacterComponent::StateDataAIMING>(ctx.character_component->state_data));
+        auto& state_data = std::get<CharacterComponent::StateDataAIMING>(ctx.character_component->state_data);
+
+        std::cerr << state_data.aim_direction.x << " " << state_data.aim_direction.y << "\n";
+        state_data.aim_direction -= ctx.input_receiver_component->secondary_analog_input * ctx.world->fixed_frame_time;
+        state_data.aim_direction = Vector2Clamp(state_data.aim_direction, AIM_LIMIT_MIN, AIM_LIMIT_MAX);
     }
 }
 
@@ -207,6 +273,7 @@ void CharacterSystem::update_state(otb::World* world)
             case CharacterComponent::MovementState::PREPARING_JUMP: update_state_PREPARING_JUMP(ctx); break;
             case CharacterComponent::MovementState::FLYING: update_state_FLYING(ctx); break;
             case CharacterComponent::MovementState::LANDING: update_state_LANDING(ctx); break;
+            case CharacterComponent::MovementState::AIMING: update_state_AIMING(ctx); break;
             default: OTB_ASSERT(false); break;
         }
     }

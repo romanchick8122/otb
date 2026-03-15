@@ -25,7 +25,6 @@ void InputSystem::clear_input(otb::World* world)
 void InputSystem::collect_input_kb_mouse(otb::World* world)
 {
     using namespace otb;
-    static constexpr float rotation_speed = 5.f;
 
     Vector2 movement_request{0, 0};
     float rotation_input = 0;
@@ -39,17 +38,16 @@ void InputSystem::collect_input_kb_mouse(otb::World* world)
     }
     if (IsKeyDown(KEY_D))
     {
-        rotation_input -= rotation_speed;
+        movement_request.y -= 1;
     }
     if (IsKeyDown(KEY_A))
     {
-        rotation_input += rotation_speed;
+        movement_request.y += 1;
     }
 
-    movement_request = Vector2Normalize(movement_request);
-
     const Vector2 mouse_delta = GetMouseDelta();
-    static constexpr float mouse_sensitivity = -0.005f;
+    static constexpr float mouse_sensitivity = 1.f;
+    const Vector2 analog_input = mouse_delta * mouse_sensitivity;
 
     std::vector<std::pair<InternedString, float>> actions;
     if (IsKeyDown(KEY_SPACE))
@@ -60,11 +58,15 @@ void InputSystem::collect_input_kb_mouse(otb::World* world)
     {
         actions.emplace_back(InputReceiverComponent::ActionNames::ability_1, 0.f);
     }
+    if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT))
+    {
+        actions.emplace_back(InputReceiverComponent::ActionNames::aim, 0.f);
+    }
 
     for(auto it = world->components_begin<InputReceiverComponent>(); it != world->components_end<InputReceiverComponent>(); ++it)
     {
         it->analog_input = movement_request;
-        it->rotation_input = rotation_input;
+        it->secondary_analog_input = analog_input;
         for (const auto& [k, v] : actions)
         {
             it->action_queue.request(k, v);
@@ -96,6 +98,7 @@ void InputSystem::apply_input(otb::World* world)
     using namespace otb;
 
     static constexpr float MOVEMENT_SPEED = 10.f;
+    static constexpr float ROTATION_SPEED = 3.f;
     
     static std::array<bool, std::to_underlying(CharacterComponent::MovementState::COUNT)> apply_movement;
     static std::array<bool, std::to_underlying(CharacterComponent::MovementState::COUNT)> apply_rotation;
@@ -126,7 +129,7 @@ void InputSystem::apply_input(otb::World* world)
         if (apply_movement[std::to_underlying(character_component->movement_state)])
         {
             const Vector3 oriented_move_vector = Vector3RotateByQuaternion(
-                {it->analog_input.x, 0, it->analog_input.y},
+                {it->analog_input.x, 0, 0},
                 transform_component->transform.rotation
             );
             velocity_component->velocity += Vector3Scale(oriented_move_vector, MOVEMENT_SPEED);
@@ -135,7 +138,7 @@ void InputSystem::apply_input(otb::World* world)
         {
             const Quaternion added_rotation = QuaternionFromAxisAngle(
                 {0, 1, 0},
-                it->rotation_input * world->fixed_frame_time
+                it->analog_input.y * ROTATION_SPEED * world->fixed_frame_time
             );
             transform_component->transform.rotation = QuaternionMultiply(transform_component->transform.rotation, added_rotation);
         }
