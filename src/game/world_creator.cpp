@@ -46,7 +46,7 @@ std::unique_ptr<otb::World> create_world()
     world->add_fixed_system(BoxSystem::late_update_velocity);
     // -------- NORMAL -------
     world->add_normal_system(MeshSystem::update_animations);
-    world->add_normal_system(CharacterSystem::character_follow_camera);
+    world->add_normal_system(CharacterSystem::update_camera);
     world->add_normal_system(RenderControlSystem::render_begin);
     world->add_normal_system(MeshSystem::render_meshes);
     world->add_normal_system(BoxAttachmentSystem::debug_draw);

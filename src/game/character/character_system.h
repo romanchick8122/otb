@@ -9,7 +9,7 @@ namespace game
 {
 struct CharacterSystem
 {
-    static void character_follow_camera(otb::World*, float);
+    static void update_camera(otb::World*, float);
     static void update_state(otb::World*);
 };
 }

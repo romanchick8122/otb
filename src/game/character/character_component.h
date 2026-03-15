@@ -22,11 +22,12 @@ class CharacterComponent : public otb::Component
 
     // Runtime
     enum class MovementState {
+        WAKING_UP,
         GROUNDED,
         PREPARING_JUMP,
         FLYING,
         LANDING,
-    } movement_state;
+    } movement_state = MovementState::WAKING_UP;
 
     float extra_jump_delay = 0;
   private:
