@@ -4,6 +4,7 @@
 #include "core/ecs/component.h"
 #include "core/math/transform_utils.h"
 #include "core/render/camera_component.h"
+#include "core/world/physics/velocity_component.h"
 #include "core/world/transform_component.h"
 
 #include "game/box/box_component.h"
@@ -94,11 +95,23 @@ void BoxAttachmentSystem::process_ability(otb::World* world)
     using namespace otb;
 
     auto* box_sc = world->get_world_entity()->get_component<BoxSingleComponent>();
+    const auto* character_component = &*world->components_begin<CharacterComponent>();
+    const Vector3 character_position = character_component->entity->get_component<TransformComponent>()->transform.translation;
+    const auto* character_velocity_component = character_component->entity->get_component<VelocityComponent>();
+    if (abs(character_velocity_component->velocity.x) < EPSILON && abs(character_velocity_component->velocity.z) < EPSILON)
+    {
+        return;
+    }
+    const Vector2 character_velocity_proj = Vector2Normalize({character_velocity_component->velocity.x, character_velocity_component->velocity.z});
     for (auto it = world->components_begin<BoxAttachmentAbilityComponent>(); it != world->components_end<BoxAttachmentAbilityComponent>(); ++it)
     {
         if (it->attached_box != nullptr)
         {
-            box_sc->request_one_frame_attachment(it->attached_box);
+            const Vector3 to_box_direction = it->attached_box->entity->get_component<TransformComponent>()->transform.translation - character_position;
+            if (Vector2DotProduct({to_box_direction.x, to_box_direction.z}, character_velocity_proj) < 0)
+            {
+                box_sc->request_one_frame_attachment(it->attached_box);
+            }
         }
     }
 }

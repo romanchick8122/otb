@@ -235,12 +235,6 @@ void BoxSystem::push_back_chain(otb::World* world)
             box_sc->chain[i].filtered = true;
         }
     }
-    
-    VelocityComponent* character_velocity = box_sc->chain[0].entity->get_component<VelocityComponent>();
-    if (block_x)
-        character_velocity->velocity.x = 0;
-    if (block_z)
-        character_velocity->velocity.z = 0;
 }
 
 void BoxSystem::update_chain(otb::World* world)
