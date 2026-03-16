@@ -6,6 +6,8 @@
 #include "core/world/physics/velocity_component.h"
 #include "core/world/transform_component.h"
 
+#include "game/abilities/box_attachment_ability_component.h"
+#include "game/box/box_component.h"
 #include "game/character/character_component.h"
 #include "game/character/input_receiver_component.h"
 
@@ -123,7 +125,10 @@ namespace
     static constexpr float JUMP_ANIMATION_DELAY = 25 / 60.f;
     static const otb::InternedString FLYING_ANIMATION("Flying");
     static const otb::InternedString WALKING_ANIMATION("WalkingCycle");
+    static const otb::InternedString THROW_ANIMATION("Throw");
+    static const otb::InternedString PULL_ANIMATION("PullCycle");
     static constexpr float WALKING_SPEED = 3.36408f;
+    static constexpr float PULL_SPEED = -3.1307f;
     static constexpr float WALKING_ANIM_EPS = 0.7f;
 
     static constexpr Vector2 AIM_LIMIT_MIN { -1.f, -0.5f };
@@ -150,6 +155,35 @@ namespace
                 ctx.character_component->state_data = std::monostate{};
                 break;
         }
+    }
+
+    void select_animation_from_movement_speed(
+        StateUpdateContext& ctx,
+        float forward_eps,
+        float backward_eps,
+        otb::InternedString anim_forward,
+        float forward_speed_scale,
+        otb::InternedString anim_neutral,
+        otb::InternedString anim_backward,
+        float backward_speed_scale
+    )
+    {
+        const Vector3 character_forward_vector = Vector3RotateByQuaternion({1, 0, 0}, ctx.transform_component->transform.rotation);
+        const float forward_projected_speed = Vector3DotProduct(character_forward_vector, ctx.velocity_component->velocity);
+        if (forward_projected_speed > forward_eps)
+        {
+            ctx.model_component->request_animation(anim_forward, true);
+            ctx.model_component->set_animation_speed(GLOBAL_ANIMATION_SPEED * (forward_speed_scale == 0 ? 1 : forward_projected_speed * forward_speed_scale));
+            return;
+        }
+        if (forward_projected_speed < -backward_eps)
+        {
+            ctx.model_component->request_animation(anim_backward, true);
+            ctx.model_component->set_animation_speed(GLOBAL_ANIMATION_SPEED * (backward_speed_scale == 0 ? 1 : forward_projected_speed * backward_speed_scale));
+            return;
+        }
+        ctx.model_component->request_animation(anim_neutral, true);
+        ctx.model_component->set_animation_speed(GLOBAL_ANIMATION_SPEED);
     }
 
     void update_state_WAKING_UP(StateUpdateContext& ctx)
@@ -185,18 +219,7 @@ namespace
         }
         else
         {
-            const Vector3 character_forward_vector = Vector3RotateByQuaternion({1, 0, 0}, ctx.transform_component->transform.rotation);
-            const float forward_projected_speed = Vector3DotProduct(character_forward_vector, ctx.velocity_component->velocity);
-            if (abs(forward_projected_speed) < WALKING_ANIM_EPS)
-            {
-                ctx.model_component->request_animation(IDLE_ANIMATION, true);
-                ctx.model_component->set_animation_speed(GLOBAL_ANIMATION_SPEED);
-            }
-            else
-            {
-                ctx.model_component->request_animation(WALKING_ANIMATION, true);
-                ctx.model_component->set_animation_speed(forward_projected_speed * GLOBAL_ANIMATION_SPEED / WALKING_SPEED);
-            }
+            select_animation_from_movement_speed(ctx, WALKING_ANIM_EPS, WALKING_ANIM_EPS, WALKING_ANIMATION, 1 / WALKING_SPEED, IDLE_ANIMATION, WALKING_ANIMATION, 1 / WALKING_SPEED);
         }
     }
 
@@ -238,7 +261,14 @@ namespace
     {
         if (!ctx.input_receiver_component->extra_actions.contains(InputReceiverComponent::ActionNames::aim))
         {
-            set_state(ctx, CharacterComponent::MovementState::GROUNDED);
+            if (ctx.character_component->entity->get_component<BoxAttachmentAbilityComponent>()->attached_box != nullptr)
+            {
+                set_state(ctx, CharacterComponent::MovementState::PULLING);
+            }
+            else
+            {
+                set_state(ctx, CharacterComponent::MovementState::GROUNDED);
+            }
             return;
         }
         OTB_ASSERT(std::holds_alternative<CharacterComponent::StateDataAIMING>(ctx.character_component->state_data));
@@ -247,6 +277,27 @@ namespace
         std::cerr << state_data.aim_direction.x << " " << state_data.aim_direction.y << "\n";
         state_data.aim_direction -= ctx.input_receiver_component->secondary_analog_input * ctx.world->fixed_frame_time;
         state_data.aim_direction = Vector2Clamp(state_data.aim_direction, AIM_LIMIT_MIN, AIM_LIMIT_MAX);
+
+        if (ctx.character_component->entity->get_component<BoxAttachmentAbilityComponent>()->attached_box != nullptr)
+        {
+            ctx.model_component->request_animation(THROW_ANIMATION, true);
+        }
+    }
+
+    void update_state_PULLING(StateUpdateContext& ctx)
+    {
+        using namespace otb;
+        const BoxAttachmentAbilityComponent* ability = ctx.character_component->entity->get_component<BoxAttachmentAbilityComponent>();
+        const auto attached_box = ability->attached_box;
+        if (attached_box == nullptr)
+        {
+            set_state(ctx, CharacterComponent::MovementState::GROUNDED);
+            return;
+        }
+        Vector3 to_box = attached_box->entity->get_component<TransformComponent>()->transform.translation - ctx.transform_component->transform.translation;
+        to_box.y = 0;
+        ctx.transform_component->transform.rotation = QuaternionFromVector3ToVector3({1, 0, 0}, Vector3Normalize(to_box));
+        select_animation_from_movement_speed(ctx, WALKING_ANIM_EPS, WALKING_ANIM_EPS, WALKING_ANIMATION, 1 / WALKING_SPEED, IDLE_ANIMATION, PULL_ANIMATION, 1 / PULL_SPEED);
     }
 }
 
@@ -274,6 +325,7 @@ void CharacterSystem::update_state(otb::World* world)
             case CharacterComponent::MovementState::FLYING: update_state_FLYING(ctx); break;
             case CharacterComponent::MovementState::LANDING: update_state_LANDING(ctx); break;
             case CharacterComponent::MovementState::AIMING: update_state_AIMING(ctx); break;
+            case CharacterComponent::MovementState::PULLING: update_state_PULLING(ctx); break;
             default: OTB_ASSERT(false); break;
         }
     }

@@ -7,6 +7,7 @@
 #include "core/world/physics/velocity_component.h"
 #include "core/world/transform_component.h"
 
+#include "game/abilities/box_attachment_ability_component.h"
 #include "game/box/box_component.h"
 #include "game/box/box_system.h"
 #include "game/character/character_component.h"
@@ -16,17 +17,6 @@
 
 namespace game
 {
-namespace
-{
-struct BoxAttachmentAbilityComponent : public otb::Component
-{
-    ~BoxAttachmentAbilityComponent() = default;
-
-    BoxComponent* attached_box = nullptr;
-    Vector3 local_space_attachment_position = {};
-};
-}
-
 void BoxAttachmentSystem::process_ability_activation(otb::World* world)
 {
     using namespace otb;
@@ -93,7 +83,6 @@ void BoxAttachmentSystem::process_ability_activation(otb::World* world)
 void BoxAttachmentSystem::process_ability(otb::World* world)
 {
     using namespace otb;
-
     auto* box_sc = world->get_world_entity()->get_component<BoxSingleComponent>();
     const auto* character_component = &*world->components_begin<CharacterComponent>();
     const Vector3 character_position = character_component->entity->get_component<TransformComponent>()->transform.translation;
@@ -108,7 +97,8 @@ void BoxAttachmentSystem::process_ability(otb::World* world)
         if (it->attached_box != nullptr)
         {
             const Vector3 to_box_direction = it->attached_box->entity->get_component<TransformComponent>()->transform.translation - character_position;
-            if (Vector2DotProduct({to_box_direction.x, to_box_direction.z}, character_velocity_proj) < 0)
+            it->pulling = Vector2DotProduct({to_box_direction.x, to_box_direction.z}, character_velocity_proj) < 0;
+            if (it->pulling)
             {
                 box_sc->request_one_frame_attachment(it->attached_box);
             }

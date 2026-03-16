@@ -131,6 +131,7 @@ void BoxSystem::find_collision_chain(otb::World* world)
                 .transform_component = attached_component->entity->get_component<TransformComponent>(),
                 .parent_index = 0,
             });
+            box_sc->chain[0].parent_index = 1;
         }
         box_sc->attached_components.clear();
     }
@@ -228,11 +229,22 @@ void BoxSystem::push_back_chain(otb::World* world)
             for (size_t pb = box_sc->chain[i].parent_index; pb != std::string::npos; pb = box_sc->chain[pb].parent_index)
             {
                 box_sc->chain[pb].displacement -= box_sc->chain[i].displacement;
+                if (pb == 1 && box_sc->chain[0].parent_index == 1)
+                {
+                    break;
+                }
             }
             block_x |= box_sc->chain[i].displacement.x != 0;
             block_z |= box_sc->chain[i].displacement.z != 0;
             box_sc->chain[i].displacement = {};
             box_sc->chain[i].filtered = true;
+        }
+    }
+    if (box_sc->chain[0].filtered)
+    {
+        for (size_t i = 1; i < box_sc->chain.size(); ++i)
+        {
+            box_sc->chain[i].displacement = {};
         }
     }
 }

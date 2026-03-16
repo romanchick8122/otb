@@ -13,4 +13,5 @@ struct BoxAttachmentSystem
     static void process_ability(otb::World*);
     static void debug_draw(otb::World*, float);
 };
+
 }

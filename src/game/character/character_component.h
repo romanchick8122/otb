@@ -28,6 +28,7 @@ class CharacterComponent : public otb::Component
         FLYING,
         LANDING,
         AIMING,
+        PULLING,
         COUNT,
     } movement_state = MovementState::WAKING_UP;
 
