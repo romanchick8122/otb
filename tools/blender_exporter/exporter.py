@@ -1,6 +1,8 @@
 import bpy
-from .vs import save,load
+from .vs import save
 from bpy_extras.io_utils import ExportHelper
+from .coord_transitioner import blender_to_engine, vector_abs, engine_to_blender
+from mathutils import Vector
 
 class OTBWorldExportOperator(bpy.types.Operator, ExportHelper):
     bl_idname = "otb.world_export"
@@ -9,21 +11,21 @@ class OTBWorldExportOperator(bpy.types.Operator, ExportHelper):
     filename_ext = ".vs"
 
     def execute(self, context):
-        def add_transfrom_component(obj):
+        def add_transfrom_component(obj, dimensions):
             components = {}
+            translation = blender_to_engine(obj.location)
+            rotation = obj.rotation_euler.to_quaternion().to_euler("YZX")
+            print(rotation)
+            scale = vector_abs(blender_to_engine(dimensions))
             components["TransformComponent"] = {
-                "translation": f"{-obj.location.x} {obj.location.z} {obj.location.y}",
-                "rotation": f"{obj.rotation_euler.x} {obj.rotation_euler.z} {obj.rotation_euler.y}",
-                "scale": f"{obj.dimensions.x} {obj.dimensions.z} {obj.dimensions.y}"
+                "translation": f"{translation.x} {translation.y} {translation.z}",
+                "rotation": f"{-rotation.x} {rotation.y} {rotation.z}",
+                "scale": f"{scale.x} {scale.y} {scale.z}"
             }
             return components
         def add_char_components(obj):
-            components = {}
-            components["TransformComponent"] = {
-                "translation": f"{-obj.location.x} {obj.location.z} {obj.location.y}",
-                "rotation": f"{obj.rotation_euler.x} {obj.rotation_euler.z} {obj.rotation_euler.y}",
-                "scale": "3.3333001136779785 1.4919999837875366 3.3333001136779785"
-            }
+            character_dimensions = engine_to_blender(Vector((3.3333001136779785, 1.4919999837875366, 3.3333001136779785)))
+            components = add_transfrom_component(obj, character_dimensions)
             components["BoxComponent"] = {"type":"DYNAMIC"}
             components["ModelComponent"] = {
                 "path":"/models/BuggyBug.glb",
@@ -40,7 +42,7 @@ class OTBWorldExportOperator(bpy.types.Operator, ExportHelper):
             components["InputReceiverComponent"] = "RUNTIME"
             return components
         def add_box_components(obj):
-            components = add_transfrom_component(obj)
+            components = add_transfrom_component(obj, obj.dimensions)
             if obj.name[4] == "S":
                 components["BoxComponent"] = {"type":"STATIC"}
             else: components["BoxComponent"] = {"type":"DYNAMIC"}
@@ -48,6 +50,19 @@ class OTBWorldExportOperator(bpy.types.Operator, ExportHelper):
                 components["ModelComponent"] = "/cube.glb"
             else: components["ModelComponent"] = obj.get("model")
             return components
+        def add_camera_component(obj):
+            components = add_transfrom_component(obj, obj.dimensions)
+            target = blender_to_engine(obj.rotation_quaternion @ Vector((0,0,-1)) + obj.location)
+            up = blender_to_engine(obj.rotation_quaternion @ Vector((0,1,0)))
+            position = blender_to_engine(obj.location)
+            components["CameraComponent"] = {
+                "fovy":"90.000000",
+                "position":f"{position.x} {position.y} {position.z}",
+                "projection":"0",
+                "target":f"{target.x} {target.y} {target.z}",
+                "up":f"{up.x} {up.y} {up.z}"
+            }
+            
         World = {"entities":[]}
         if bpy.context.scene.get("_world") is not None:
             World["entities"].append({
@@ -78,6 +93,8 @@ class OTBWorldExportOperator(bpy.types.Operator, ExportHelper):
             if obj.name[:3] == "OTB":
                 World["entities"].append({"name":obj.name, "components": add_box_components(obj)})
             elif obj.name.lower() == "man": 
-               World["entities"].append({"name":obj.name, "components": add_char_components(obj)})       
+                World["entities"].append({"name":obj.name, "components": add_char_components(obj)})
+            elif obj.type == "CAMERA":
+                World["entities"].append({"name":obj.name, "components": add_camera_component(obj)})
         save(World,self.filepath)
         return {'FINISHED'}
