@@ -22,7 +22,7 @@ std::unique_ptr<otb::World> create_world()
 
     World* world = new World();
     ValueStorage vs;
-    vs.load(OTB_ASSETS_DIRECTORY"/Lvl1.vs");
+    vs.load(OTB_ASSETS_DIRECTORY"/Test_level.vs");
     world->deserialize(vs);
 
     // -------- FIXED --------
