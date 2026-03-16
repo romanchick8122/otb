@@ -3,8 +3,8 @@
     !<DICT>
       components: !<DICT>
         BoxSingleComponent: !<DICT>
-          air_drag_coefficient: !<VALUE> 0.3
-          gravity: !<VALUE> 9.8
+          air_drag_coefficient: !<VALUE> 0.9
+          gravity: !<VALUE> 40
         CameraComponent: !<DICT>
           fovy: !<VALUE> 90.000000
           position: !<VALUE> 0 0 0

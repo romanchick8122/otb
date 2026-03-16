@@ -3,8 +3,8 @@
     !<DICT>
       components: !<DICT>
         BoxSingleComponent: !<DICT>
-          air_drag_coefficient: !<VALUE> 0.3
-          gravity: !<VALUE> 9.8
+          air_drag_coefficient: !<VALUE> 0.9
+          gravity: !<VALUE> 50
         CameraComponent: !<DICT>
           fovy: !<VALUE> 90.000000
           position: !<VALUE> 0 0 0
@@ -109,7 +109,7 @@
         TransformComponent: !<DICT>
           rotation: !<VALUE> 0.0 0.0 0.0
           scale: !<VALUE> 4.859881401062012 2.950000047683716 4.412611961364746
-          translation: !<VALUE> -13.04051685333252 1.8472397327423096 4.603257179260254
+          translation: !<VALUE> -13.04051685333252 1.8472397327423096 -9.852883338928223
       name: !<VALUE> OTB_S_Cube.007
     !<DICT>
       components: !<DICT>
@@ -121,3 +121,13 @@
           scale: !<VALUE> 4.859881401062012 2.9000000953674316 4.412611961364746
           translation: !<VALUE> -11.690988540649414 1.8222405910491943 9.913944244384766
       name: !<VALUE> OTB_S_Cube.008
+    !<DICT>
+      components: !<DICT>
+        BoxComponent: !<DICT>
+          type: !<VALUE> STATIC
+        ModelComponent: !<VALUE> /models/boxes/carton_box.glb
+        TransformComponent: !<DICT>
+          rotation: !<VALUE> 0.0 0.0 0.0
+          scale: !<VALUE> 31.278663635253906 0.6511400938034058 21.63770866394043
+          translation: !<VALUE> -0.0 0.04666954278945923 -38.876155853271484
+      name: !<VALUE> OTB_S_Cube.009
