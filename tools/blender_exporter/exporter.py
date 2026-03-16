@@ -18,7 +18,12 @@ class OTBWorldExportOperator(bpy.types.Operator, ExportHelper):
             }
             return components
         def add_char_components(obj):
-            components = add_transfrom_component(obj)
+            components = {}
+            components["TransformComponent"] = {
+                "translation": f"{-obj.location.x} {obj.location.z} {obj.location.y}",
+                "rotation": f"{obj.rotation_euler.x} {obj.rotation_euler.z} {obj.rotation_euler.y}",
+                "scale": "3.3333001136779785 1.4919999837875366 3.3333001136779785"
+            }
             components["BoxComponent"] = {"type":"DYNAMIC"}
             components["ModelComponent"] = {
                 "path":"/models/BuggyBug.glb",
@@ -44,7 +49,7 @@ class OTBWorldExportOperator(bpy.types.Operator, ExportHelper):
             else: components["ModelComponent"] = obj.get("model")
             return components
         World = {"entities":[]}
-        if bpy.context.scene["_world"] is not None:
+        if bpy.context.scene.get("_world") is not None:
             World["entities"].append({
                 "name": "_world",
                 "components": bpy.context.scene["_world"].to_dict()
