@@ -12,14 +12,20 @@ class OTBWorldImportOperator(bpy.types.Operator, ImportHelper):
         bpy.context.scene["_world"] = World["entities"][0]["components"]
         for obj in World["entities"]:
             if obj != World["entities"][0]:
+                
                 translation = obj["components"]["TransformComponent"]["translation"].split()
                 scale = obj["components"]["TransformComponent"]["scale"].split()
                 rotation = obj["components"]["TransformComponent"]["rotation"].split()
-                bpy.ops.mesh.primitive_cube_add(
+                if obj["name"].lower() == "man":
+                    bpy.ops.mesh.primitive_ico_sphere_add(
+                        location = (-float(translation[0]),float(translation[2]),float(translation[1])),
+                    )
+                else:
+                    bpy.ops.mesh.primitive_cube_add(
                     location = (-float(translation[0]),float(translation[2]),float(translation[1])),
                     scale = (float(scale[0])/2, float(scale[2])/2, float(scale[1])/2),
                     rotation = (float(rotation[0]), float(rotation[2]), float(rotation[1]))
-                )     
+                    )     
                 context.object["model"] = obj["components"]["ModelComponent"]
                 context.object.name = obj["name"]
         return {'FINISHED'}
