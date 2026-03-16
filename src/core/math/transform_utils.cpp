@@ -41,4 +41,9 @@ BoundingBox TransformUtils::get_box(const Transform& transform)
         transform.translation + transform.scale / 2.f,
     };
 }
+
+bool TransformUtils::is_point_in_bounding_box(const Vector3& point, const BoundingBox& bb)
+{
+    return point.x > bb.min.x && point.y > bb.min.y && point.z > bb.min.z && point.x < bb.max.x && point.y < bb.max.y && point.z < bb.max.z;
+}
 }

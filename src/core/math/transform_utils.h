@@ -12,5 +12,6 @@ class TransformUtils
     static Vector3 apply_inverse_transform(const Transform&, const Vector3&);
 
     static BoundingBox get_box(const Transform&);
+    static bool is_point_in_bounding_box(const Vector3&, const BoundingBox&);
 };
 }

@@ -8,6 +8,7 @@
 #include "core/world/transform_component.h"
 
 #include "game/abilities/box_attachment_system.h"
+#include "game/abilities/fan_system.h"
 #include "game/box/box_system.h"
 #include "game/character/character_system.h"
 #include "game/character/input_system.h"
@@ -32,6 +33,7 @@ std::unique_ptr<otb::World> create_world()
     world->add_fixed_system(InputSystem::update_action_queue);
     world->add_fixed_system(InputSystem::apply_input);
 
+    world->add_fixed_system(FanSystem::apply_velocity);
     world->add_fixed_system(BoxAttachmentSystem::process_ability_activation);
 
     world->add_fixed_system(BoxAttachmentSystem::process_ability);
