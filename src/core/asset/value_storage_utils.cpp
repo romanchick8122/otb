@@ -32,6 +32,13 @@ ValueStorage ValueStorageUtils::serialize(Vector3 v)
     return ss.str();
 }
 
+ValueStorage ValueStorageUtils::serialize(Quaternion v)
+{
+    std::stringstream ss;
+    ss << v.x << " " << v.y << " " << v.z << " " << v.w;
+    return ss.str();
+}
+
 ValueStorage ValueStorageUtils::serialize(const Transform& transform)
 {
     return ValueStorage::DictType {
@@ -62,6 +69,15 @@ template<> Vector3 ValueStorageUtils::deserialize<Vector3>(const ValueStorage& v
     return result;
 }
 
+template<> Quaternion ValueStorageUtils::deserialize<Quaternion>(const ValueStorage& vs)
+{
+    OTB_ASSERT(std::holds_alternative<std::string>(vs.storage));
+    std::stringstream ss(std::get<std::string>(vs.storage));
+    Quaternion result;
+    ss >> result.x >> result.y >> result.z >> result.w;
+    return result;
+}
+
 template<> Transform ValueStorageUtils::deserialize<Transform>(const ValueStorage& vs)
 {
     OTB_ASSERT(std::holds_alternative<ValueStorage::DictType>(vs.storage));
@@ -70,8 +86,16 @@ template<> Transform ValueStorageUtils::deserialize<Transform>(const ValueStorag
     Transform result;
 
     result.translation = ValueStorageUtils::deserialize<Vector3>(dict.at(TRANSLATION_FIELD));
-    const Vector3 rot_euler = ValueStorageUtils::deserialize<Vector3>(dict.at(ROTATION_FIELD));
-    result.rotation = QuaternionFromEuler(rot_euler.x, rot_euler.y, rot_euler.z);
+    const std::string& rv = std::get<std::string>(dict.at(ROTATION_FIELD).storage);
+    if (std::count(rv.begin(), rv.end(), ' ') == 2)
+    {
+        const Vector3 rot_euler = ValueStorageUtils::deserialize<Vector3>(dict.at(ROTATION_FIELD));
+        result.rotation = QuaternionFromEuler(rot_euler.x, rot_euler.y, rot_euler.z);
+    }
+    else
+    {
+        result.rotation = ValueStorageUtils::deserialize<Quaternion>(dict.at(ROTATION_FIELD));
+    }
     result.scale = ValueStorageUtils::deserialize<Vector3>(dict.at(SCALE_FIELD));
 
     return result;
