@@ -62,7 +62,7 @@ class OTBWorldExportOperator(bpy.types.Operator, ExportHelper):
                 "target":f"{target.x} {target.y} {target.z}",
                 "up":f"{up.x} {up.y} {up.z}"
             }
-            
+            return components
         World = {"entities":[]}
         if bpy.context.scene.get("_world") is not None:
             World["entities"].append({
@@ -88,7 +88,12 @@ class OTBWorldExportOperator(bpy.types.Operator, ExportHelper):
             })
         
         for obj in bpy.data.objects:
-            with bpy.context.temp_override(object=obj):
+            c = {
+                "object":obj,
+                "selected_objects":list(bpy.data.objects),
+                "selected_editable_objects":list(bpy.data.objects)
+            }
+            with bpy.context.temp_override(**c):
                 bpy.ops.object.origin_set(type="ORIGIN_GEOMETRY")
             if obj.name[:3] == "OTB":
                 World["entities"].append({"name":obj.name, "components": add_box_components(obj)})
