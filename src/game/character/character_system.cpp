@@ -115,7 +115,7 @@ void CharacterSystem::update_camera(otb::World* world, float dt)
 
 namespace
 {
-    static constexpr float JUMP_SPEED = 10.f;
+    static constexpr float JUMP_SPEED = 17.6f;
 
     static constexpr float GLOBAL_ANIMATION_SPEED = 60.f;
 
