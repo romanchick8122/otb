@@ -132,7 +132,7 @@ namespace
     static constexpr float WALKING_ANIM_EPS = 0.7f;
 
     static constexpr Vector2 AIM_LIMIT_MIN { -1.f, -0.5f };
-    static constexpr Vector2 AIM_LIMIT_MAX { 1.f, 0.5f };
+    static constexpr Vector2 AIM_LIMIT_MAX { 1.f, 1.f };
 
     struct StateUpdateContext
     {
