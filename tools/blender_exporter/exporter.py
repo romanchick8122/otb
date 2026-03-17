@@ -1,7 +1,7 @@
 import bpy
 from .vs import save
 from bpy_extras.io_utils import ExportHelper
-from .coord_transitioner import blender_to_engine, vector_abs, engine_to_blender
+from .coord_transitioner import blender_to_engine, quaternion_blender_to_engine, vector_abs, engine_to_blender
 from mathutils import Vector
 
 class OTBWorldExportOperator(bpy.types.Operator, ExportHelper):
@@ -14,12 +14,12 @@ class OTBWorldExportOperator(bpy.types.Operator, ExportHelper):
         def add_transfrom_component(obj, dimensions):
             components = {}
             translation = blender_to_engine(obj.location)
-            rotation = obj.rotation_euler.to_quaternion().to_euler("YZX")
+            rotation = quaternion_blender_to_engine(obj.rotation_euler.to_quaternion())
             print(rotation)
             scale = vector_abs(blender_to_engine(dimensions))
             components["TransformComponent"] = {
                 "translation": f"{translation.x} {translation.y} {translation.z}",
-                "rotation": f"{-rotation.x} {rotation.y} {rotation.z}",
+                "rotation": f"{rotation[0]} {rotation[1]} {rotation[2]} {rotation[3]}",
                 "scale": f"{scale.x} {scale.y} {scale.z}"
             }
             return components
