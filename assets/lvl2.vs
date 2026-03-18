@@ -282,7 +282,7 @@
           rotation: !<VALUE> 0.0 0.7071068286895752 -0.0 0.7071067094802856
           scale: !<VALUE> 13.115518569946289 5.300000190734863 13.434617042541504
           translation: !<VALUE> 12.263769149780273 4.0292253494262695 7.2032952308654785
-      name: !<VALUE> OTB_S_Fan
+      name: !<VALUE> OTB_Fan
     !<DICT>
       components: !<DICT>
         BoxComponent: !<DICT>

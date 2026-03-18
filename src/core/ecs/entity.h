@@ -37,6 +37,7 @@ class Entity final
 
     InternedString name = InternedString { "" };
 
+    void set_name(InternedString);
   private:
     Entity(World*);
 

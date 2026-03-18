@@ -28,6 +28,7 @@ class World final
 
     Entity* get_world_entity() const;
     Entity* add_entity();
+    Entity* get_entity(InternedString) const;
 
     using FixedSystem = std::function<void(World*)>;
     using NormalSystem = std::function<void(World*, float)>;
@@ -52,6 +53,8 @@ class World final
     decltype(clock.now()) previous_update_time;
 
     std::vector<std::unique_ptr<Entity>> entities;
+    std::unordered_map<InternedString, Entity*> entities_by_name;
+
     std::unordered_map<std::type_index, std::vector<ComponentPtr>> components;
 
     std::vector<FixedSystem> fixed_systems;

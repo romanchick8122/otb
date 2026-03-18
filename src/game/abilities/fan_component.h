@@ -4,6 +4,8 @@
 
 namespace game
 {
+class FanControlButtonComponent;
+
 class FanComponent : public otb::Component
 {
   public:
@@ -13,5 +15,7 @@ class FanComponent : public otb::Component
     ~FanComponent() = default;
 
     float power = 1.f;
+
+    FanControlButtonComponent* controller = nullptr;
 };
 }

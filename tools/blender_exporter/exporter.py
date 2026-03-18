@@ -17,6 +17,11 @@ class OTBWorldExportOperator(bpy.types.Operator, ExportHelper):
                 result["ModelComponent"] = obj["model"]
             if "fan_power" in obj:
                 result["FanComponent"] = str(obj["fan_power"])
+            if "fan_control_button_for" in obj:
+                result["FanControlButtonComponent"] = {
+                    "target_entity": obj["fan_control_button_for"],
+                    "enabled": str(obj["fan_control_button_state"])
+                }
             return result
 
         def add_transfrom_component(obj, dimensions):

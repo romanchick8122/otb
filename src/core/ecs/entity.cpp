@@ -23,6 +23,17 @@ ComponentPtr Entity::add_component(Component* component)
     return ComponentPtr(it->second);
 }
 
+void Entity::set_name(InternedString _name)
+{
+    OTB_ASSERT(_name != InternedString::get_empty());
+    if (name != InternedString::get_empty())
+    {
+        world->entities_by_name.erase(name);
+    }
+    name = _name;
+    world->entities_by_name.emplace(name, this);
+}
+
 namespace
 {
     static const InternedString COMPONENTS_FIELD { "components" };
@@ -47,7 +58,7 @@ void Entity::deserialize(const ValueStorage& vs)
     OTB_ASSERT(std::holds_alternative<ValueStorage::DictType>(vs.storage));
     const auto& dict = std::get<ValueStorage::DictType>(vs.storage);
 
-    name = InternedString(std::get<std::string>(dict.at(NAME_FIELD).storage).c_str());
+    set_name(InternedString(std::get<std::string>(dict.at(NAME_FIELD).storage).c_str()));
 
     const auto& components_vs = dict.at(COMPONENTS_FIELD);
     OTB_ASSERT(std::holds_alternative<ValueStorage::DictType>(components_vs.storage));

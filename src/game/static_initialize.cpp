@@ -2,6 +2,7 @@
 
 #include "core/ecs/world.h"
 
+#include "game/abilities/fan_control_button_component.h"
 #include "game/abilities/fan_component.h"
 #include "game/box/box_component.h"
 #include "game/box/box_system.h"
@@ -17,5 +18,6 @@ void run_static_initializer()
     REGISTER_COMPONENT_TYPE(CharacterComponent);
     REGISTER_COMPONENT_TYPE(InputReceiverComponent);
     REGISTER_COMPONENT_TYPE(FanComponent);
+    REGISTER_COMPONENT_TYPE(FanControlButtonComponent);
 }
 }

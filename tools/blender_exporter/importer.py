@@ -27,6 +27,9 @@ class OTBWorldImportOperator(bpy.types.Operator, ImportHelper):
                 context.object["model"] = components["ModelComponent"]
             if "FanComponent" in components:
                 context.object["fan_power"] = float(components["FanComponent"])
+            if "FanControlButtonComponent" in components:
+                context.object["fan_control_button_for"] = components["FanControlButtonComponent"]["target_entity"]
+                context.object["fan_control_button_state"] = bool(components["FanControlButtonComponent"]["enabled"])
 
         World = load(self.filepath)
         bpy.context.scene["_world"] = World["entities"][0]["components"]

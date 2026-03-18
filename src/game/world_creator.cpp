@@ -25,8 +25,11 @@ std::unique_ptr<otb::World> create_world()
     vs.load(OTB_ASSETS_DIRECTORY"/lvl2.vs");
     world->deserialize(vs);
 
+    // -------- INITIAL ------
+    BoxSystem::create_components(world);
+    FanSystem::init(world);
+
     // -------- FIXED --------
-    world->add_fixed_system(BoxSystem::create_components);
 
     world->add_fixed_system(InputSystem::clear_input);
     world->add_fixed_system(InputSystem::collect_input_kb_mouse);
@@ -43,6 +46,7 @@ std::unique_ptr<otb::World> create_world()
     world->add_fixed_system(BoxSystem::update_chain);
     
     world->add_fixed_system(BoxSystem::update_from_velocity);
+    world->add_fixed_system(FanSystem::update_controllers);
 
     world->add_fixed_system(CharacterSystem::update_state);
 

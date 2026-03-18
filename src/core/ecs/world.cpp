@@ -61,6 +61,13 @@ Entity* World::add_entity()
     return result;
 }
 
+Entity* World::get_entity(InternedString name) const
+{
+    auto it = entities_by_name.find(name);
+    OTB_ASSERT(it != entities_by_name.end());
+    return it->second;
+}
+
 void World::add_fixed_system(World::FixedSystem&& system)
 {
     fixed_systems.emplace_back(std::move(system));

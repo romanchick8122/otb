@@ -15,6 +15,11 @@ static const otb::InternedString ROTATION_FIELD { "rotation" };
 static const otb::InternedString SCALE_FIELD { "scale" };
 }
 
+ValueStorage ValueStorageUtils::serialize(bool v)
+{
+    return std::string(v ? "True" : "False");
+}
+
 ValueStorage ValueStorageUtils::serialize(int v)
 {
     return std::to_string(v);
@@ -46,6 +51,12 @@ ValueStorage ValueStorageUtils::serialize(const Transform& transform)
         { ROTATION_FIELD, ValueStorageUtils::serialize(QuaternionToEuler(transform.rotation)) },
         { SCALE_FIELD, ValueStorageUtils::serialize(transform.scale) },
     };
+}
+
+template<> bool ValueStorageUtils::deserialize<bool>(const ValueStorage& vs)
+{
+    OTB_ASSERT(std::holds_alternative<std::string>(vs.storage));
+    return std::get<std::string>(vs.storage)[0] == 'T';
 }
 
 template<> int ValueStorageUtils::deserialize<int>(const ValueStorage& vs)
