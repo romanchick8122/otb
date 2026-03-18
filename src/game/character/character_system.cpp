@@ -122,7 +122,6 @@ namespace
     static const otb::InternedString WAKING_UP_ANIMATION("WakingUp");
     static const otb::InternedString IDLE_ANIMATION("Idle");
     static const otb::InternedString JUMP_ANIMATION("Jump");
-    static constexpr float JUMP_ANIMATION_DELAY = 25 / 60.f;
     static const otb::InternedString FLYING_ANIMATION("Flying");
     static const otb::InternedString WALKING_ANIMATION("WalkingCycle");
     static const otb::InternedString THROW_ANIMATION("Throw");
@@ -209,7 +208,6 @@ namespace
         if (ctx.input_receiver_component->extra_actions.contains(InputReceiverComponent::ActionNames::jump))
         {
             set_state(ctx, CharacterComponent::MovementState::PREPARING_JUMP);
-            ctx.character_component->extra_jump_delay = JUMP_ANIMATION_DELAY;
             ctx.model_component->request_animation(FLYING_ANIMATION, true);
             ctx.model_component->set_animation_speed(GLOBAL_ANIMATION_SPEED);
         }
@@ -227,16 +225,8 @@ namespace
     {
         if (ctx.model_component->get_playing_animation() == JUMP_ANIMATION)
         {
-            if (ctx.character_component->extra_jump_delay > 0)
-            {
-                ctx.character_component->extra_jump_delay -= ctx.world->fixed_frame_time;
-            }
-            else
-            {
-                set_state(ctx, CharacterComponent::MovementState::FLYING);
-                ctx.character_component->extra_jump_delay = -1;
-                ctx.velocity_component->velocity.y = JUMP_SPEED;
-            }
+            set_state(ctx, CharacterComponent::MovementState::FLYING);
+            ctx.velocity_component->velocity.y = JUMP_SPEED;
         }
     }
 

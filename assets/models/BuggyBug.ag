@@ -1,9 +1,11 @@
 !<DICT>
   Idle: !<DICT>
-    Jump: !<VALUE> 0.2
+    JumpReady: !<VALUE> 0.2
     WalkingCycle: !<VALUE> 0.2
     PullCycle: !<VALUE> 0.2
     IdleAction: !<VALUE> 0.2
+  JumpReady: !<DICT>
+    Jump: !<VALUE> -1
   Jump: !<DICT>
     Flying: !<VALUE> -1
   Flying: !<DICT>
@@ -14,12 +16,12 @@
     Neutral: !<VALUE> -1
   WalkingCycle: !<DICT>
     Idle: !<VALUE> 0.2
-    Jump: !<VALUE> 0.2
+    JumpReady: !<VALUE> 0.2
     PullCycle: !<VALUE> 0.2
   Neutral: !<DICT>
     Idle: !<VALUE> -1
     WalkingCycle: !<VALUE> 0.3
-    Jump: !<VALUE> -1
+    JumpReady: !<VALUE> -1
     Throw: !<VALUE> -1
     HeadUp: !<VALUE> -1
   HeadUp: !<DICT>

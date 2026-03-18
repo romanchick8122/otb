@@ -39,8 +39,5 @@ class CharacterComponent : public otb::Component
         std::monostate,
         StateDataAIMING
     > state_data;
-
-    float extra_jump_delay = 0;
-  private:
 };
 }

@@ -49,7 +49,7 @@ void MeshSystem::update_animations(World* world, float dt)
         const ModelAnimation& anim = it->asset->animations[it->playing_animation_index];
         // Note - using default animation speed for all animations excpet the final one
         it->animation_time += ((it->playing_animation_index == it->request_animation_index) ? it->animation_speed : 60) * dt;
-        if (it->animation_time >= anim.keyframeCount || it->animation_time < 0.f)
+        if (it->animation_time >= anim.keyframeCount - 1 || it->animation_time < 0.f)
         {
             if (it->playing_transition != nullptr)
             {
@@ -88,11 +88,6 @@ void MeshSystem::render_meshes(World* world, float)
         float angle;
 
         QuaternionToAxisAngle(transform_component->transform.rotation, &axis, &angle);
-
-        if (it->model_space_collider.translation.y != 0) {
-            int x = 0;
-            ++x;
-        }
 
         if (it->playing_animation_index != std::string::npos)
         {
