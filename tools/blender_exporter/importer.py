@@ -22,6 +22,12 @@ class OTBWorldImportOperator(bpy.types.Operator, ImportHelper):
                 result["scale"] = vector_abs(engine_to_blender(Vector(tuple(map(lambda x: float(x) / 2, transform_component["scale"].split())))))
             return result
 
+        def load_extra_components(components: dict):
+            if "ModelComponent" in components:
+                context.object["model"] = components["ModelComponent"]
+            if "FanComponent" in components:
+                context.object["fan_power"] = float(components["FanComponent"])
+
         World = load(self.filepath)
         bpy.context.scene["_world"] = World["entities"][0]["components"]
         for obj in World["entities"]:
@@ -33,8 +39,7 @@ class OTBWorldImportOperator(bpy.types.Operator, ImportHelper):
                 else:
                     bpy.ops.mesh.primitive_cube_add(**get_transform(obj, True))     
                 
-                if "ModelComponent" in obj["components"]:
-                    context.object["model"] = obj["components"]["ModelComponent"]
-                
+                load_extra_components(obj["components"])
+
                 context.object.name = obj["name"]
         return {'FINISHED'}

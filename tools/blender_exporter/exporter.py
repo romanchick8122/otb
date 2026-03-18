@@ -11,8 +11,16 @@ class OTBWorldExportOperator(bpy.types.Operator, ExportHelper):
     filename_ext = ".vs"
 
     def execute(self, context):
+        def get_extra_components(obj):
+            result = {}
+            if "model" in obj:
+                result["ModelComponent"] = obj["model"]
+            if "fan_power" in obj:
+                result["FanComponent"] = str(obj["fan_power"])
+            return result
+
         def add_transfrom_component(obj, dimensions):
-            components = {}
+            components = get_extra_components(obj)
             translation = blender_to_engine(obj.location)
             rotation = quaternion_blender_to_engine(obj.rotation_euler.to_quaternion())
             print(rotation)
@@ -45,10 +53,8 @@ class OTBWorldExportOperator(bpy.types.Operator, ExportHelper):
             components = add_transfrom_component(obj, obj.dimensions)
             if obj.name[4] == "S":
                 components["BoxComponent"] = {"type":"STATIC"}
-            else: components["BoxComponent"] = {"type":"DYNAMIC"}
-            if obj.get("model") is None:
-                components["ModelComponent"] = "/cube.glb"
-            else: components["ModelComponent"] = obj.get("model")
+            elif obj.name[4] == "D":
+                components["BoxComponent"] = {"type":"DYNAMIC"}
             return components
         def add_camera_component(obj):
             components = add_transfrom_component(obj, obj.dimensions)
@@ -63,6 +69,8 @@ class OTBWorldExportOperator(bpy.types.Operator, ExportHelper):
                 "up":f"{up.x} {up.y} {up.z}"
             }
             return components
+        
+        
         World = {"entities":[]}
         if bpy.context.scene.get("_world") is not None:
             World["entities"].append({
