@@ -53,6 +53,9 @@ void BoxSystem::update_from_velocity(otb::World* world)
         {
             continue;
         }
+
+        it->rests_on = nullptr;
+
         VelocityComponent* box_velocity = it->entity->get_component<VelocityComponent>();
         box_velocity->velocity += gravity;
 
@@ -60,6 +63,7 @@ void BoxSystem::update_from_velocity(otb::World* world)
         const Vector3 box_min = box_transform->transform.translation - box_transform->transform.scale / 2.f;
         const Vector3 box_max = box_transform->transform.translation + box_transform->transform.scale / 2.f;
 
+        BoxComponent* max_collided_component = nullptr;
         float max_collided_y = std::numeric_limits<float>::lowest();
 
         for (auto collide_it = world->components_begin<BoxComponent>(); collide_it != world->components_end<BoxComponent>(); ++collide_it)
@@ -80,10 +84,15 @@ void BoxSystem::update_from_velocity(otb::World* world)
                 continue;
             }
 
-            max_collided_y = std::max(max_collided_y, collide_max.y);
+            if (collide_max.y > max_collided_y)
+            {
+                max_collided_y = collide_max.y;
+                max_collided_component = &*collide_it;
+            }
         }
         if (max_collided_y != std::numeric_limits<float>::lowest())
         {
+            it->rests_on = max_collided_component;
             box_transform->transform.translation.y = max_collided_y + box_transform->transform.scale.y / 2.f + eps;
             box_velocity->velocity.y = 0;
         }

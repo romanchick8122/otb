@@ -16,5 +16,8 @@ struct BoxComponent : public otb::Component
     } type;
     
     ~BoxComponent() override = default;
+
+    // Runtime
+    BoxComponent* rests_on;
 };
 }

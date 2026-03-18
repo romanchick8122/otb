@@ -141,6 +141,7 @@ namespace
         otb::ModelComponent* model_component;
         otb::TransformComponent* transform_component;
         otb::VelocityComponent* velocity_component;
+        BoxComponent* box_component;
     };
 
     void set_state(StateUpdateContext& ctx, CharacterComponent::MovementState new_state)
@@ -205,10 +206,16 @@ namespace
 
     void update_state_GROUNDED(StateUpdateContext& ctx)
     {
-        if (ctx.input_receiver_component->extra_actions.contains(InputReceiverComponent::ActionNames::jump))
+        if (ctx.box_component->rests_on == nullptr)
+        {
+            set_state(ctx, CharacterComponent::MovementState::FLYING);
+            ctx.model_component->request_animation(FLYING_ANIMATION, true);
+            ctx.model_component->set_animation_speed(GLOBAL_ANIMATION_SPEED);
+        }
+        else if (ctx.input_receiver_component->extra_actions.contains(InputReceiverComponent::ActionNames::jump))
         {
             set_state(ctx, CharacterComponent::MovementState::PREPARING_JUMP);
-            ctx.model_component->request_animation(FLYING_ANIMATION, true);
+            ctx.model_component->request_animation(JUMP_ANIMATION, true);
             ctx.model_component->set_animation_speed(GLOBAL_ANIMATION_SPEED);
         }
         else if (ctx.input_receiver_component->extra_actions.contains(InputReceiverComponent::ActionNames::aim))
@@ -226,6 +233,7 @@ namespace
         if (ctx.model_component->get_playing_animation() == JUMP_ANIMATION)
         {
             set_state(ctx, CharacterComponent::MovementState::FLYING);
+            ctx.model_component->request_animation(FLYING_ANIMATION, true);
             ctx.velocity_component->velocity.y = JUMP_SPEED;
         }
     }
@@ -306,6 +314,7 @@ void CharacterSystem::update_state(otb::World* world)
             .model_component = it->entity->get_component<otb::ModelComponent>(),
             .transform_component = it->entity->get_component<TransformComponent>(),
             .velocity_component = it->entity->get_component<otb::VelocityComponent>(),
+            .box_component = it->entity->get_component<BoxComponent>(),
         };
         switch(it->movement_state)
         {
