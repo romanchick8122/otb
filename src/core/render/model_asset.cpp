@@ -98,7 +98,6 @@ ModelAsset::ModelAsset(InternedString asset_path)
         ValueStorage agvs;
         agvs.load(AssetUtils::get_asset_file_path(AssetUtils::get_sibling_asset(asset_path, ".ag")).c_str());
         load_anim_graph(*this, agvs);
-
     }
 }
 

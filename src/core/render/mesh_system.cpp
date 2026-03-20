@@ -108,13 +108,31 @@ void MeshSystem::render_meshes(World* world, float)
             }
         }
 
-        DrawModelEx(
-            model,
-            transform_component->transform.translation + it->model_space_collider.translation,
-            axis,
-            angle / DEG2RAD,
-            transform_component->transform.scale * it->model_space_collider.scale,
-            WHITE);
+        const Vector3 translation = transform_component->transform.translation + it->model_space_collider.translation;
+        const Vector3 scale = transform_component->transform.scale * it->model_space_collider.scale;
+
+        if (it->forced_material_index == std::string::npos)
+        {
+            DrawModelEx(
+                model,
+                translation,
+                axis,
+                angle / DEG2RAD,
+                scale,
+                WHITE);
+        }
+        else
+        {
+            const Matrix scale_matrix = MatrixScale(scale.x, scale.y, scale.z);
+            const Matrix rotation_matrix = QuaternionToMatrix(transform_component->transform.rotation);
+            const Matrix translation_matrix = MatrixTranslate(translation.x, translation.y, translation.z);
+            const Matrix transform_matrix = ((scale_matrix * rotation_matrix) * translation_matrix);
+
+            for (size_t i = 0; i < model.meshCount; ++i)
+            {
+                DrawMesh(model.meshes[i], model.materials[it->forced_material_index], transform_matrix);
+            }
+        }
     }
 }
 }
