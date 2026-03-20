@@ -5,12 +5,14 @@
     PullCycle: !<VALUE> 0.2
     IdleAction: !<VALUE> 0.2
     Flying: !<VALUE> 0.2
+    UmbrellaUnleash: !<VALUE> 0.1
   JumpReady: !<DICT>
     Jump: !<VALUE> -1
   Jump: !<DICT>
     Flying: !<VALUE> -1
   Flying: !<DICT>
     Landing: !<VALUE> 0.001
+    UmbrellaUnleash: !<VALUE> 0.2
   Landing: !<DICT>
     Neutral: !<VALUE> -1
   WakingUp: !<DICT>
@@ -20,6 +22,7 @@
     Jump: !<VALUE> 0.001
     PullCycle: !<VALUE> 0.2
     Flying: !<VALUE> 0.2
+    UmbrellaUnleash: !<VALUE> 0.2
   Neutral: !<DICT>
     Idle: !<VALUE> -1
     WalkingCycle: !<VALUE> 0.3
@@ -35,3 +38,11 @@
     Idle: !<VALUE> -1
   PullCycle: !<DICT>
     Neutral: !<VALUE> 0.3
+  UmbrellaUnleash: !<DICT> 
+    UmbrellaFlying: !<VALUE> -1
+    UmbrellaSheathe: !<VALUE> -1
+  UmbrellaFlying: !<DICT>
+    UmbrellaSheathe: !<VALUE> 0.2
+  UmbrellaSheathe: !<DICT>
+    Neutral: !<VALUE> -1
+    Idle: !<VALUE> -1
