@@ -77,6 +77,11 @@ void ModelComponent::set_animation_speed(float speed)
     animation_speed = speed;
 }
 
+void ModelComponent::set_forced_material_index(size_t index)
+{
+    forced_material_index = index;
+}
+
 InternedString ModelComponent::get_playing_animation() const
 {
     if (playing_animation_index == std::string::npos)

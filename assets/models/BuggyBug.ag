@@ -11,7 +11,7 @@
   Jump: !<DICT>
     Flying: !<VALUE> -1
   Flying: !<DICT>
-    Landing: !<VALUE> 0.2
+    Landing: !<VALUE> 0.001
     UmbrellaUnleash: !<VALUE> 0.2
   Landing: !<DICT>
     Neutral: !<VALUE> -1
@@ -19,7 +19,7 @@
     Neutral: !<VALUE> -1
   WalkingCycle: !<DICT>
     Idle: !<VALUE> 0.2
-    JumpReady: !<VALUE> 0.2
+    Jump: !<VALUE> 0.001
     PullCycle: !<VALUE> 0.2
     Flying: !<VALUE> 0.2
     UmbrellaUnleash: !<VALUE> 0.2

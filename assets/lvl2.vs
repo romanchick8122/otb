@@ -258,7 +258,7 @@
         FanControlButtonComponent: !<DICT>
           enabled: !<VALUE> True
           target_entity: !<VALUE> OTB_Fan_2
-        ModelComponent: !<VALUE> /models/boxes/blue_box.glb
+        ModelComponent: !<VALUE> /models/switch/button.glb
         TransformComponent: !<DICT>
           rotation: !<VALUE> 0.0 0.0 -0.0 1.0
           scale: !<VALUE> 2.8386056423187256 1.222349762916565 2.596999406814575
@@ -321,7 +321,7 @@
         FanControlButtonComponent: !<DICT>
           enabled: !<VALUE> False
           target_entity: !<VALUE> OTB_Fan_3
-        ModelComponent: !<VALUE> /models/boxes/blue_box.glb
+        ModelComponent: !<VALUE> /models/switch/button.glb
         TransformComponent: !<DICT>
           rotation: !<VALUE> 0.0 0.0 -0.0 1.0
           scale: !<VALUE> 2.8386056423187256 1.222349762916565 2.596999406814575
@@ -334,7 +334,7 @@
         FanControlButtonComponent: !<DICT>
           enabled: !<VALUE> False
           target_entity: !<VALUE> OTB_Fan_1
-        ModelComponent: !<VALUE> /models/boxes/blue_box.glb
+        ModelComponent: !<VALUE> /models/switch/button.glb
         TransformComponent: !<DICT>
           rotation: !<VALUE> 0.0 0.0 -0.0 1.0
           scale: !<VALUE> 2.8386056423187256 1.222349762916565 2.596999406814575

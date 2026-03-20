@@ -18,6 +18,7 @@ class ModelComponent : public Component
 
     void request_animation(InternedString, bool);
     void set_animation_speed(float);
+    void set_forced_material_index(size_t);
     InternedString get_playing_animation() const;
 
   private:
@@ -34,6 +35,8 @@ class ModelComponent : public Component
     bool looping_requested = false;
 
     size_t request_animation_index = std::string::npos;
+
+    size_t forced_material_index = std::string::npos;
 
     friend class MeshSystem;
 };

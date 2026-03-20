@@ -2,6 +2,7 @@
 
 #include "core/ecs/world.h"
 #include "core/math/transform_utils.h"
+#include "core/render/model_component.h"
 #include "core/world/physics/velocity_component.h"
 #include "core/world/transform_component.h"
 
@@ -21,6 +22,7 @@ void FanSystem::init(otb::World* world)
         auto* fan_component = world->get_entity(it->target_entity)->get_component<FanComponent>();
         OTB_ASSERT(fan_component != nullptr);
         fan_component->controller = &*it;
+        it->entity->get_component<otb::ModelComponent>()->set_forced_material_index(it->enabled ? 2 : 1);
     }
 }
 
@@ -33,6 +35,7 @@ void FanSystem::update_controllers(otb::World* world)
     if (this_frame_pressed != nullptr && !this_frame_pressed->prev_frame_pressed)
     {
         this_frame_pressed->enabled = !this_frame_pressed->enabled;
+        this_frame_pressed->entity->get_component<otb::ModelComponent>()->set_forced_material_index(this_frame_pressed->enabled ? 2 : 1);
     }
 
     for (auto it = world->components_begin<FanControlButtonComponent>(); it != world->components_end<FanControlButtonComponent>(); ++it)
