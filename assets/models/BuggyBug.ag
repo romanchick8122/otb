@@ -10,14 +10,14 @@
   Jump: !<DICT>
     Flying: !<VALUE> -1
   Flying: !<DICT>
-    Landing: !<VALUE> 0.2
+    Landing: !<VALUE> 0.001
   Landing: !<DICT>
     Neutral: !<VALUE> -1
   WakingUp: !<DICT>
     Neutral: !<VALUE> -1
   WalkingCycle: !<DICT>
     Idle: !<VALUE> 0.2
-    JumpReady: !<VALUE> 0.2
+    Jump: !<VALUE> 0.001
     PullCycle: !<VALUE> 0.2
     Flying: !<VALUE> 0.2
   Neutral: !<DICT>
