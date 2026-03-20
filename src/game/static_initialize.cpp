@@ -8,6 +8,8 @@
 #include "game/box/box_system.h"
 #include "game/character/character_component.h"
 #include "game/character/input_receiver_component.h"
+#include "game/menu/menu_button_component.h"
+#include "game/menu/menu_layer_component.h"
 
 namespace game
 {
@@ -19,5 +21,7 @@ void run_static_initializer()
     REGISTER_COMPONENT_TYPE(InputReceiverComponent);
     REGISTER_COMPONENT_TYPE(FanComponent);
     REGISTER_COMPONENT_TYPE(FanControlButtonComponent);
+    REGISTER_COMPONENT_TYPE(MenuButtonComponent);
+    REGISTER_COMPONENT_TYPE(MenuLayerComponent);
 }
 }

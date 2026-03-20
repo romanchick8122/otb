@@ -78,3 +78,12 @@ World::ComponentIterator<T> World::components_end()
     return ComponentIterator<T>(nullptr, 0);
 }
 }
+
+namespace std
+{
+template<class T>
+struct iterator_traits<otb::World::ComponentIterator<T>>
+{
+    using iterator_category = forward_iterator_tag;
+};
+}
