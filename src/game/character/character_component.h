@@ -29,6 +29,7 @@ class CharacterComponent : public otb::Component
         LANDING,
         AIMING,
         PULLING,
+        PUSHING,
         COUNT,
     } movement_state = MovementState::WAKING_UP;
 
@@ -39,5 +40,8 @@ class CharacterComponent : public otb::Component
         std::monostate,
         StateDataAIMING
     > state_data;
+
+    bool is_pushing = false;
+    Vector3 pushing_direction;
 };
 }

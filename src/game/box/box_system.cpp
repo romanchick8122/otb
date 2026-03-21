@@ -12,6 +12,8 @@
 
 #include "raymath.h"
 
+#include <iostream>
+
 namespace game
 {
 namespace
@@ -270,6 +272,21 @@ void BoxSystem::update_chain(otb::World* world)
     }
 
     box_sc->chain.clear();
+}
+
+void BoxSystem::find_active_pushing(otb::World* world)
+{
+    BoxSingleComponent* box_sc = world->get_world_entity()->get_component<BoxSingleComponent>();
+    CharacterComponent* character_sc = &*world->components_begin<CharacterComponent>();
+    character_sc->is_pushing = false;
+    for (size_t index = 0; index < box_sc->chain.size(); index++)
+    {
+        if (box_sc->chain[index].parent_index == 0 && box_sc->chain[0].parent_index != index && box_sc->chain[index].entity->get_component<BoxComponent>()->type != BoxComponent::BoxType::STATIC)
+        {
+            character_sc->is_pushing = true;
+            character_sc->pushing_direction = Vector3Normalize(box_sc->chain[index].displacement);
+        }
+    }
 }
 
 namespace

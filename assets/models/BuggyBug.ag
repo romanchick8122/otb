@@ -6,6 +6,8 @@
     IdleAction: !<VALUE> 0.2
     Flying: !<VALUE> 0.2
     UmbrellaUnleash: !<VALUE> 0.1
+    HeadUp: !<VALUE> 0.1
+    Neutral: !<VALUE> 0.1
   JumpReady: !<DICT>
     Jump: !<VALUE> -1
   Jump: !<DICT>
