@@ -22,7 +22,7 @@ void InputReceiverComponent::ActionQueue::request(otb::InternedString action, fl
     size_t i = 0;
     for (; i < delays.size() && delay > total_prev_delay; total_prev_delay += delays[i].second, ++i) {}
     const float inserted_delay = delay - total_prev_delay;
-    delays.insert(delays.begin() + i, {action, inserted_delay});
+    delays.insert(delays.begin() + static_cast<std::ptrdiff_t>(i), {action, inserted_delay});
     if (i + 1 < delays.size())
     {
         delays[i + 1].second -= inserted_delay;

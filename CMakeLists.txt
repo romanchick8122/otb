@@ -39,7 +39,7 @@ target_link_libraries(${PROJECT_NAME} PUBLIC raylib)
 if(MSVC)
   target_compile_options(${PROJECT_NAME} PRIVATE /W4 /WX)
 else()
-  target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wextra -Wpedantic -Werror)
+  target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wextra -Wpedantic -Wimplicit-float-conversion -Wshadow-all -Wconditional-type-mismatch -Wsign-conversion -Werror)
 endif()
 
 if (${CMAKE_BUILD_TYPE} STREQUAL "Release")

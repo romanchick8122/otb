@@ -21,7 +21,8 @@ void World::update()
         const auto current_time = clock.now();
         const auto time_delta = current_time - previous_update_time;
         previous_update_time = current_time;
-        return std::min(std::chrono::nanoseconds(time_delta).count() / 1e9f, 1.f);
+        long double delta_count = static_cast<long double>(std::chrono::nanoseconds(time_delta).count());
+        return std::min(static_cast<float>(delta_count / 1e9), 1.f);
     }();
 
     accumulated_time += frame_time;
@@ -103,12 +104,12 @@ void World::deserialize(const ValueStorage& vs)
 
     const ValueStorage& entities_vs = dict.at(ENTITIES_FIELD);
     OTB_ASSERT(std::holds_alternative<ValueStorage::ArrayType>(entities_vs.storage));
-    const auto& entities = std::get<ValueStorage::ArrayType>(entities_vs.storage);
+    const auto& entities_vsa = std::get<ValueStorage::ArrayType>(entities_vs.storage);
 
-    get_world_entity()->deserialize(entities[0]);
-    for (size_t i = 1; i < entities.size(); ++i)
+    get_world_entity()->deserialize(entities_vsa[0]);
+    for (size_t i = 1; i < entities_vsa.size(); ++i)
     {
-        add_entity()->deserialize(entities[i]);
+        add_entity()->deserialize(entities_vsa[i]);
     }
 }
 

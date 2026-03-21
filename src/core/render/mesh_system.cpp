@@ -49,7 +49,7 @@ void MeshSystem::update_animations(World* world, float dt)
         const ModelAnimation& anim = it->asset->animations[it->playing_animation_index];
         // Note - using default animation speed for all animations excpet the final one
         it->animation_time += ((it->playing_animation_index == it->request_animation_index) ? it->animation_speed : 60) * dt;
-        if (it->animation_time >= anim.keyframeCount - 1 || it->animation_time < 0.f)
+        if (it->animation_time >= static_cast<float>(anim.keyframeCount - 1) || it->animation_time < 0.f)
         {
             if (it->playing_transition != nullptr)
             {
@@ -60,11 +60,11 @@ void MeshSystem::update_animations(World* world, float dt)
             {
                 if (it->animation_time < 0)
                 {
-                    it->animation_time += anim.keyframeCount;
+                    it->animation_time += static_cast<float>(anim.keyframeCount);
                 }
                 else
                 {
-                    it->animation_time -= anim.keyframeCount;
+                    it->animation_time -= static_cast<float>(anim.keyframeCount);
                 }
             }
             else

@@ -87,7 +87,7 @@ ModelAsset::ModelAsset(InternedString asset_path)
     animations = LoadModelAnimations(AssetUtils::get_asset_file_path(asset_path).c_str(), &anim_count_raw);
     if (animations != nullptr)
     {
-        animation_count = anim_count_raw;
+        animation_count = static_cast<size_t>(anim_count_raw);
         animation_names.reserve(animation_count);
 
         for (size_t anim_index = 0; anim_index < animation_count; ++anim_index)

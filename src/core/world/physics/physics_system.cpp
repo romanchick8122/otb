@@ -49,12 +49,12 @@ void PhysicsSystem::update(World* world)
         do
         {
             has_collision = false;
-            for (auto it = world->components_begin<CollisionComponent>(); it != world->components_end<CollisionComponent>(); ++it)
+            for (auto coll_it = world->components_begin<CollisionComponent>(); coll_it != world->components_end<CollisionComponent>(); ++coll_it)
             {
-                RayCollision collision = it->test_fn(movement_ray);
+                RayCollision collision = coll_it->test_fn(movement_ray);
                 if (collision.hit && collision.distance < pos_to_target_distance)
                 {
-                    it->callback_fn(collision.point);
+                    coll_it->callback_fn(collision.point);
                     float post_hit_rate = 1 - collision.distance / pos_to_target_distance;
                     target_location = collision.point + collision.normal * eps;
                     updated_velocity -= Vector3Project(updated_velocity, collision.normal);

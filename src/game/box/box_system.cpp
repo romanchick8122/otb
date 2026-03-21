@@ -147,10 +147,10 @@ void BoxSystem::find_collision_chain(otb::World* world)
 
     static constexpr auto sign = [](const float v) {
         if (v < eps && v > -eps)
-            return 0;
+            return 0.f;
         if (v < 0)
-            return -1;
-        return 1;
+            return -1.f;
+        return 1.f;
     };
 
     // Sweeep all cubes
