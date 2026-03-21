@@ -138,33 +138,6 @@
       name: !<VALUE> OTB_Fan3_Actual
     !<DICT>
       components: !<DICT>
-        FanComponent: !<VALUE> 60.0
-        ModelComponent: !<VALUE> /models/spiral.glb
-        TransformComponent: !<DICT>
-          rotation: !<VALUE> 0.5000002384185791 0.5000001788139343 0.4999997615814209 0.4999997913837433
-          scale: !<VALUE> 20.60651397705078 5.300000190734863 4.675706386566162
-          translation: !<VALUE> -11.721636772155762 11.682479858398438 -23.430734634399414
-      name: !<VALUE> OTB_Fan_1
-    !<DICT>
-      components: !<DICT>
-        FanComponent: !<VALUE> 12.0
-        ModelComponent: !<VALUE> /models/spiral.glb
-        TransformComponent: !<DICT>
-          rotation: !<VALUE> 0.0 0.7071068286895752 -0.0 0.7071067094802856
-          scale: !<VALUE> 13.115518569946289 13.100000381469727 13.100000381469727
-          translation: !<VALUE> 12.263769149780273 3.399961471557617 5.74622917175293
-      name: !<VALUE> OTB_Fan_2
-    !<DICT>
-      components: !<DICT>
-        FanComponent: !<VALUE> 60.0
-        ModelComponent: !<VALUE> /models/spiral.glb
-        TransformComponent: !<DICT>
-          rotation: !<VALUE> 0.5000002384185791 0.5000001788139343 0.4999997615814209 0.4999997913837433
-          scale: !<VALUE> 10.148107528686523 5.300000190734863 4.675706386566162
-          translation: !<VALUE> 21.400217056274414 6.4532790184021 26.13370704650879
-      name: !<VALUE> OTB_Fan_3
-    !<DICT>
-      components: !<DICT>
         BoxComponent: !<DICT>
           type: !<VALUE> STATIC
         ModelComponent: !<VALUE> /models/boxes/carton_box.glb
@@ -298,10 +271,10 @@
         BoxComponent: !<DICT>
           type: !<VALUE> STATIC
         FanControlButtonComponent: !<DICT>
-          animated_entities: !<VALUE> OTB_Fan2_Actual OTB_Fan_2
+          animated_entities: !<VALUE> OTB_Fan2_Actual OTB_ZFan_2
           enabled: !<VALUE> True
-          target_entity: !<VALUE> OTB_Fan_2
-        ModelComponent: !<VALUE> /models/lvl2/switch/button.glb
+          target_entity: !<VALUE> OTB_ZFan_2
+        ModelComponent: !<VALUE> /models/switch/button.glb
         TransformComponent: !<DICT>
           rotation: !<VALUE> 0.0 0.0 -0.0 1.0
           scale: !<VALUE> 2.8386056423187256 1.222349762916565 2.596999406814575
@@ -362,9 +335,9 @@
         BoxComponent: !<DICT>
           type: !<VALUE> STATIC
         FanControlButtonComponent: !<DICT>
-          animated_entities: !<VALUE> OTB_Fan3_Actual OTB_Fan_3
+          animated_entities: !<VALUE> OTB_Fan3_Actual OTB_ZFan_3
           enabled: !<VALUE> False
-          target_entity: !<VALUE> OTB_Fan_3
+          target_entity: !<VALUE> OTB_ZFan_3
         ModelComponent: !<VALUE> /models/switch/button.glb
         TransformComponent: !<DICT>
           rotation: !<VALUE> 0.0 0.0 -0.0 1.0
@@ -376,9 +349,9 @@
         BoxComponent: !<DICT>
           type: !<VALUE> STATIC
         FanControlButtonComponent: !<DICT>
-          animated_entities: !<VALUE> OTB_Fan1_Actual OTB_Fan_1
+          animated_entities: !<VALUE> OTB_Fan1_Actual OTB_ZFan_1
           enabled: !<VALUE> False
-          target_entity: !<VALUE> OTB_Fan_1
+          target_entity: !<VALUE> OTB_ZFan_1
         ModelComponent: !<VALUE> /models/switch/button.glb
         TransformComponent: !<DICT>
           rotation: !<VALUE> 0.0 0.0 -0.0 1.0
@@ -455,3 +428,30 @@
           scale: !<VALUE> 67.3547592163086 42.629302978515625 17.577280044555664
           translation: !<VALUE> -0.633061408996582 19.55443000793457 -35.10926055908203
       name: !<VALUE> OTB_S_Floor.006
+    !<DICT>
+      components: !<DICT>
+        FanComponent: !<VALUE> 60.0
+        ModelComponent: !<VALUE> /models/spiral.glb
+        TransformComponent: !<DICT>
+          rotation: !<VALUE> 0.5000002384185791 0.5000001788139343 0.4999997615814209 0.4999997913837433
+          scale: !<VALUE> 20.60651397705078 5.300000190734863 4.675706386566162
+          translation: !<VALUE> -11.721636772155762 11.682479858398438 -23.430734634399414
+      name: !<VALUE> OTB_ZFan_1
+    !<DICT>
+      components: !<DICT>
+        FanComponent: !<VALUE> 12.0
+        ModelComponent: !<VALUE> /models/spiral.glb
+        TransformComponent: !<DICT>
+          rotation: !<VALUE> 0.0 0.7071068286895752 -0.0 0.7071067094802856
+          scale: !<VALUE> 13.115518569946289 13.100000381469727 13.100000381469727
+          translation: !<VALUE> 12.263769149780273 3.399961471557617 5.74622917175293
+      name: !<VALUE> OTB_ZFan_2
+    !<DICT>
+      components: !<DICT>
+        FanComponent: !<VALUE> 60.0
+        ModelComponent: !<VALUE> /models/spiral.glb
+        TransformComponent: !<DICT>
+          rotation: !<VALUE> 0.5000002384185791 0.5000001788139343 0.4999997615814209 0.4999997913837433
+          scale: !<VALUE> 10.148107528686523 5.300000190734863 4.675706386566162
+          translation: !<VALUE> 21.400217056274414 6.4532790184021 26.13370704650879
+      name: !<VALUE> OTB_ZFan_3
