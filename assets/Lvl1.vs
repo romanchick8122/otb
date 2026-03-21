@@ -175,7 +175,7 @@
         TransformComponent: !<DICT>
           rotation: !<VALUE> 0.0 0.0 -0.0 1.0
           scale: !<VALUE> 27.191862106323242 9.7305326461792 19.30333137512207
-          translation: !<VALUE> -13.758967399597168 3.1520516872406006 -22.190689086914062
+          translation: !<VALUE> -13.758967399597168 3.9056057929992676 -20.809871673583984
       name: !<VALUE> OTB_S_BOX1.004
     !<DICT>
       components: !<DICT>
@@ -225,7 +225,7 @@
         TransformComponent: !<DICT>
           rotation: !<VALUE> 0.0 0.0 -0.0 1.0
           scale: !<VALUE> 74.46820831298828 0.15835915505886078 73.56425476074219
-          translation: !<VALUE> -7.852216720581055 -0.9584569931030273 6.240928649902344
+          translation: !<VALUE> -7.852260589599609 -0.9584569931030273 6.240928649902344
       name: !<VALUE> OTB_S_Floor
     !<DICT>
       components: !<DICT>
@@ -235,7 +235,7 @@
         TransformComponent: !<DICT>
           rotation: !<VALUE> 0.0 0.0 -0.0 1.0
           scale: !<VALUE> 71.46820831298828 0.15835915505886078 73.56425476074219
-          translation: !<VALUE> -7.852225303649902 35.858455657958984 6.240928649902344
+          translation: !<VALUE> -7.852270126342773 35.858455657958984 6.240928649902344
       name: !<VALUE> OTB_S_Floor.001
     !<DICT>
       components: !<DICT>
@@ -275,7 +275,7 @@
         TransformComponent: !<DICT>
           rotation: !<VALUE> 0.0 0.0 -0.0 1.0
           scale: !<VALUE> 71.62064361572266 36.62211608886719 1.3180240392684937
-          translation: !<VALUE> -7.447938919067383 17.410043716430664 -30.723276138305664
+          translation: !<VALUE> -7.4479875564575195 17.410043716430664 -30.723276138305664
       name: !<VALUE> OTB_S_WALL1.002
     !<DICT>
       components: !<DICT>
