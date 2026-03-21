@@ -73,7 +73,7 @@ World::ComponentIterator<T> World::components_end()
     if (const auto it = components.find(tid);
         it != components.end())
     {
-        return ComponentIterator<T>(&it->second, -1uz);
+        return ComponentIterator<T>(&it->second, std::string::npos);
     }
     return ComponentIterator<T>(nullptr, 0);
 }
