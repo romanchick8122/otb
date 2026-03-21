@@ -127,7 +127,7 @@ namespace
     static const otb::InternedString WALKING_ANIMATION("WalkingCycle");
     static const otb::InternedString THROW_ANIMATION("Throw");
     static const otb::InternedString PULL_ANIMATION("PullCycle");
-    static const otb::InternedString PUSH_ANIMATION("PushCycle");
+    static const otb::InternedString PUSH_ANIMATION("AlternativePushingCycle");
     static constexpr float WALKING_SPEED = 3.36408f;
     static constexpr float PULL_SPEED = -3.1307f;
     static constexpr float PUSHING_SPEED = 1.10695f;

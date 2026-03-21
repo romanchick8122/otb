@@ -8,6 +8,7 @@
     UmbrellaUnleash: !<VALUE> 0.1
     HeadUp: !<VALUE> 0.1
     Neutral: !<VALUE> 0.1
+    AlternativePushingReady: !<VALUE> 0.01
   JumpReady: !<DICT>
     Jump: !<VALUE> -1
   Jump: !<DICT>
@@ -48,3 +49,7 @@
   UmbrellaSheathe: !<DICT>
     Neutral: !<VALUE> -1
     Idle: !<VALUE> -1
+  AlternativePushingReady: !<DICT>
+    AlternativePushingCycle: !<VALUE> -1
+  AlternativePushingCycle: !<DICT>
+    Idle: !<VALUE> 0.1
