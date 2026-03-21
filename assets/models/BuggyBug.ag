@@ -50,6 +50,6 @@
     Neutral: !<VALUE> -1
     Idle: !<VALUE> -1
   AlternativePushingReady: !<DICT>
-    AlternativePushingCycle: !<VALUE> -1
+    AlternativePushingCycle: !<VALUE> 0.05
   AlternativePushingCycle: !<DICT>
     Idle: !<VALUE> 0.1
