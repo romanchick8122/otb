@@ -29,19 +29,27 @@ class CharacterComponent : public otb::Component
         LANDING,
         AIMING,
         PULLING,
+        PREPARE_PUSHING,
         PUSHING,
+        STOP_PUSHING,
         COUNT,
     } movement_state = MovementState::WAKING_UP;
 
     struct StateDataAIMING {
         Vector2 aim_direction;
     };
+    struct StateDataPREPARE_PUSHING {
+        Vector3 pushing_direction;
+    };
     std::variant<
         std::monostate,
-        StateDataAIMING
+        StateDataAIMING,
+        StateDataPREPARE_PUSHING
     > state_data;
 
     bool is_pushing = false;
     Vector3 pushing_direction;
+
+    float movement_speed_multiplier = 1.f;
 };
 }

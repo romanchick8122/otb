@@ -101,6 +101,7 @@ void InputSystem::apply_input(otb::World* world)
     
     static std::array<bool, std::to_underlying(CharacterComponent::MovementState::COUNT)> apply_movement;
     static std::array<bool, std::to_underlying(CharacterComponent::MovementState::COUNT)> apply_rotation;
+    static std::array<bool, std::to_underlying(CharacterComponent::MovementState::COUNT)> block_backwards;
 
     apply_movement[std::to_underlying(CharacterComponent::MovementState::GROUNDED)] = true;
     apply_movement[std::to_underlying(CharacterComponent::MovementState::FLYING)] = true;
@@ -111,6 +112,10 @@ void InputSystem::apply_input(otb::World* world)
     apply_rotation[std::to_underlying(CharacterComponent::MovementState::GROUNDED)] = true;
     apply_rotation[std::to_underlying(CharacterComponent::MovementState::PREPARING_JUMP)] = true;
     apply_rotation[std::to_underlying(CharacterComponent::MovementState::FLYING)] = true;
+
+    block_backwards[std::to_underlying(CharacterComponent::MovementState::PREPARE_PUSHING)] = true;
+    block_backwards[std::to_underlying(CharacterComponent::MovementState::PUSHING)] = true;
+    block_backwards[std::to_underlying(CharacterComponent::MovementState::STOP_PUSHING)] = true;
 
 
     for(auto it = world->components_begin<InputReceiverComponent>(); it != world->components_end<InputReceiverComponent>(); ++it)
@@ -130,11 +135,12 @@ void InputSystem::apply_input(otb::World* world)
 
         if (apply_movement[std::to_underlying(character_component->movement_state)])
         {
+            const float x_movement = std::max(it->analog_input.x, block_backwards[std::to_underlying(character_component->movement_state)] ? 0.f : -1.f);
             const Vector3 oriented_move_vector = Vector3RotateByQuaternion(
-                {it->analog_input.x, 0, 0},
+                {x_movement, 0, 0},
                 transform_component->transform.rotation
             );
-            velocity_component->velocity += Vector3Scale(oriented_move_vector, MOVEMENT_SPEED);
+            velocity_component->velocity += Vector3Scale(oriented_move_vector, MOVEMENT_SPEED * character_component->movement_speed_multiplier);
         }
         if (apply_rotation[std::to_underlying(character_component->movement_state)])
         {

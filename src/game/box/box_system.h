@@ -47,6 +47,7 @@ class BoxSingleComponent : public otb::Component
         otb::TransformComponent* transform_component;
         size_t parent_index;
         bool filtered = false;
+        bool pulled_box = false;
     };
 
     std::vector<Entry> chain;

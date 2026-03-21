@@ -136,6 +136,11 @@ namespace
     static constexpr Vector2 AIM_LIMIT_MIN { -1.f, -0.5f };
     static constexpr Vector2 AIM_LIMIT_MAX { 1.f, 1.f };
 
+    static constexpr float PUSHING_MOVEMENT_SPEED_MULTIPLIER = 0.65f;
+    static constexpr float PULLING_MOVEMENT_SPEED_MULTIPLIER = 0.65f;
+
+    static constexpr float ROTATION_SLERP_FACTOR = 5.f;
+
     struct StateUpdateContext
     {
         otb::World* world;
@@ -154,9 +159,28 @@ namespace
             case CharacterComponent::MovementState::AIMING:
                 ctx.character_component->state_data = CharacterComponent::StateDataAIMING{};
                 break;
+            case CharacterComponent::MovementState::PREPARE_PUSHING:
+                ctx.character_component->state_data = CharacterComponent::StateDataPREPARE_PUSHING {
+                    .pushing_direction = ctx.character_component->pushing_direction,
+                };
+                break;
             default:
                 ctx.character_component->state_data = std::monostate{};
                 break;
+        }
+
+        // Movement speed
+        if (ctx.character_component->movement_state == CharacterComponent::MovementState::PUSHING)
+        {
+            ctx.character_component->movement_speed_multiplier = PUSHING_MOVEMENT_SPEED_MULTIPLIER;
+        }
+        else if (ctx.character_component->movement_state == CharacterComponent::MovementState::PULLING)
+        {
+            ctx.character_component->movement_speed_multiplier = PULLING_MOVEMENT_SPEED_MULTIPLIER;
+        }
+        else
+        {
+            ctx.character_component->movement_speed_multiplier = 1.f;
         }
     }
 
@@ -187,6 +211,12 @@ namespace
         }
         ctx.model_component->request_animation(anim_neutral, true);
         ctx.model_component->set_animation_speed(GLOBAL_ANIMATION_SPEED);
+    }
+
+    void set_desired_rotation(StateUpdateContext& ctx, Quaternion rotation)
+    {
+        float slerp_factor = ROTATION_SLERP_FACTOR * ctx.world->fixed_frame_time;
+        ctx.transform_component->transform.rotation = QuaternionSlerp(ctx.transform_component->transform.rotation, rotation, slerp_factor);
     }
 
     void update_state_WAKING_UP(StateUpdateContext& ctx)
@@ -227,7 +257,8 @@ namespace
         } 
         else if (ctx.character_component->is_pushing)
         {
-            set_state(ctx, CharacterComponent::MovementState::PUSHING);
+            set_state(ctx, CharacterComponent::MovementState::PREPARE_PUSHING);
+            ctx.model_component->request_animation(PUSH_ANIMATION, true);
         }
         else
         {
@@ -305,15 +336,34 @@ namespace
         select_animation_from_movement_speed(ctx, WALKING_ANIM_EPS, WALKING_ANIM_EPS, WALKING_ANIMATION, 1 / WALKING_SPEED, IDLE_ANIMATION, PULL_ANIMATION, 1 / PULL_SPEED);
     }
 
+    void update_state_PREPARE_PUSHING(StateUpdateContext& ctx)
+    {
+        set_desired_rotation(ctx, otb::MathUtils::get_rotation_from_to({1, 0, 0}, std::get<CharacterComponent::StateDataPREPARE_PUSHING>(ctx.character_component->state_data).pushing_direction));
+        if (ctx.model_component->get_playing_animation() == PUSH_ANIMATION)
+        {
+            set_state(ctx, CharacterComponent::MovementState::PUSHING);
+        }
+    }
+
     void update_state_PUSHING(StateUpdateContext& ctx)
     {
         if(!ctx.character_component->is_pushing)
         {
-            set_state(ctx, CharacterComponent::MovementState::GROUNDED);
+            set_state(ctx, CharacterComponent::MovementState::STOP_PUSHING);
+            ctx.model_component->request_animation(IDLE_ANIMATION, true);
+            ctx.model_component->set_animation_speed(GLOBAL_ANIMATION_SPEED);
             return;
         }
         select_animation_from_movement_speed(ctx, WALKING_ANIM_EPS, WALKING_ANIM_EPS, PUSH_ANIMATION, 1 / PUSHING_SPEED, IDLE_ANIMATION, WALKING_ANIMATION, 1 / WALKING_SPEED);
-        ctx.transform_component->transform.rotation = otb::MathUtils::get_rotation_from_to({1, 0, 0}, ctx.character_component->pushing_direction);
+        set_desired_rotation(ctx, otb::MathUtils::get_rotation_from_to({1, 0, 0}, ctx.character_component->pushing_direction));
+    }
+
+    void update_state_STOP_PUSHING(StateUpdateContext& ctx)
+    {
+        if (ctx.model_component->get_playing_animation() == IDLE_ANIMATION)
+        {
+            set_state(ctx, CharacterComponent::MovementState::GROUNDED);
+        }
     }
 }
 
@@ -343,7 +393,9 @@ void CharacterSystem::update_state(otb::World* world)
             case CharacterComponent::MovementState::LANDING: update_state_LANDING(ctx); break;
             case CharacterComponent::MovementState::AIMING: update_state_AIMING(ctx); break;
             case CharacterComponent::MovementState::PULLING: update_state_PULLING(ctx); break;
+            case CharacterComponent::MovementState::PREPARE_PUSHING: update_state_PREPARE_PUSHING(ctx); break;
             case CharacterComponent::MovementState::PUSHING: update_state_PUSHING(ctx); break;
+            case CharacterComponent::MovementState::STOP_PUSHING: update_state_STOP_PUSHING(ctx); break;
             default: OTB_ASSERT(false); break;
         }
     }

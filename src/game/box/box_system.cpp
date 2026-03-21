@@ -12,7 +12,7 @@
 
 #include <raymath.h>
 
-#include <iostream>
+#include <array>
 
 namespace game
 {
@@ -141,6 +141,7 @@ void BoxSystem::find_collision_chain(otb::World* world)
                 .displacement = box_sc->chain[0].displacement,
                 .transform_component = attached_component->entity->get_component<TransformComponent>(),
                 .parent_index = 0,
+                .pulled_box = true,
             });
             box_sc->chain[0].parent_index = 1;
         }
@@ -205,6 +206,7 @@ void BoxSystem::find_collision_chain(otb::World* world)
                 .displacement = {displacement_x, 0, displacement_z},
                 .transform_component = candidate_transform,
                 .parent_index = unprocessed_i,
+                .pulled_box = box_sc->chain[unprocessed_i].pulled_box,
             });
         }
     }
@@ -213,6 +215,17 @@ void BoxSystem::find_collision_chain(otb::World* world)
 void BoxSystem::push_back_chain(otb::World* world)
 {
     using namespace otb;
+
+    static std::array<bool, std::to_underlying(CharacterComponent::MovementState::COUNT)> allow_push = []{
+        std::array<bool, std::to_underlying(CharacterComponent::MovementState::COUNT)> result;
+
+        result[std::to_underlying(CharacterComponent::MovementState::PUSHING)] = true;
+
+        return result;
+    }();
+
+    const CharacterComponent* character_component = &*world->components_begin<CharacterComponent>();
+    const bool can_push = allow_push[std::to_underlying(character_component->movement_state)];
 
     BoxSingleComponent* box_sc = world->get_world_entity()->get_component<BoxSingleComponent>();
     OTB_ASSERT(box_sc != nullptr);
@@ -232,7 +245,17 @@ void BoxSystem::push_back_chain(otb::World* world)
             continue;
         }
 
-        if (box_sc->chain[i].entity->get_component<BoxComponent>()->type == BoxComponent::BoxType::STATIC)
+        const bool can_push_this_box = [&]{
+            if (i == 0)
+                return true;
+            if (box_sc->chain[i].entity->get_component<BoxComponent>()->type == BoxComponent::BoxType::STATIC)
+                return false;
+            if (box_sc->chain[i].pulled_box)
+                return true;
+            return can_push;
+        }();
+
+        if (!can_push_this_box)
         {
             for (size_t pb = box_sc->chain[i].parent_index; pb != std::string::npos; pb = box_sc->chain[pb].parent_index)
             {
