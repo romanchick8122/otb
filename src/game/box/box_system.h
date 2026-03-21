@@ -18,6 +18,7 @@ struct BoxSystem
 {
     static void create_components(otb::World*);
     static void find_collision_chain(otb::World*);
+    static void find_active_pushing(otb::World*);
     static void push_back_chain(otb::World*);
     static void update_chain(otb::World*);
     static void update_from_velocity(otb::World*);

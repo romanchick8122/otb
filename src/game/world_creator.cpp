@@ -43,6 +43,7 @@ std::unique_ptr<otb::World> create_world(otb::InternedString world_asset)
     world->add_fixed_system(BoxAttachmentSystem::process_ability);
 
     world->add_fixed_system(BoxSystem::find_collision_chain);
+    world->add_fixed_system(BoxSystem::find_active_pushing);
     world->add_fixed_system(BoxSystem::push_back_chain);
     world->add_fixed_system(BoxSystem::update_chain);
     

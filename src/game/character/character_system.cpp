@@ -126,6 +126,7 @@ namespace
     static const otb::InternedString WALKING_ANIMATION("WalkingCycle");
     static const otb::InternedString THROW_ANIMATION("Throw");
     static const otb::InternedString PULL_ANIMATION("PullCycle");
+    static const otb::InternedString PUSH_ANIMATION("PushCycle");
     static constexpr float WALKING_SPEED = 3.36408f;
     static constexpr float PULL_SPEED = -3.1307f;
     static constexpr float WALKING_ANIM_EPS = 0.7f;
@@ -221,6 +222,10 @@ namespace
         else if (ctx.input_receiver_component->extra_actions.contains(InputReceiverComponent::ActionNames::aim))
         {
             set_state(ctx, CharacterComponent::MovementState::AIMING);
+        } 
+        else if (ctx.character_component->is_pushing)
+        {
+            set_state(ctx, CharacterComponent::MovementState::PUSHING);
         }
         else
         {
@@ -297,6 +302,17 @@ namespace
         ctx.transform_component->transform.rotation = QuaternionFromVector3ToVector3({1, 0, 0}, Vector3Normalize(to_box));
         select_animation_from_movement_speed(ctx, WALKING_ANIM_EPS, WALKING_ANIM_EPS, WALKING_ANIMATION, 1 / WALKING_SPEED, IDLE_ANIMATION, PULL_ANIMATION, 1 / PULL_SPEED);
     }
+
+    void update_state_PUSHING(StateUpdateContext& ctx)
+    {
+        if(!ctx.character_component->is_pushing)
+        {
+            set_state(ctx, CharacterComponent::MovementState::GROUNDED);
+            return;
+        }
+        select_animation_from_movement_speed(ctx, WALKING_ANIM_EPS, WALKING_ANIM_EPS, PUSH_ANIMATION, 1 / WALKING_SPEED, IDLE_ANIMATION, WALKING_ANIMATION, 1 / WALKING_SPEED);
+        //ctx.transform_component->transform.rotation = QuaternionFromVector3ToVector3({1, 0, 0}, ctx.character_component->pushing_direction);
+    }
 }
 
 void CharacterSystem::update_state(otb::World* world)
@@ -325,6 +341,7 @@ void CharacterSystem::update_state(otb::World* world)
             case CharacterComponent::MovementState::LANDING: update_state_LANDING(ctx); break;
             case CharacterComponent::MovementState::AIMING: update_state_AIMING(ctx); break;
             case CharacterComponent::MovementState::PULLING: update_state_PULLING(ctx); break;
+            case CharacterComponent::MovementState::PUSHING: update_state_PUSHING(ctx); break;
             default: OTB_ASSERT(false); break;
         }
     }

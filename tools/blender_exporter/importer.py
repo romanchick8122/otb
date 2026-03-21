@@ -41,8 +41,6 @@ class OTBWorldImportOperator(bpy.types.Operator, ImportHelper):
                     bpy.ops.object.camera_add(**get_transform(obj, False))
                 else:
                     bpy.ops.mesh.primitive_cube_add(**get_transform(obj, True))     
-                
                 load_extra_components(obj["components"])
-
                 context.object.name = obj["name"]
         return {'FINISHED'}
