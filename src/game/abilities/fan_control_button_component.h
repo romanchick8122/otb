@@ -15,6 +15,8 @@ class FanControlButtonComponent final : public otb::Component
     ~FanControlButtonComponent() override = default;
 
     otb::InternedString target_entity;
+    std::vector<otb::InternedString> animated_entities_names;
+    std::vector<otb::Entity*> animated_entities;
     bool enabled = false;
 
     bool prev_frame_pressed = false;

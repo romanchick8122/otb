@@ -42,7 +42,7 @@
         TransformComponent: !<DICT>
           rotation: !<VALUE> 0.0 0.0 -0.0 1.0
           scale: !<VALUE> 3.3333001136779785 1.4919999837875366 3.3333001136779785
-          translation: !<VALUE> -3.664753194243531e-07 2.533938407897949 22.18668556213379
+          translation: !<VALUE> -3.6931362501491094e-07 2.533938407897949 22.18668556213379
       name: !<VALUE> Man
     !<DICT>
       components: !<DICT>
@@ -109,7 +109,7 @@
         FanComponent: !<VALUE> 60.0
         ModelComponent: !<VALUE> /cube.glb
         TransformComponent: !<DICT>
-          rotation: !<VALUE> 0.5000001192092896 0.5000000596046448 0.49999988079071045 0.49999991059303284
+          rotation: !<VALUE> 0.5000001788139343 0.5000001192092896 0.4999998211860657 0.49999985098838806
           scale: !<VALUE> 20.60651397705078 5.300000190734863 4.675706386566162
           translation: !<VALUE> -11.721636772155762 11.682479858398438 -23.430734634399414
       name: !<VALUE> OTB_Fan_1
@@ -127,7 +127,7 @@
         FanComponent: !<VALUE> 60.0
         ModelComponent: !<VALUE> /cube.glb
         TransformComponent: !<DICT>
-          rotation: !<VALUE> 0.5000001192092896 0.5000000596046448 0.49999988079071045 0.49999991059303284
+          rotation: !<VALUE> 0.5000001788139343 0.5000001192092896 0.4999998211860657 0.49999985098838806
           scale: !<VALUE> 10.148107528686523 5.300000190734863 4.675706386566162
           translation: !<VALUE> 21.400217056274414 6.4532790184021 26.13370704650879
       name: !<VALUE> OTB_Fan_3
@@ -159,7 +159,7 @@
         TransformComponent: !<DICT>
           rotation: !<VALUE> 0.0 0.0 -0.0 1.0
           scale: !<VALUE> 27.198802947998047 8.871175765991211 5.405669689178467
-          translation: !<VALUE> -2.4020938873291016 5.553906440734863 16.295717239379883
+          translation: !<VALUE> -2.402090549468994 5.553906440734863 16.295717239379883
       name: !<VALUE> OTB_S_Cube.002
     !<DICT>
       components: !<DICT>
@@ -266,6 +266,7 @@
         BoxComponent: !<DICT>
           type: !<VALUE> STATIC
         FanControlButtonComponent: !<DICT>
+          animated_entities: !<VALUE> 
           enabled: !<VALUE> True
           target_entity: !<VALUE> OTB_Fan_2
         ModelComponent: !<VALUE> /models/switch/button.glb
@@ -329,6 +330,7 @@
         BoxComponent: !<DICT>
           type: !<VALUE> STATIC
         FanControlButtonComponent: !<DICT>
+          animated_entities: !<VALUE> 
           enabled: !<VALUE> False
           target_entity: !<VALUE> OTB_Fan_3
         ModelComponent: !<VALUE> /models/switch/button.glb
@@ -342,6 +344,7 @@
         BoxComponent: !<DICT>
           type: !<VALUE> STATIC
         FanControlButtonComponent: !<DICT>
+          animated_entities: !<VALUE> 
           enabled: !<VALUE> False
           target_entity: !<VALUE> OTB_Fan_1
         ModelComponent: !<VALUE> /models/switch/button.glb
@@ -408,7 +411,7 @@
         TransformComponent: !<DICT>
           rotation: !<VALUE> 0.0 0.0 -0.0 1.0
           scale: !<VALUE> 67.3547592163086 42.629302978515625 16.00344467163086
-          translation: !<VALUE> -0.6334152221679688 19.55443000793457 41.61882400512695
+          translation: !<VALUE> -0.6333789825439453 19.55443000793457 41.61882400512695
       name: !<VALUE> OTB_S_Floor.005
     !<DICT>
       components: !<DICT>
@@ -418,5 +421,5 @@
         TransformComponent: !<DICT>
           rotation: !<VALUE> 0.0 0.0 -0.0 1.0
           scale: !<VALUE> 67.3547592163086 42.629302978515625 17.577280044555664
-          translation: !<VALUE> -0.6334142684936523 19.55443000793457 -35.10926055908203
+          translation: !<VALUE> -0.6333770751953125 19.55443000793457 -35.10926055908203
       name: !<VALUE> OTB_S_Floor.006

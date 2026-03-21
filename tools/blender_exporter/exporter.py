@@ -20,7 +20,8 @@ class OTBWorldExportOperator(bpy.types.Operator, ExportHelper):
             if "fan_control_button_for" in obj:
                 result["FanControlButtonComponent"] = {
                     "target_entity": obj["fan_control_button_for"],
-                    "enabled": str(obj["fan_control_button_state"])
+                    "enabled": str(obj["fan_control_button_state"]),
+                    "animated_entities": obj["fan_control_animated_entities"],
                 }
             return result
 

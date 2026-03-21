@@ -15,19 +15,45 @@
 
 namespace game
 {
+namespace
+{
+static const otb::InternedString SPINNING_ANIMATION("FanSpinning");
+static const otb::InternedString STATIONARY_ANIMATION("FanNothing");
+
+static constexpr float ANIMATION_SPEED = 60.f;
+}
+
 void FanSystem::init(otb::World* world)
 {
+    using namespace otb;
+
     for (auto it = world->components_begin<FanControlButtonComponent>(); it != world->components_end<FanControlButtonComponent>(); ++it)
     {
         auto* fan_component = world->get_entity(it->target_entity)->get_component<FanComponent>();
         OTB_ASSERT(fan_component != nullptr);
         fan_component->controller = &*it;
         it->entity->get_component<otb::ModelComponent>()->set_forced_material_index(it->enabled ? 2 : 1);
+
+        for (const auto name : it->animated_entities_names)
+        {
+            it->animated_entities.emplace_back(world->get_entity(name));
+        }
+
+        const auto anim_name = it->enabled ? SPINNING_ANIMATION : STATIONARY_ANIMATION;
+
+        for (Entity* target : it->animated_entities)
+        {
+            auto* model_component = target->get_component<ModelComponent>();
+            model_component->request_animation(anim_name, true);
+            model_component->set_animation_speed(ANIMATION_SPEED);
+        }
     }
 }
 
 void FanSystem::update_controllers(otb::World* world)
 {
+    using namespace otb;
+
     const auto* character_component = &*world->components_begin<CharacterComponent>();
     const auto* character_box = character_component->entity->get_component<BoxComponent>();
     auto* this_frame_pressed = character_box->rests_on == nullptr ? nullptr : character_box->rests_on->entity->get_component<FanControlButtonComponent>();
@@ -35,7 +61,16 @@ void FanSystem::update_controllers(otb::World* world)
     if (this_frame_pressed != nullptr && !this_frame_pressed->prev_frame_pressed)
     {
         this_frame_pressed->enabled = !this_frame_pressed->enabled;
-        this_frame_pressed->entity->get_component<otb::ModelComponent>()->set_forced_material_index(this_frame_pressed->enabled ? 2 : 1);
+        this_frame_pressed->entity->get_component<ModelComponent>()->set_forced_material_index(this_frame_pressed->enabled ? 2 : 1);
+
+        const auto anim_name = this_frame_pressed->enabled ? SPINNING_ANIMATION : STATIONARY_ANIMATION;
+
+        for (Entity* target : this_frame_pressed->animated_entities)
+        {
+            auto* model_component = target->get_component<ModelComponent>();
+            model_component->request_animation(anim_name, true);
+            model_component->set_animation_speed(ANIMATION_SPEED);
+        }
     }
 
     for (auto it = world->components_begin<FanControlButtonComponent>(); it != world->components_end<FanControlButtonComponent>(); ++it)

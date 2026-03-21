@@ -1,0 +1,10 @@
+!<DICT>
+  FanStart: !<DICT>
+    FanSpinning: !<VALUE> -1
+  FanSpinning: !<DICT>
+    FanStop: !<VALUE> -1
+  FanStop: !<DICT>
+    FanStart: !<VALUE> -1
+    FanNothing: !<VALUE> -1
+  FanNothing: !<DICT>
+    FanStart: !<VALUE> -1

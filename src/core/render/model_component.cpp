@@ -57,7 +57,7 @@ void ModelComponent::request_animation(InternedString animation_name, bool reque
     OTB_ASSERT(asset->animation_lookup.find(animation_name) != asset->animation_lookup.end());
     if (asset->anim_graph.animation_transitions.empty() || playing_animation_index == std::string::npos)
     {
-        playing_animation_index = asset->animation_lookup[animation_name];
+        request_animation_index = playing_animation_index = asset->animation_lookup[animation_name];
     }
     else
     {

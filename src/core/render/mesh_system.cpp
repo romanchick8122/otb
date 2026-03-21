@@ -42,7 +42,7 @@ void MeshSystem::update_animations(World* world, float dt)
                 request_next_transition();
             }
             // Don't update if we started in transition
-            return;
+            continue;
         }
         OTB_ASSERT(it->playing_transition == nullptr || it->playing_transition->transition_time < 0);
 
@@ -54,7 +54,7 @@ void MeshSystem::update_animations(World* world, float dt)
             if (it->playing_transition != nullptr)
             {
                 request_next_transition();
-                return;
+                continue;
             }
             if (it->looping_requested)
             {
