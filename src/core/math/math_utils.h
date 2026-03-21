@@ -10,5 +10,6 @@ struct MathUtils
     static bool has_intersection_ranges(const Vector2&, const Vector2&);
     static bool is_point_inside_range(const Vector2&, float);
     static bool is_point_inside_range_safe(Vector2, float);
+    static Quaternion get_rotation_from_to(Vector3, Vector3);
 };
 }

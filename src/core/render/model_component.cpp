@@ -62,7 +62,7 @@ void ModelComponent::request_animation(InternedString animation_name, bool reque
     else
     {
         const size_t animation_target = asset->animation_lookup[animation_name];
-        if (request_animation_index != animation_target)
+        if (request_animation_index != animation_target && playing_transition == nullptr)
         {
             playing_transition = asset->anim_graph.directions[playing_animation_index][animation_target].transition;
             transition_time = 0;

@@ -1,6 +1,7 @@
 #include "character_system.h"
 
 #include "core/ecs/world.h"
+#include "core/math/math_utils.h"
 #include "core/render/camera_component.h"
 #include "core/render/model_component.h"
 #include "core/world/physics/velocity_component.h"
@@ -129,6 +130,7 @@ namespace
     static const otb::InternedString PUSH_ANIMATION("PushCycle");
     static constexpr float WALKING_SPEED = 3.36408f;
     static constexpr float PULL_SPEED = -3.1307f;
+    static constexpr float PUSHING_SPEED = 1.10695f;
     static constexpr float WALKING_ANIM_EPS = 0.7f;
 
     static constexpr Vector2 AIM_LIMIT_MIN { -1.f, -0.5f };
@@ -299,7 +301,7 @@ namespace
         }
         Vector3 to_box = attached_box->entity->get_component<TransformComponent>()->transform.translation - ctx.transform_component->transform.translation;
         to_box.y = 0;
-        ctx.transform_component->transform.rotation = QuaternionFromVector3ToVector3({1, 0, 0}, Vector3Normalize(to_box));
+        ctx.transform_component->transform.rotation = MathUtils::get_rotation_from_to({1, 0, 0}, Vector3Normalize(to_box));
         select_animation_from_movement_speed(ctx, WALKING_ANIM_EPS, WALKING_ANIM_EPS, WALKING_ANIMATION, 1 / WALKING_SPEED, IDLE_ANIMATION, PULL_ANIMATION, 1 / PULL_SPEED);
     }
 
@@ -310,8 +312,8 @@ namespace
             set_state(ctx, CharacterComponent::MovementState::GROUNDED);
             return;
         }
-        select_animation_from_movement_speed(ctx, WALKING_ANIM_EPS, WALKING_ANIM_EPS, PUSH_ANIMATION, 1 / WALKING_SPEED, IDLE_ANIMATION, WALKING_ANIMATION, 1 / WALKING_SPEED);
-        //ctx.transform_component->transform.rotation = QuaternionFromVector3ToVector3({1, 0, 0}, ctx.character_component->pushing_direction);
+        select_animation_from_movement_speed(ctx, WALKING_ANIM_EPS, WALKING_ANIM_EPS, PUSH_ANIMATION, 1 / PUSHING_SPEED, IDLE_ANIMATION, WALKING_ANIMATION, 1 / WALKING_SPEED);
+        ctx.transform_component->transform.rotation = otb::MathUtils::get_rotation_from_to({1, 0, 0}, ctx.character_component->pushing_direction);
     }
 }
 

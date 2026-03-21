@@ -1,5 +1,7 @@
 #include "math_utils.h"
 
+#include <raymath.h>
+
 #include <compare>
 #include <utility>
 
@@ -31,5 +33,14 @@ bool MathUtils::is_point_inside_range_safe(Vector2 range, float p)
     if (range.x > range.y)
         std::swap(range.x, range.y);
     return MathUtils::is_point_inside_range(range, p);
+}
+
+Quaternion MathUtils::get_rotation_from_to(Vector3 from, Vector3 to)
+{
+    if (Vector3Equals(from * -1.f, to)) [[unlikely]]
+    {
+        return QuaternionFromAxisAngle({0, 1, 0}, PI);
+    }
+    return QuaternionFromVector3ToVector3(from, to);
 }
 }
