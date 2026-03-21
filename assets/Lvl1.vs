@@ -61,7 +61,7 @@
       components: !<DICT>
         BoxComponent: !<DICT>
           type: !<VALUE> DYNAMIC
-        ModelComponent: !<VALUE> /models/boxes/blue_box.glb
+        ModelComponent: !<VALUE> /models/boxes/small_box.glb
         TransformComponent: !<DICT>
           rotation: !<VALUE> 0.0 0.0 -0.0 1.0
           scale: !<VALUE> 4.839717388153076 4.97646951675415 4.493396759033203
@@ -71,7 +71,7 @@
       components: !<DICT>
         BoxComponent: !<DICT>
           type: !<VALUE> DYNAMIC
-        ModelComponent: !<VALUE> /models/boxes/blue_box.glb
+        ModelComponent: !<VALUE> /models/boxes/small_box.glb
         TransformComponent: !<DICT>
           rotation: !<VALUE> 0.0 0.0 -0.0 1.0
           scale: !<VALUE> 3.4776523113250732 2.0 2.0
@@ -81,7 +81,7 @@
       components: !<DICT>
         BoxComponent: !<DICT>
           type: !<VALUE> DYNAMIC
-        ModelComponent: !<VALUE> /models/boxes/blue_box.glb
+        ModelComponent: !<VALUE> /models/boxes/small_box.glb
         TransformComponent: !<DICT>
           rotation: !<VALUE> 0.0 0.0 -0.0 1.0
           scale: !<VALUE> 3.9224166870117188 3.7839608192443848 2.0
@@ -91,7 +91,7 @@
       components: !<DICT>
         BoxComponent: !<DICT>
           type: !<VALUE> DYNAMIC
-        ModelComponent: !<VALUE> /models/boxes/blue_box.glb
+        ModelComponent: !<VALUE> /models/boxes/small_box.glb
         TransformComponent: !<DICT>
           rotation: !<VALUE> 0.0 0.0 -0.0 1.0
           scale: !<VALUE> 3.0983548164367676 4.488110065460205 4.0
@@ -101,17 +101,17 @@
       components: !<DICT>
         BoxComponent: !<DICT>
           type: !<VALUE> DYNAMIC
-        ModelComponent: !<VALUE> /models/boxes/blue_box.glb
+        ModelComponent: !<VALUE> /models/boxes/soda.glb
         TransformComponent: !<DICT>
           rotation: !<VALUE> 0.0 0.0 -0.0 1.0
-          scale: !<VALUE> 7.084249973297119 7.206329822540283 2.9113707542419434
-          translation: !<VALUE> -38.794429779052734 12.81234073638916 20.479351043701172
+          scale: !<VALUE> 4.833817005157471 7.206329822540283 2.9113707542419434
+          translation: !<VALUE> -37.669212341308594 12.81234073638916 20.479351043701172
       name: !<VALUE> OTB_D_BOX4.004
     !<DICT>
       components: !<DICT>
         BoxComponent: !<DICT>
           type: !<VALUE> DYNAMIC
-        ModelComponent: !<VALUE> /models/boxes/blue_box.glb
+        ModelComponent: !<VALUE> /models/boxes/small_box.glb
         TransformComponent: !<DICT>
           rotation: !<VALUE> 0.0 0.0 -0.0 1.0
           scale: !<VALUE> 4.848721981048584 3.8078300952911377 8.863829612731934
@@ -121,7 +121,7 @@
       components: !<DICT>
         BoxComponent: !<DICT>
           type: !<VALUE> DYNAMIC
-        ModelComponent: !<VALUE> /models/boxes/grey_box.glb
+        ModelComponent: !<VALUE> /models/boxes/small_box.glb
         TransformComponent: !<DICT>
           rotation: !<VALUE> 0.0 0.0 -0.0 1.0
           scale: !<VALUE> 3.9240708351135254 1.19133460521698 4.80018424987793
@@ -141,7 +141,7 @@
       components: !<DICT>
         BoxComponent: !<DICT>
           type: !<VALUE> STATIC
-        ModelComponent: !<VALUE> /models/boxes/carton_box.glb
+        ModelComponent: !<VALUE> /models/boxes/paper_box.glb
         TransformComponent: !<DICT>
           rotation: !<VALUE> 0.0 0.0 -0.0 1.0
           scale: !<VALUE> 8.531471252441406 12.548678398132324 19.30333137512207
@@ -171,17 +171,17 @@
       components: !<DICT>
         BoxComponent: !<DICT>
           type: !<VALUE> STATIC
-        ModelComponent: !<VALUE> /models/boxes/carton_box.glb
+        ModelComponent: !<VALUE> /models/boxes/office_box.glb
         TransformComponent: !<DICT>
           rotation: !<VALUE> 0.0 0.0 -0.0 1.0
           scale: !<VALUE> 27.191862106323242 9.7305326461792 19.30333137512207
-          translation: !<VALUE> -13.758967399597168 4.125104904174805 -20.260356903076172
+          translation: !<VALUE> -13.758967399597168 3.1520516872406006 -22.190689086914062
       name: !<VALUE> OTB_S_BOX1.004
     !<DICT>
       components: !<DICT>
         BoxComponent: !<DICT>
           type: !<VALUE> STATIC
-        ModelComponent: !<VALUE> /models/boxes/carton_box.glb
+        ModelComponent: !<VALUE> /models/boxes/column.glb
         TransformComponent: !<DICT>
           rotation: !<VALUE> 0.0 0.0 -0.0 1.0
           scale: !<VALUE> 10.0 36.62220001220703 10.0
@@ -221,21 +221,21 @@
       components: !<DICT>
         BoxComponent: !<DICT>
           type: !<VALUE> STATIC
-        ModelComponent: !<VALUE> /models/boxes/carton_box.glb
+        ModelComponent: !<VALUE> /models/boxes/outter_box.glb
         TransformComponent: !<DICT>
           rotation: !<VALUE> 0.0 0.0 -0.0 1.0
           scale: !<VALUE> 74.46820831298828 0.15835915505886078 73.56425476074219
-          translation: !<VALUE> -7.852058410644531 -0.9584569931030273 6.240928649902344
+          translation: !<VALUE> -7.852216720581055 -0.9584569931030273 6.240928649902344
       name: !<VALUE> OTB_S_Floor
     !<DICT>
       components: !<DICT>
         BoxComponent: !<DICT>
           type: !<VALUE> STATIC
-        ModelComponent: !<VALUE> /models/boxes/carton_box.glb
+        ModelComponent: !<VALUE> /models/boxes/outter_box.glb
         TransformComponent: !<DICT>
           rotation: !<VALUE> 0.0 0.0 -0.0 1.0
           scale: !<VALUE> 71.46820831298828 0.15835915505886078 73.56425476074219
-          translation: !<VALUE> -7.852060317993164 35.858455657958984 6.240928649902344
+          translation: !<VALUE> -7.852225303649902 35.858455657958984 6.240928649902344
       name: !<VALUE> OTB_S_Floor.001
     !<DICT>
       components: !<DICT>
@@ -251,7 +251,7 @@
       components: !<DICT>
         BoxComponent: !<DICT>
           type: !<VALUE> STATIC
-        ModelComponent: !<VALUE> /models/boxes/carton_box.glb
+        ModelComponent: !<VALUE> /models/boxes/outter_box.glb
         TransformComponent: !<DICT>
           rotation: !<VALUE> 0.0 0.0 -0.0 1.0
           scale: !<VALUE> 0.4165515899658203 36.62211608886719 72.5154037475586
@@ -261,7 +261,7 @@
       components: !<DICT>
         BoxComponent: !<DICT>
           type: !<VALUE> STATIC
-        ModelComponent: !<VALUE> /models/boxes/carton_box.glb
+        ModelComponent: !<VALUE> /models/boxes/outter_box.glb
         TransformComponent: !<DICT>
           rotation: !<VALUE> 0.0 0.0 -0.0 1.0
           scale: !<VALUE> 0.4165515899658203 36.62220001220703 72.5154037475586
@@ -271,17 +271,17 @@
       components: !<DICT>
         BoxComponent: !<DICT>
           type: !<VALUE> STATIC
-        ModelComponent: !<VALUE> /models/boxes/carton_box.glb
+        ModelComponent: !<VALUE> /models/boxes/outter_box.glb
         TransformComponent: !<DICT>
           rotation: !<VALUE> 0.0 0.0 -0.0 1.0
           scale: !<VALUE> 71.62064361572266 36.62211608886719 1.3180240392684937
-          translation: !<VALUE> -7.447747230529785 17.410043716430664 -30.723276138305664
+          translation: !<VALUE> -7.447938919067383 17.410043716430664 -30.723276138305664
       name: !<VALUE> OTB_S_WALL1.002
     !<DICT>
       components: !<DICT>
         BoxComponent: !<DICT>
           type: !<VALUE> STATIC
-        ModelComponent: !<VALUE> /models/boxes/carton_box.glb
+        ModelComponent: !<VALUE> /models/boxes/outter_box.glb
         TransformComponent: !<DICT>
           rotation: !<VALUE> 0.0 0.0 -0.0 1.0
           scale: !<VALUE> 70.85075378417969 36.62211608886719 1.3180240392684937
