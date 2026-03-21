@@ -4,7 +4,7 @@
 #include "core/interned_string.h"
 #include "core/render/model_asset.h"
 
-#include "raylib.h"
+#include <raylib.h>
 
 namespace otb
 {
@@ -38,6 +38,6 @@ class ModelComponent : public Component
 
     size_t forced_material_index = std::string::npos;
 
-    friend class MeshSystem;
+    friend struct MeshSystem;
 };
 }

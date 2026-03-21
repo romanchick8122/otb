@@ -12,17 +12,18 @@
 #include "game/box/box_system.h"
 #include "game/character/character_system.h"
 #include "game/character/input_system.h"
+#include "game/menu/menu_system.h"
 #include "game/ui/hud_system.h"
 
 namespace game
 {
-std::unique_ptr<otb::World> create_world()
+std::unique_ptr<otb::World> create_world(otb::InternedString world_asset)
 {
     using namespace otb;
 
     World* world = new World();
     ValueStorage vs;
-    vs.load(OTB_ASSETS_DIRECTORY"/lvl2.vs");
+    vs.load(AssetUtils::get_asset_file_path(world_asset).c_str());
     world->deserialize(vs);
 
     // -------- INITIAL ------
@@ -67,6 +68,36 @@ std::unique_ptr<otb::World> create_world()
 
     world->add_normal_system(RenderControlSystem::render_end);
 
+    world->fixed_frame_time = 1 / 60.f;
+    world->max_fixed_frames = 2;
+
+    return std::unique_ptr<World>(world);
+}
+std::unique_ptr<otb::World> create_menu_world()
+{
+    using namespace otb;
+
+    World* world = new World();
+    ValueStorage vs;
+    vs.load(AssetUtils::get_asset_file_path(InternedString("/menu_world.vs")).c_str());
+    world->deserialize(vs);
+
+    // -------- INITIAL ------
+    MenuSystem::init(world);
+
+    // -------- FIXED --------
+    world->add_fixed_system(MenuSystem::collect_events);
+    world->add_fixed_system(MenuSystem::subworld_update_fixed);
+
+    world->add_fixed_system(MenuSystem::process_events);
+
+    // -------- NORMAL -------
+    world->add_normal_system(MenuSystem::render_menu);
+    world->add_normal_system(MenuSystem::subworld_update);
+
+    world->fixed_frame_time = 1 / 60.f;
+    world->max_fixed_frames = 2;
+    
     return std::unique_ptr<World>(world);
 }
 }

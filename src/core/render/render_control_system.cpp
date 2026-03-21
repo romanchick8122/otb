@@ -5,7 +5,7 @@
 #include "core/ecs/world.h"
 #include "core/render/camera_component.h"
 
-#include "raylib.h"
+#include <raylib.h>
 
 namespace otb
 {

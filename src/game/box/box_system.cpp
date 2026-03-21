@@ -10,7 +10,7 @@
 #include "game/box/box_component.h"
 #include "game/character/character_component.h"
 
-#include "raymath.h"
+#include <raymath.h>
 
 #include <iostream>
 
@@ -149,10 +149,10 @@ void BoxSystem::find_collision_chain(otb::World* world)
 
     static constexpr auto sign = [](const float v) {
         if (v < eps && v > -eps)
-            return 0;
+            return 0.f;
         if (v < 0)
-            return -1;
-        return 1;
+            return -1.f;
+        return 1.f;
     };
 
     // Sweeep all cubes
@@ -224,9 +224,6 @@ void BoxSystem::push_back_chain(otb::World* world)
         return; // Nothing is pushed
     }
 
-    bool block_x = false;
-    bool block_z = false;
-
     for (size_t i = 0; i < box_sc->chain.size(); ++i)
     {
         if (box_sc->chain[i].parent_index != std::string::npos && box_sc->chain[box_sc->chain[i].parent_index].filtered)
@@ -245,8 +242,6 @@ void BoxSystem::push_back_chain(otb::World* world)
                     break;
                 }
             }
-            block_x |= box_sc->chain[i].displacement.x != 0;
-            block_z |= box_sc->chain[i].displacement.z != 0;
             box_sc->chain[i].displacement = {};
             box_sc->chain[i].filtered = true;
         }

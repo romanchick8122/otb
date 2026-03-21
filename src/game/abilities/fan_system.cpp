@@ -11,7 +11,7 @@
 #include "game/box/box_component.h"
 #include "game/character/character_component.h"
 
-#include "raymath.h"
+#include <raymath.h>
 
 namespace game
 {

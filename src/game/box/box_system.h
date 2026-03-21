@@ -2,7 +2,7 @@
 
 #include "core/ecs/component.h"
 
-#include "raylib.h"
+#include <raylib.h>
 
 namespace otb
 {
@@ -52,6 +52,6 @@ class BoxSingleComponent : public otb::Component
     std::vector<Entry> chain;
     std::vector<BoxComponent*> attached_components;
 
-    friend class BoxSystem;
+    friend struct BoxSystem;
 };
 }

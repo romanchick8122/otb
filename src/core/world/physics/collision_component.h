@@ -2,7 +2,7 @@
 
 #include "core/ecs/component.h"
 
-#include "raylib.h"
+#include <raylib.h>
 
 #include <functional>
 
@@ -21,6 +21,6 @@ class CollisionComponent : public Component
   private:
     CollisionTestFn test_fn;
     CallbackFn callback_fn;
-    friend class PhysicsSystem;
+    friend struct PhysicsSystem;
 };
 }

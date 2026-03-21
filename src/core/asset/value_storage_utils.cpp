@@ -2,7 +2,7 @@
 
 #include "core/assert.h"
 
-#include "raymath.h"
+#include <raymath.h>
 
 #include <sstream>
 
@@ -25,9 +25,21 @@ ValueStorage ValueStorageUtils::serialize(int v)
     return std::to_string(v);
 }
 
+ValueStorage ValueStorageUtils::serialize(size_t v)
+{
+    return std::to_string(v);
+}
+
 ValueStorage ValueStorageUtils::serialize(float v)
 {
     return std::to_string(v);
+}
+
+ValueStorage ValueStorageUtils::serialize(Vector2 v)
+{
+    std::stringstream ss;
+    ss << v.x << " " << v.y;
+    return ss.str();
 }
 
 ValueStorage ValueStorageUtils::serialize(Vector3 v)
@@ -65,10 +77,27 @@ template<> int ValueStorageUtils::deserialize<int>(const ValueStorage& vs)
     return std::stoi(std::get<std::string>(vs.storage));
 }
 
+template<> size_t ValueStorageUtils::deserialize<size_t>(const ValueStorage& vs)
+{
+    OTB_ASSERT(std::holds_alternative<std::string>(vs.storage));
+    size_t result = 0;
+    sscanf_s(std::get<std::string>(vs.storage).c_str(), "%zu", &result);
+    return result;
+}
+
 template<> float ValueStorageUtils::deserialize<float>(const ValueStorage& vs)
 {
     OTB_ASSERT(std::holds_alternative<std::string>(vs.storage));
     return std::stof(std::get<std::string>(vs.storage));
+}
+
+template<> Vector2 ValueStorageUtils::deserialize<Vector2>(const ValueStorage& vs)
+{
+    OTB_ASSERT(std::holds_alternative<std::string>(vs.storage));
+    std::stringstream ss(std::get<std::string>(vs.storage));
+    Vector2 result;
+    ss >> result.x >> result.y;
+    return result;
 }
 
 template<> Vector3 ValueStorageUtils::deserialize<Vector3>(const ValueStorage& vs)

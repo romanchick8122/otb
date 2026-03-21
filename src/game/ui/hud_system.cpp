@@ -5,15 +5,13 @@
 
 #include "game/character/character_component.h"
 
-#include "raylib.h"
-#include "raymath.h"
+#include <raylib.h>
+#include <raymath.h>
 
 namespace game
 {
 namespace
 {
-static constexpr float UI_SCALE = 1.f;
-
 void render_scope()
 {
     static const auto scope = otb::AssetUtils::get_asset<otb::TextureAsset>("/ui/scope.png");

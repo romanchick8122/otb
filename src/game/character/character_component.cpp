@@ -6,7 +6,7 @@
 #include "core/world/physics/velocity_component.h"
 #include "core/world/transform_component.h"
 
-#include "raymath.h"
+#include <raymath.h>
 
 #include <array>
 

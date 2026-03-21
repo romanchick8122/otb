@@ -44,7 +44,7 @@ Component* CameraComponent::deserialize(const ValueStorage& vs)
     result->camera.target = ValueStorageUtils::deserialize<Vector3>(dict.at(TARGET_FIELD));
     result->camera.up = ValueStorageUtils::deserialize<Vector3>(dict.at(UP_FIELD));
     result->camera.fovy = ValueStorageUtils::deserialize<float>(dict.at(FOVY_FIELD));
-    result->camera.projection = ValueStorageUtils::deserialize<float>(dict.at(PROJECITON_FIELD));
+    result->camera.projection = ValueStorageUtils::deserialize<int>(dict.at(PROJECITON_FIELD));
 
     return result;
 }

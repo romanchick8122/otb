@@ -135,9 +135,9 @@ void save_to(std::fstream& target, const ValueStorage& v, size_t depth, std::opt
     else if (const auto dict_ptr = std::get_if<ValueStorage::DictType>(&v.storage))
     {
         target << "!<DICT>\n";
-        for (const auto& [k, v] : *dict_ptr)
+        for (const auto& [k, vs] : *dict_ptr)
         {
-            save_to(target, v, depth + 1, k.c_str());
+            save_to(target, vs, depth + 1, k.c_str());
         }
     }
     else if (const auto str_ptr = std::get_if<std::string>(&v.storage))
@@ -174,7 +174,7 @@ ValueStorage::ValueStorage(std::string&& str)
 void ValueStorage::load(InternedString file_path)
 {
     std::fstream source{ file_path.c_str(), std::fstream::in };
-    *this = std::move(otb::load_impl(source));
+    *this = otb::load_impl(source);
 }
 
 void ValueStorage::save(InternedString file_path) const

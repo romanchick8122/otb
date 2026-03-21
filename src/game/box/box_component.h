@@ -4,7 +4,7 @@
 
 namespace game
 {
-struct BoxComponent : public otb::Component
+class BoxComponent : public otb::Component
 {
   public:
     otb::ValueStorage serialize() const override;

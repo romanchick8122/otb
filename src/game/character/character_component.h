@@ -2,7 +2,7 @@
 
 #include "core/ecs/component.h"
 
-#include "raylib.h"
+#include <raylib.h>
 
 namespace game
 {
@@ -21,7 +21,7 @@ class CharacterComponent : public otb::Component
     float camera_follow_offset = 0.f;
 
     // Runtime
-    enum class MovementState {
+    enum class MovementState : uint8_t {
         WAKING_UP,
         GROUNDED,
         PREPARING_JUMP,

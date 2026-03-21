@@ -2,7 +2,7 @@
 
 #include "core/ecs/component.h"
 
-#include "raylib.h"
+#include <raylib.h>
 
 namespace otb
 {
@@ -16,6 +16,6 @@ class CameraComponent : public Component
 
     ~CameraComponent() override = default;
 
-    Camera camera { 0 };
+    Camera camera;
 };
 }
