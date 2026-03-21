@@ -22,6 +22,9 @@ int main()
 
     static constexpr std::array<int, 2> DEFAULT_WINDOW_SIZE{800, 600};
 
+
+    SetConfigFlags(FLAG_VSYNC_HINT);
+    SetConfigFlags(FLAG_MSAA_4X_HINT);
     InitWindow(DEFAULT_WINDOW_SIZE[0], DEFAULT_WINDOW_SIZE[1], "otb");
     SetTargetFPS(60);
 
