@@ -90,7 +90,7 @@ ModelAsset::ModelAsset(InternedString asset_path)
         animation_count = anim_count_raw;
         animation_names.reserve(animation_count);
 
-        for (int anim_index = 0; anim_index < animation_count; ++anim_index)
+        for (size_t anim_index = 0; anim_index < animation_count; ++anim_index)
         {
             animation_names.emplace_back(animations[anim_index].name);
             animation_lookup.emplace(animation_names.back(), anim_index);

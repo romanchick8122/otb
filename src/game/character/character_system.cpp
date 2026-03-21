@@ -11,7 +11,7 @@
 #include "game/character/character_component.h"
 #include "game/character/input_receiver_component.h"
 
-#include "raymath.h"
+#include <raymath.h>
 
 #include <iostream>
 

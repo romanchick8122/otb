@@ -5,7 +5,7 @@
 #include "core/world/physics/velocity_component.h"
 #include "core/world/transform_component.h"
 
-#include "raymath.h"
+#include <raymath.h>
 
 #include <algorithm>
 
@@ -44,12 +44,6 @@ void PhysicsSystem::update(World* world)
             };
         };
         update_context();
-
-        if (target_location.y < 0 && transform_component->transform.translation.y > 0)
-        {
-            int x = 0;
-            ++x;
-        }
 
         bool has_collision = true;
         do

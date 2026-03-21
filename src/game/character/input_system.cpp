@@ -8,8 +8,8 @@
 #include "game/character/character_component.h"
 #include "game/character/input_receiver_component.h"
 
-#include "raylib.h"
-#include "raymath.h"
+#include <raylib.h>
+#include <raymath.h>
 
 #include <array>
 
@@ -27,7 +27,6 @@ void InputSystem::collect_input_kb_mouse(otb::World* world)
     using namespace otb;
 
     Vector2 movement_request{0, 0};
-    float rotation_input = 0;
     if (IsKeyDown(KEY_W))
     {
         movement_request.x += 1;

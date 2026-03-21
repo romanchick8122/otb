@@ -5,8 +5,8 @@
 #include "core/render/model_component.h"
 #include "core/world/transform_component.h"
 
-#include "raylib.h"
-#include "raymath.h"
+#include <raylib.h>
+#include <raymath.h>
 
 #include <iostream>
 
@@ -128,7 +128,7 @@ void MeshSystem::render_meshes(World* world, float)
             const Matrix translation_matrix = MatrixTranslate(translation.x, translation.y, translation.z);
             const Matrix transform_matrix = ((scale_matrix * rotation_matrix) * translation_matrix);
 
-            for (size_t i = 0; i < model.meshCount; ++i)
+            for (int i = 0; i < model.meshCount; ++i)
             {
                 DrawMesh(model.meshes[i], model.materials[it->forced_material_index], transform_matrix);
             }

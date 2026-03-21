@@ -2,7 +2,7 @@
 
 #include "core/ecs/component.h"
 
-#include "raylib.h"
+#include <raylib.h>
 
 #include <unordered_set>
 

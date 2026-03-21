@@ -2,7 +2,7 @@
 
 #include "core/asset/asset.h"
 
-#include "raylib.h"
+#include <raylib.h>
 
 namespace otb
 {

@@ -7,12 +7,10 @@
 #include "game/menu/menu_layer_component.h"
 #include "game/world_creator.h"
 
-#include "raylib.h"
-#include "raymath.h"
+#include <raylib.h>
+#include <raymath.h>
 
 #include <algorithm>
-
-#include <iostream>
 
 namespace game
 {
@@ -122,7 +120,6 @@ void MenuSystem::render_menu(otb::World* world, float)
 
         static Asset<TextureAsset> cursor = AssetUtils::get_asset<TextureAsset>(InternedString("/ui/scope.png"));
         static Rectangle source_rect { 0.f, 0.f, static_cast<float>(cursor->texture.width), static_cast<float>(cursor->texture.height) };
-        std::cerr << GetMousePosition().x << " " << GetMousePosition().y << std::endl;
         const Vector2 mouse_pos = GetMousePosition();
         const Rectangle destination_rect {mouse_pos.x - MOUSE_CURSOR_SIZE / 2.f, mouse_pos.y - MOUSE_CURSOR_SIZE / 2.f, MOUSE_CURSOR_SIZE, MOUSE_CURSOR_SIZE };
         DrawTexturePro(cursor->texture, source_rect, destination_rect, {}, 0, WHITE);

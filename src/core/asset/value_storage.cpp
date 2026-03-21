@@ -174,7 +174,7 @@ ValueStorage::ValueStorage(std::string&& str)
 void ValueStorage::load(InternedString file_path)
 {
     std::fstream source{ file_path.c_str(), std::fstream::in };
-    *this = std::move(otb::load_impl(source));
+    *this = otb::load_impl(source);
 }
 
 void ValueStorage::save(InternedString file_path) const
