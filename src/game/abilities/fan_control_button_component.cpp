@@ -24,9 +24,9 @@ otb::ValueStorage FanControlButtonComponent::serialize() const
 {
     using namespace otb;
     std::stringstream ss;
-    for (const Entity* entity : animated_entities)
+    for (const Entity* controlled_entity : animated_entities)
     {
-        ss << entity->name.c_str() << " ";
+        ss << controlled_entity->name.c_str() << " ";
     }
     return ValueStorage::DictType {
         { TARGET_ENTITY_FIELD, std::string(target_entity.c_str()) },
