@@ -18,7 +18,9 @@
 namespace game
 {
 void BoxAttachmentSystem::process_ability_activation(otb::World* world)
-{
+{    
+    static constexpr float MAX_ATTACHMENT_DISTANCE = 10.f;
+
     using namespace otb;
 
     const auto* character_component = &*world->components_begin<CharacterComponent>();
@@ -73,7 +75,7 @@ void BoxAttachmentSystem::process_ability_activation(otb::World* world)
             best_hit = { collision, &*box_it};
         }
     }
-    if (best_hit.second != nullptr && best_hit.second->type == BoxComponent::BoxType::DYNAMIC)
+    if (best_hit.second != nullptr && best_hit.second->type == BoxComponent::BoxType::DYNAMIC && best_hit.first.distance < MAX_ATTACHMENT_DISTANCE)
     {
         ability->attached_box = best_hit.second;
         ability->local_space_attachment_position = TransformUtils::apply_inverse_transform(best_hit.second->entity->get_component<TransformComponent>()->transform, best_hit.first.point);
