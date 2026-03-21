@@ -21,6 +21,7 @@ struct MenuControllerComponent : public otb::Component
     ~MenuControllerComponent() override = default;
 
     std::unique_ptr<otb::World> sub_world;
+    otb::InternedString sub_world_path = otb::InternedString::get_empty();
 
     std::vector<otb::InternedString> events;
 };
@@ -67,24 +68,29 @@ void MenuSystem::process_events(otb::World* world)
     using namespace otb;
 
     auto* menu_component = world->get_world_entity()->get_component<MenuControllerComponent>();
-    if (menu_component->sub_world != nullptr)
-        return;
 
     static const InternedString LVL_1_EVENT("go_level.lvl1");
     static const InternedString LVL_2_EVENT("go_level.lvl2");
     static const InternedString LVL_1_ASSET("/lvl1.vs");
     static const InternedString LVL_2_ASSET("/lvl2.vs");
 
-    for (const auto event : menu_component->events)
+    for (const auto event : std::exchange(menu_component->events, {}))
     {
         if (event == LVL_1_EVENT)
         {
             menu_component->sub_world = create_world(LVL_1_ASSET);
+            menu_component->sub_world_path = LVL_1_ASSET;
         }
         else if (event == LVL_2_EVENT)
         {
             menu_component->sub_world = create_world(LVL_2_ASSET);
+            menu_component->sub_world_path = LVL_2_ASSET;
         }
+    }
+    if (IsKeyPressed(KEY_R) && menu_component->sub_world)
+    {
+        menu_component->sub_world.reset();
+        menu_component->sub_world = create_world(menu_component->sub_world_path);
     }
 }
 
