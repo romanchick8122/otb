@@ -19,7 +19,7 @@ namespace game
 {
 void BoxAttachmentSystem::process_ability_activation(otb::World* world)
 {    
-    static constexpr float MAX_ATTACHMENT_DISTANCE = 10.f;
+    static constexpr float MAX_ATTACHMENT_DISTANCE = 22.f;
 
     using namespace otb;
 
