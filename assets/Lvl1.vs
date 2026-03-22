@@ -116,7 +116,7 @@
         TransformComponent: !<DICT>
           rotation: !<VALUE> 0.0 0.0 -0.0 1.0
           scale: !<VALUE> 2.0 2.0 2.0
-          translation: !<VALUE> 12.36550521850586 13.927578926086426 38.27861785888672
+          translation: !<VALUE> 13.256174087524414 13.927578926086426 38.27861785888672
       name: !<VALUE> OTB_PICKUP_THREAD_N_NEEDLE
     !<DICT>
       components: !<DICT>
@@ -216,7 +216,7 @@
         TransformComponent: !<DICT>
           rotation: !<VALUE> 0.0 0.0 -0.0 1.0
           scale: !<VALUE> 74.46820831298828 0.15835915505886078 73.56425476074219
-          translation: !<VALUE> -7.852319717407227 -0.9584569931030273 6.240928649902344
+          translation: !<VALUE> -7.852392196655273 -0.9584569931030273 6.240928649902344
       name: !<VALUE> OTB_S_Floor
     !<DICT>
       components: !<DICT>
@@ -226,8 +226,28 @@
         TransformComponent: !<DICT>
           rotation: !<VALUE> 0.0 0.0 -0.0 1.0
           scale: !<VALUE> 71.46820831298828 0.15835915505886078 73.56425476074219
-          translation: !<VALUE> -7.85233211517334 35.858455657958984 6.240928649902344
+          translation: !<VALUE> -7.852405548095703 35.858455657958984 6.240928649902344
       name: !<VALUE> OTB_S_Floor.001
+    !<DICT>
+      components: !<DICT>
+        BoxComponent: !<DICT>
+          type: !<VALUE> STATIC
+        ModelComponent: !<VALUE> /models/boxes/learn_cube1.glb
+        TransformComponent: !<DICT>
+          rotation: !<VALUE> 0.0 0.0 -0.0 1.0
+          scale: !<VALUE> 3.5385472774505615 3.5385472774505615 3.5385472774505615
+          translation: !<VALUE> 29.204465866088867 0.7973646521568298 -26.897525787353516
+      name: !<VALUE> OTB_S_LEARNBOX1
+    !<DICT>
+      components: !<DICT>
+        BoxComponent: !<DICT>
+          type: !<VALUE> STATIC
+        ModelComponent: !<VALUE> /models/boxes/learn_cube2.glb
+        TransformComponent: !<DICT>
+          rotation: !<VALUE> 0.0 0.0 -0.0 1.0
+          scale: !<VALUE> 2.77142333984375 2.77142333984375 2.77142333984375
+          translation: !<VALUE> 9.797969818115234 13.64549446105957 38.74656295776367
+      name: !<VALUE> OTB_S_LEARNBOX2
     !<DICT>
       components: !<DICT>
         BoxComponent: !<DICT>
@@ -266,7 +286,7 @@
         TransformComponent: !<DICT>
           rotation: !<VALUE> 0.0 0.0 -0.0 1.0
           scale: !<VALUE> 71.62064361572266 36.62211608886719 18.63031005859375
-          translation: !<VALUE> -7.448084831237793 17.410043716430664 -39.379417419433594
+          translation: !<VALUE> -7.448163986206055 17.410043716430664 -39.379417419433594
       name: !<VALUE> OTB_S_WALL1.002
     !<DICT>
       components: !<DICT>
