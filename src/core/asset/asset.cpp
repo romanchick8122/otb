@@ -2,8 +2,6 @@
 
 #include "core/assert.h"
 
-#include <string>
-
 namespace otb
 {
 AssetBase::AssetBase(InternedString asset_path)
@@ -21,11 +19,5 @@ InternedString AssetUtils::get_sibling_asset(InternedString asset_path, const st
     return InternedString(result.c_str());
 }
 
-std::string AssetUtils::get_asset_file_path(InternedString asset_path)
-{
-    static std::string data;
-    data = OTB_ASSETS_DIRECTORY;
-    data += asset_path.c_str();
-    return data;
-}
+
 }
