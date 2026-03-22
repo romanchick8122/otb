@@ -96,7 +96,7 @@ void InventorySystem::process_hud(otb::World* world)
 
         if (!was_open)
         {
-            inventory_it->hud_highlighted_sector = std::string::npos;
+            inventory_it->hud_highlighted_sector = 2uz;
         }
 
         if (Vector2LengthSqr(input_receiver_component->secondary_analog_input) < MOUSE_DEAD_ZONE * MOUSE_DEAD_ZONE * world->fixed_frame_time * world->fixed_frame_time)

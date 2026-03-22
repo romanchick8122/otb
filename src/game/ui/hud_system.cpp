@@ -39,8 +39,8 @@ void render_active_item(const InventoryComponent* inventory)
 
     static const auto bg = AssetUtils::get_asset<TextureAsset>("/ui/inventory/active_item_bg.png");
 
-    static const Vector2 norm_pos { -0.8f, 0.8f };
-    static const float target_height = 0.2f;
+    static const Vector2 norm_pos { -0.824f, 0.698f };
+    static const float target_height = 0.426f;
 
     const Vector2 texture_size { static_cast<float>(bg->texture.width), static_cast<float>(bg->texture.height) };
     const Vector2 norm_size = { UIUtils::get_norm_target_width(texture_size, target_height), target_height };
@@ -62,9 +62,9 @@ void render_inventory(const InventoryComponent* inventory)
     static const auto highlight = AssetUtils::get_asset<TextureAsset>("/ui/inventory/selector.png");
 
     static constexpr size_t SECTOR_COUNT = 3uz;
-    static constexpr float WHEEL_RADIUS = 1.f;
-    static constexpr float ITEM_RADIUS = .3f;
-    static constexpr float ITEM_SIZE = .25f;
+    static constexpr float WHEEL_RADIUS = 1.342f;
+    static constexpr float ITEM_RADIUS = .39f;
+    static constexpr float ITEM_SIZE = .459f;
 
     render_active_item(inventory);
 

@@ -148,6 +148,8 @@ namespace
 
     static constexpr float ROTATION_SLERP_FACTOR = 5.f;
 
+    static constexpr float PUSHING_MAX_OVERHANG_SIZE = 1.f;
+
     static const otb::InternedString ABILITY_ITEM_THREAD_N_NEEDLE("thread_n_needle");
 
     struct StateUpdateContext
@@ -272,7 +274,19 @@ namespace
         {
             set_state(ctx, CharacterComponent::MovementState::AIMING);
         } 
-        else if (ctx.character_component->pushing_obj != nullptr)
+        else if ([&]{
+            if (ctx.character_component->pushing_obj == nullptr)
+            {
+                return false;
+            }
+            const Vector3 pushing_ort { -ctx.character_component->pushing_direction.z, ctx.character_component->pushing_direction.y, ctx.character_component->pushing_direction.x };
+            const Transform& target_transform = ctx.character_component->pushing_obj->entity->get_component<TransformComponent>()->transform;
+            const float box_edge_size = abs(Vector3DotProduct(target_transform.scale, pushing_ort));
+            const float distance_to_edge_center = abs(Vector3DotProduct(target_transform.translation - ctx.transform_component->transform.translation, pushing_ort));
+            const float character_edge_size = ctx.transform_component->transform.scale.z;
+            const float overhang = distance_to_edge_center - (box_edge_size - character_edge_size) / 2.f;
+            return overhang < PUSHING_MAX_OVERHANG_SIZE;
+        }())
         {
             set_state(ctx, CharacterComponent::MovementState::PREPARE_PUSHING);
             if (std::get<CharacterComponent::StateDataPUSHING>(ctx.character_component->state_data).high_push)
