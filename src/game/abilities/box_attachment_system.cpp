@@ -134,7 +134,7 @@ void BoxAttachmentSystem::debug_draw(otb::World* world, float)
     QuaternionToAxisAngle(rotation, &axis, &angle);
 
     static constexpr float LINE_WIDTH = .1f;
-    static constexpr Color LINE_COLOR = CLITERAL(Color){0x73, 0x93, 0xB3, 0xFF};
+    static constexpr Color LINE_COLOR = CLITERAL(Color){0x48, 0x49, 0x4B, 0xFF};
     DrawModelEx(plane_mesh, (from + to) / 2, axis, angle / DEG2RAD, {Vector3Length(to - from), 1.f, LINE_WIDTH}, LINE_COLOR);
 }
 }
