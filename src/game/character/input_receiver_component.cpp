@@ -15,6 +15,7 @@ otb::Component* InputReceiverComponent::deserialize(const otb::ValueStorage&)
 const otb::InternedString InputReceiverComponent::ActionNames::ability("ability");
 const otb::InternedString InputReceiverComponent::ActionNames::aim("aim");
 const otb::InternedString InputReceiverComponent::ActionNames::jump("jump");
+const otb::InternedString InputReceiverComponent::ActionNames::inventory("inventory");
 
 void InputReceiverComponent::ActionQueue::request(otb::InternedString action, float delay)
 {

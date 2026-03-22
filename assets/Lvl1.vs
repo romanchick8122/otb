@@ -14,32 +14,6 @@
       name: !<VALUE> _world
     !<DICT>
       components: !<DICT>
-        CameraComponent: !<DICT>
-          fovy: !<VALUE> 90.000000
-          position: !<VALUE> 7.358891487121582 4.958309173583984 6.925790786743164
-          projection: !<VALUE> 0
-          target: !<VALUE> 7.358891487121582 3.9583091735839844 6.925790786743164
-          up: !<VALUE> 0.0 0.0 -1.0
-        TransformComponent: !<DICT>
-          rotation: !<VALUE> 0.483536034822464 0.33687159419059753 -0.20870360732078552 0.7804827094078064
-          scale: !<VALUE> 0.0 0.0 0.0
-          translation: !<VALUE> 7.358891487121582 4.958309173583984 6.925790786743164
-      name: !<VALUE> Camera
-    !<DICT>
-      components: !<DICT>
-        CameraComponent: !<DICT>
-          fovy: !<VALUE> 90.000000
-          position: !<VALUE> 7.358891487121582 4.958309173583984 6.925790786743164
-          projection: !<VALUE> 0
-          target: !<VALUE> 7.358891487121582 3.9583091735839844 6.925790786743164
-          up: !<VALUE> 0.0 0.0 -1.0
-        TransformComponent: !<DICT>
-          rotation: !<VALUE> 0.483536034822464 0.33687159419059753 -0.20870360732078552 0.7804827094078064
-          scale: !<VALUE> 0.0 0.0 0.0
-          translation: !<VALUE> 7.358891487121582 4.958309173583984 6.925790786743164
-      name: !<VALUE> Camera.001
-    !<DICT>
-      components: !<DICT>
         BoxComponent: !<DICT>
           type: !<VALUE> DYNAMIC
         CharacterComponent: !<DICT>
@@ -127,6 +101,14 @@
           scale: !<VALUE> 3.9240708351135254 1.19133460521698 4.80018424987793
           translation: !<VALUE> -1.1984176635742188 -0.08708372712135315 33.783023834228516
       name: !<VALUE> OTB_D_BOX4.006
+    !<DICT>
+      components: !<DICT>
+        EventTriggerComponent: !<VALUE> go_level.lvl2
+        TransformComponent: !<DICT>
+          rotation: !<VALUE> 0.0 0.0 -0.0 1.0
+          scale: !<VALUE> 12.708446502685547 2.0 17.45824432373047
+          translation: !<VALUE> -36.130836486816406 9.990371704101562 31.944292068481445
+      name: !<VALUE> OTB_Finish
     !<DICT>
       components: !<DICT>
         ItemPickupComponent: !<VALUE> thread_n_needle
@@ -263,8 +245,8 @@
         ModelComponent: !<VALUE> /models/boxes/outter_box.glb
         TransformComponent: !<DICT>
           rotation: !<VALUE> 0.0 0.0 -0.0 1.0
-          scale: !<VALUE> 0.4165515899658203 36.62211608886719 72.5154037475586
-          translation: !<VALUE> 27.968942642211914 17.410043716430664 5.951292991638184
+          scale: !<VALUE> 14.270586967468262 36.62211608886719 72.5154037475586
+          translation: !<VALUE> 34.895957946777344 17.410043716430664 5.951292991638184
       name: !<VALUE> OTB_S_WALL1
     !<DICT>
       components: !<DICT>
@@ -273,8 +255,8 @@
         ModelComponent: !<VALUE> /models/boxes/outter_box.glb
         TransformComponent: !<DICT>
           rotation: !<VALUE> 0.0 0.0 -0.0 1.0
-          scale: !<VALUE> 0.4165515899658203 36.62220001220703 72.5154037475586
-          translation: !<VALUE> -43.16499328613281 17.410043716430664 5.97215461730957
+          scale: !<VALUE> 18.533950805664062 36.62220001220703 72.5154037475586
+          translation: !<VALUE> -52.22369384765625 17.410043716430664 5.97215461730957
       name: !<VALUE> OTB_S_WALL1.001
     !<DICT>
       components: !<DICT>
@@ -283,8 +265,8 @@
         ModelComponent: !<VALUE> /models/boxes/outter_box.glb
         TransformComponent: !<DICT>
           rotation: !<VALUE> 0.0 0.0 -0.0 1.0
-          scale: !<VALUE> 71.62064361572266 36.62211608886719 1.3180240392684937
-          translation: !<VALUE> -7.448037147521973 17.410043716430664 -30.723276138305664
+          scale: !<VALUE> 71.62064361572266 36.62211608886719 18.63031005859375
+          translation: !<VALUE> -7.448060989379883 17.410043716430664 -39.379417419433594
       name: !<VALUE> OTB_S_WALL1.002
     !<DICT>
       components: !<DICT>
@@ -293,6 +275,6 @@
         ModelComponent: !<VALUE> /models/boxes/outter_box.glb
         TransformComponent: !<DICT>
           rotation: !<VALUE> 0.0 0.0 -0.0 1.0
-          scale: !<VALUE> 70.85075378417969 36.62211608886719 1.3180240392684937
-          translation: !<VALUE> -7.619932651519775 17.410043716430664 41.48511505126953
+          scale: !<VALUE> 70.85075378417969 36.62211608886719 18.930219650268555
+          translation: !<VALUE> -7.619932651519775 17.410043716430664 50.29121017456055
       name: !<VALUE> OTB_S_WALL1.003

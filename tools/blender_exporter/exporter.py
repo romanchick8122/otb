@@ -25,6 +25,8 @@ class OTBWorldExportOperator(bpy.types.Operator, ExportHelper):
                 }
             if "item_pickup" in obj:
                 result["ItemPickupComponent"] = obj["item_pickup"]
+            if "event_trigger" in obj:
+                result["EventTriggerComponent"] = obj["event_trigger"]
             return result
 
         def add_transfrom_component(obj, dimensions):

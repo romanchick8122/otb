@@ -29,10 +29,6 @@ void BoxSystem::create_components(otb::World* world)
 
     for (auto it = world->components_begin<BoxComponent>(); it != world->components_end<BoxComponent>(); ++it)
     {
-        if (!it->entity->has_component<ModelComponent>())
-        {
-            it->entity->add_component(new ModelComponent(debug_cube_asset));
-        }
         if (!it->entity->has_component<VelocityComponent>())
         {
             it->entity->add_component(new VelocityComponent());
