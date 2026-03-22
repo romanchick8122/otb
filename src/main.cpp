@@ -34,7 +34,6 @@ int main()
 
     std::unique_ptr<World> world = game::create_menu_world();
 
-    SetExitKey(0);
     while (!WindowShouldClose())
     {
         #if defined(OTB_DEBUG)
