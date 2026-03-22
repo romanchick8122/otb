@@ -6,6 +6,7 @@
 
 namespace game
 {
+class BoxComponent;
 class SurfaceComponent;
 
 class CharacterComponent : public otb::Component
@@ -38,17 +39,20 @@ class CharacterComponent : public otb::Component
     struct StateDataAIMING {
         Vector2 aim_direction;
     };
-    struct StateDataPREPARE_PUSHING {
+    struct StateDataPUSHING {
         Vector3 pushing_direction;
+        bool high_push = false;
     };
+    
     std::variant<
         std::monostate,
         StateDataAIMING,
-        StateDataPREPARE_PUSHING
+        StateDataPUSHING
     > state_data;
 
-    bool is_pushing = false;
+    const BoxComponent* pushing_obj = nullptr;
     Vector3 pushing_direction;
+    
 
     float movement_speed_multiplier = 1.f;
 };

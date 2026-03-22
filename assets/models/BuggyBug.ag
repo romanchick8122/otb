@@ -6,17 +6,20 @@
     IdleAction: !<VALUE> 0.2
     Flying: !<VALUE> 0.2
     UmbrellaUnleash: !<VALUE> 0.1
-    HeadUp: !<VALUE> 0.1
+    HighPushingReady: !<VALUE> 0.1
     Neutral: !<VALUE> 0.1
-    AlternativePushingReady: !<VALUE> 0.01
+    LowPushingReady: !<VALUE> 0.01
   JumpReady: !<DICT>
     Jump: !<VALUE> -1
   Jump: !<DICT>
     Flying: !<VALUE> -1
   Flying: !<DICT>
-    Landing: !<VALUE> 0.001
+    LandingOnMove: !<VALUE> 0.001
+    LandingOnPlace: !<VALUE> 0.001
     UmbrellaUnleash: !<VALUE> 0.2
-  Landing: !<DICT>
+  LandingOnMove: !<DICT>
+    Neutral: !<VALUE> -1
+  LandingOnPlace: !<DICT>
     Neutral: !<VALUE> -1
   WakingUp: !<DICT>
     Neutral: !<VALUE> -1
@@ -31,10 +34,10 @@
     WalkingCycle: !<VALUE> 0.3
     JumpReady: !<VALUE> -1
     Throw: !<VALUE> -1
-    HeadUp: !<VALUE> -1
-  HeadUp: !<DICT>
-    PushCycle: !<VALUE> -1
-  PushCycle: !<DICT>
+    HighPushingReady: !<VALUE> -1
+  HighPushingReady: !<DICT>
+    HighPushingCycle: !<VALUE> -1
+  HighPushingCycle: !<DICT>
     Neutral: !<VALUE> 0.5
   Throw: !<DICT>
     PullCycle: !<VALUE> -1
@@ -49,7 +52,7 @@
   UmbrellaSheathe: !<DICT>
     Neutral: !<VALUE> -1
     Idle: !<VALUE> -1
-  AlternativePushingReady: !<DICT>
-    AlternativePushingCycle: !<VALUE> 0.05
-  AlternativePushingCycle: !<DICT>
+  LowPushingReady: !<DICT>
+    LowPushingCycle: !<VALUE> 0.05
+  LowPushingCycle: !<DICT>
     Idle: !<VALUE> 0.1

@@ -125,14 +125,20 @@ namespace
     static const otb::InternedString IDLE_ANIMATION("Idle");
     static const otb::InternedString JUMP_ANIMATION("Jump");
     static const otb::InternedString FLYING_ANIMATION("Flying");
+    static const otb::InternedString LANDING_ON_PLACE_ANIMATION("LandingOnPlace");
+    static const otb::InternedString LANDING_ON_MOVE_ANIMATION("LandingOnMove");
     static const otb::InternedString WALKING_ANIMATION("WalkingCycle");
     static const otb::InternedString THROW_ANIMATION("Throw");
     static const otb::InternedString PULL_ANIMATION("PullCycle");
-    static const otb::InternedString PUSH_ANIMATION("AlternativePushingCycle");
+    static const otb::InternedString LOW_PUSH_ANIMATION("LowPushingCycle");
+    static const otb::InternedString HIGH_PUSH_ANIMATION("HighPushingCycle");
     static constexpr float WALKING_SPEED = 3.36408f;
     static constexpr float PULL_SPEED = -3.1307f;
-    static constexpr float PUSHING_SPEED = 1.10695f;
+    static constexpr float HIGH_PUSHING_SPEED = 1.10695f;
+    static constexpr float LOW_PUSHING_SPEED = 1.97993f;
     static constexpr float WALKING_ANIM_EPS = 0.7f;
+    static constexpr float HIGHT_FOR_HIGH_PUSH = 2.75f;
+    static constexpr float SPEED_FOR_NOT_SLIDING = 0.0f;
 
     static constexpr Vector2 AIM_LIMIT_MIN { -1.f, -0.5f };
     static constexpr Vector2 AIM_LIMIT_MAX { 1.f, 1.f };
@@ -158,15 +164,20 @@ namespace
 
     void set_state(StateUpdateContext& ctx, CharacterComponent::MovementState new_state)
     {
+        using namespace otb;
         ctx.character_component->movement_state = new_state;
         switch (ctx.character_component->movement_state) {
             case CharacterComponent::MovementState::AIMING:
                 ctx.character_component->state_data = CharacterComponent::StateDataAIMING{};
                 break;
             case CharacterComponent::MovementState::PREPARE_PUSHING:
-                ctx.character_component->state_data = CharacterComponent::StateDataPREPARE_PUSHING {
+                ctx.character_component->state_data = CharacterComponent::StateDataPUSHING {
                     .pushing_direction = ctx.character_component->pushing_direction,
+                    .high_push = ctx.character_component->pushing_obj->entity->get_component<TransformComponent>()->transform.scale.y >= HIGHT_FOR_HIGH_PUSH,
                 };
+                break;
+            case CharacterComponent::MovementState::PUSHING:
+                OTB_ASSERT(std::holds_alternative<CharacterComponent::StateDataPUSHING>(ctx.character_component->state_data));
                 break;
             default:
                 ctx.character_component->state_data = std::monostate{};
@@ -243,6 +254,7 @@ namespace
 
     void update_state_GROUNDED(StateUpdateContext& ctx)
     {
+        using namespace otb;
         if (ctx.box_component->rests_on == nullptr)
         {
             set_state(ctx, CharacterComponent::MovementState::FLYING);
@@ -260,10 +272,12 @@ namespace
         {
             set_state(ctx, CharacterComponent::MovementState::AIMING);
         } 
-        else if (ctx.character_component->is_pushing)
+        else if (ctx.character_component->pushing_obj != nullptr)
         {
             set_state(ctx, CharacterComponent::MovementState::PREPARE_PUSHING);
-            ctx.model_component->request_animation(PUSH_ANIMATION, true);
+            if (std::get<CharacterComponent::StateDataPUSHING>(ctx.character_component->state_data).high_push)
+            ctx.model_component->request_animation(HIGH_PUSH_ANIMATION, true);
+            else ctx.model_component->request_animation(LOW_PUSH_ANIMATION, true);
         }
         else
         {
@@ -283,16 +297,23 @@ namespace
 
     void update_state_FLYING(StateUpdateContext& ctx)
     {
-        if (ctx.velocity_component->velocity.y == 0)
+        if (ctx.box_component->rests_on != nullptr)
         {
             set_state(ctx, CharacterComponent::MovementState::LANDING);
-            ctx.model_component->request_animation(IDLE_ANIMATION, true);
+            const Vector3 character_forward_vector = Vector3RotateByQuaternion({1, 0, 0}, ctx.transform_component->transform.rotation);
+            const float forward_projected_speed = Vector3DotProduct(character_forward_vector, ctx.velocity_component->velocity);
+            ctx.model_component->request_animation(FloatEquals(forward_projected_speed, SPEED_FOR_NOT_SLIDING) ? LANDING_ON_PLACE_ANIMATION : LANDING_ON_MOVE_ANIMATION, false);
         }
     }
 
     void update_state_LANDING(StateUpdateContext& ctx)
     {
-        if (ctx.model_component->get_playing_animation() == IDLE_ANIMATION)
+        if (ctx.model_component->get_playing_animation() == LANDING_ON_MOVE_ANIMATION || ctx.model_component->get_playing_animation() == LANDING_ON_PLACE_ANIMATION)
+        {
+            ctx.model_component->request_animation(IDLE_ANIMATION, true);
+            return;
+        } 
+        else if (ctx.model_component->get_playing_animation() == IDLE_ANIMATION)
         {
             set_state(ctx, CharacterComponent::MovementState::GROUNDED);
         }
@@ -343,8 +364,8 @@ namespace
 
     void update_state_PREPARE_PUSHING(StateUpdateContext& ctx)
     {
-        set_desired_rotation(ctx, otb::MathUtils::get_rotation_from_to({1, 0, 0}, std::get<CharacterComponent::StateDataPREPARE_PUSHING>(ctx.character_component->state_data).pushing_direction));
-        if (ctx.model_component->get_playing_animation() == PUSH_ANIMATION)
+        set_desired_rotation(ctx, otb::MathUtils::get_rotation_from_to({1, 0, 0}, std::get<CharacterComponent::StateDataPUSHING>(ctx.character_component->state_data).pushing_direction));
+        if (ctx.model_component->get_playing_animation() == HIGH_PUSH_ANIMATION || ctx.model_component->get_playing_animation() == LOW_PUSH_ANIMATION)
         {
             set_state(ctx, CharacterComponent::MovementState::PUSHING);
         }
@@ -352,14 +373,21 @@ namespace
 
     void update_state_PUSHING(StateUpdateContext& ctx)
     {
-        if(!ctx.character_component->is_pushing)
+        if(ctx.character_component->pushing_obj == nullptr)
         {
             set_state(ctx, CharacterComponent::MovementState::STOP_PUSHING);
             ctx.model_component->request_animation(IDLE_ANIMATION, true);
             ctx.model_component->set_animation_speed(GLOBAL_ANIMATION_SPEED);
             return;
+        } 
+        if (std::get<CharacterComponent::StateDataPUSHING>(ctx.character_component->state_data).high_push)
+        {
+            select_animation_from_movement_speed(ctx, WALKING_ANIM_EPS, WALKING_ANIM_EPS, HIGH_PUSH_ANIMATION, 1 / HIGH_PUSHING_SPEED, IDLE_ANIMATION, WALKING_ANIMATION, 1 / WALKING_SPEED);    
         }
-        select_animation_from_movement_speed(ctx, WALKING_ANIM_EPS, WALKING_ANIM_EPS, PUSH_ANIMATION, 1 / PUSHING_SPEED, IDLE_ANIMATION, WALKING_ANIMATION, 1 / WALKING_SPEED);
+        else
+        {
+            select_animation_from_movement_speed(ctx, WALKING_ANIM_EPS, WALKING_ANIM_EPS, LOW_PUSH_ANIMATION, 1 / LOW_PUSHING_SPEED, IDLE_ANIMATION, WALKING_ANIMATION, 1 / WALKING_SPEED);
+        }
         set_desired_rotation(ctx, otb::MathUtils::get_rotation_from_to({1, 0, 0}, ctx.character_component->pushing_direction));
     }
 
