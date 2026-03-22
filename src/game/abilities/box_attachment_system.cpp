@@ -2,6 +2,7 @@
 
 #include "core/ecs/world.h"
 #include "core/ecs/component.h"
+#include "core/math/math_utils.h"
 #include "core/math/transform_utils.h"
 #include "core/render/camera_component.h"
 #include "core/world/physics/velocity_component.h"
@@ -124,6 +125,16 @@ void BoxAttachmentSystem::debug_draw(otb::World* world, float)
 
     const Vector3 from = ability->entity->get_component<TransformComponent>()->transform.translation;
     const Vector3 to = TransformUtils::apply_transform(ability->attached_box->entity->get_component<TransformComponent>()->transform, ability->local_space_attachment_position);
-    DrawLine3D(from, to, YELLOW);
+
+    static const auto plane_mesh = LoadModelFromMesh(GenMeshPlane(1.f, 1.f, 1, 1));
+
+    const Quaternion rotation = MathUtils::get_rotation_from_to({1, 0, 0}, to - from);
+    Vector3 axis = {};
+    float angle = 0.f;
+    QuaternionToAxisAngle(rotation, &axis, &angle);
+
+    static constexpr float LINE_WIDTH = .1f;
+    static constexpr Color LINE_COLOR = CLITERAL(Color){0x73, 0x93, 0xB3, 0xFF};
+    DrawModelEx(plane_mesh, (from + to) / 2, axis, angle / DEG2RAD, {Vector3Length(to - from), 1.f, LINE_WIDTH}, LINE_COLOR);
 }
 }
