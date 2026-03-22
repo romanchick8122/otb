@@ -79,6 +79,16 @@ void FanSystem::update_controllers(otb::World* world)
     }
 }
 
+void FanSystem::update_fan_visibility(otb::World* world)
+{
+    using namespace otb;
+    for (auto it = world->components_begin<FanComponent>(); it != world->components_end<FanComponent>(); ++it)
+    {
+        
+        (it->entity->get_component<ModelComponent>()->*(it->controller->enabled ? &ModelComponent::show : &ModelComponent::hide))();
+    }
+}
+
 void FanSystem::apply_velocity(otb::World* world)
 {
     using namespace otb;

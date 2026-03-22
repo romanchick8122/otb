@@ -52,6 +52,7 @@ std::unique_ptr<otb::World> create_world(otb::InternedString world_asset)
     
     world->add_fixed_system(BoxSystem::update_from_velocity);
     world->add_fixed_system(FanSystem::update_controllers);
+    world->add_fixed_system(FanSystem::update_fan_visibility);
 
     world->add_fixed_system(CharacterSystem::update_state);
 
