@@ -20,7 +20,7 @@ namespace
     static constexpr float ANIMATION_SPEED = 60.f;
 
     static constexpr float MOUSE_DEAD_ZONE = 3000.f;
-    static constexpr size_t SECTOR_COUNT = 3.f;
+    static constexpr size_t SECTOR_COUNT = 3uz;
 }
 
 void InventorySystem::init(otb::World* world)

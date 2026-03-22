@@ -61,7 +61,7 @@ void render_inventory(const InventoryComponent* inventory)
     static const auto bg = AssetUtils::get_asset<TextureAsset>("/ui/inventory/inventory_menu.png");
     static const auto highlight = AssetUtils::get_asset<TextureAsset>("/ui/inventory/selector.png");
 
-    static constexpr size_t SECTOR_COUNT = 3;
+    static constexpr size_t SECTOR_COUNT = 3uz;
     static constexpr float WHEEL_RADIUS = 1.f;
     static constexpr float ITEM_RADIUS = .3f;
     static constexpr float ITEM_SIZE = .25f;
