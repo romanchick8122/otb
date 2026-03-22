@@ -1,6 +1,7 @@
 #include "menu_layer_component.h"
 
 #include "core/asset/value_storage_utils.h"
+#include "core/ui/ui_utils.h"
 
 #include <raymath.h>
 
@@ -52,26 +53,13 @@ otb::Component* MenuLayerComponent::deserialize(const otb::ValueStorage& vs)
 
     return result;
 }
-namespace
-{
-Vector2 get_screen_size()
-{
-    return Vector2{static_cast<float>(GetRenderWidth()), static_cast<float>(GetRenderHeight())};
-}
 
-Vector2 normalized_to_screen(const Vector2 v)
-{
-    return (v + Vector2{1.f, 1.f}) / 2.f * get_screen_size();
-}
-}
 Rectangle MenuLayerComponent::get_screen_space_rect() const
 {
-    const Vector2 screen_size = get_screen_size();
-    const float target_width = target_height * screen_size.y / screen_size.x * texture_size_override.x / texture_size_override.y;
+    using namespace otb;
+    const float target_width = UIUtils::get_norm_target_width(texture_size_override, target_height);
     const Vector2 offset { target_width, target_height };
-    const Vector2 pos_min = normalized_to_screen(position - offset / 2);
-    const Vector2 pos_max = normalized_to_screen(position + offset / 2);
-    const Vector2 screen_space_size = pos_max - pos_min;
-    return { pos_min.x, pos_min.y, screen_space_size.x, screen_space_size.y };
+    const Rectangle norm_rect = UIUtils::rect_from_min_max(position - offset / 2, position + offset / 2);
+    return UIUtils::normalized_to_screen(norm_rect);
 }
 }

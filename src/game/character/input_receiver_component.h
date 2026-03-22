@@ -30,6 +30,7 @@ class InputReceiverComponent : public otb::Component
         static const otb::InternedString ability;
         static const otb::InternedString aim;
         static const otb::InternedString jump;
+        static const otb::InternedString inventory;
     };
 };
 }

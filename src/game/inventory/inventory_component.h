@@ -12,7 +12,10 @@ class InventoryComponent : public otb::Component
   public:
     ~InventoryComponent() override = default;
 
-    std::unordered_set<otb::InternedString> items;
+    std::vector<otb::InternedString> items;
     otb::InternedString active_item = otb::InternedString::get_empty();
+
+    bool hud_open = true;
+    size_t hud_highlighted_sector = std::string::npos;
 };
 }

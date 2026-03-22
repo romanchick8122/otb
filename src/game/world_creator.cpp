@@ -41,6 +41,7 @@ std::unique_ptr<otb::World> create_world(otb::InternedString world_asset)
     world->add_fixed_system(FanSystem::apply_velocity);
 
     world->add_fixed_system(InventorySystem::process_item_pickup);
+    world->add_fixed_system(InventorySystem::process_hud);
 
     world->add_fixed_system(BoxAttachmentSystem::process_ability_activation);
     world->add_fixed_system(BoxAttachmentSystem::process_ability);
