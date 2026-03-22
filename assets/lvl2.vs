@@ -126,7 +126,7 @@
         TransformComponent: !<DICT>
           rotation: !<VALUE> 1.5454311608209537e-08 1.5454309831852697e-08 0.7071067094802856 0.7071068286895752
           scale: !<VALUE> 1.0634679794311523 4.776233196258545 4.776233196258545
-          translation: !<VALUE> -12.013294219970703 1.9221932888031006 -23.570858001708984
+          translation: !<VALUE> -11.830204010009766 1.9221932888031006 -23.570858001708984
       name: !<VALUE> OTB_Fan1_Actual
     !<DICT>
       components: !<DICT>
@@ -144,6 +144,14 @@
           scale: !<VALUE> 1.0634679794311523 4.776233196258545 4.776233196258545
           translation: !<VALUE> 21.82823944091797 1.9114056825637817 26.056774139404297
       name: !<VALUE> OTB_Fan3_Actual
+    !<DICT>
+      components: !<DICT>
+        EventTriggerComponent: !<VALUE> go_main_menu
+        TransformComponent: !<DICT>
+          rotation: !<VALUE> 0.0 0.0 -0.0 1.0
+          scale: !<VALUE> 13.828391075134277 2.0 12.011902809143066
+          translation: !<VALUE> -24.99871826171875 20.73896598815918 -20.217304229736328
+      name: !<VALUE> OTB_Finish
     !<DICT>
       components: !<DICT>
         ItemPickupComponent: !<VALUE> thread_n_needle
@@ -379,6 +387,33 @@
       components: !<DICT>
         BoxComponent: !<DICT>
           type: !<VALUE> STATIC
+        TransformComponent: !<DICT>
+          rotation: !<VALUE> 0.0 0.0 -0.0 1.0
+          scale: !<VALUE> 4.776233673095703 1.0634689331054688 4.776233196258545
+          translation: !<VALUE> -11.830204010009766 1.9221932888031006 -23.570858001708984
+      name: !<VALUE> OTB_S_Fan1_Collision
+    !<DICT>
+      components: !<DICT>
+        BoxComponent: !<DICT>
+          type: !<VALUE> STATIC
+        TransformComponent: !<DICT>
+          rotation: !<VALUE> 0.0 0.0 -0.0 1.0
+          scale: !<VALUE> 10.023104667663574 10.023104667663574 2.7193751335144043
+          translation: !<VALUE> 11.450272560119629 6.493407249450684 12.271513938903809
+      name: !<VALUE> OTB_S_Fan2_Collision
+    !<DICT>
+      components: !<DICT>
+        BoxComponent: !<DICT>
+          type: !<VALUE> STATIC
+        TransformComponent: !<DICT>
+          rotation: !<VALUE> 0.0 0.0 -0.0 1.0
+          scale: !<VALUE> 4.776233673095703 1.0634689331054688 4.776233196258545
+          translation: !<VALUE> 21.82823944091797 1.9114056825637817 26.056774139404297
+      name: !<VALUE> OTB_S_Fan3_Collision
+    !<DICT>
+      components: !<DICT>
+        BoxComponent: !<DICT>
+          type: !<VALUE> STATIC
         ModelComponent: !<VALUE> /models/boxes/carton_box.glb
         TransformComponent: !<DICT>
           rotation: !<VALUE> 0.0 0.0 -0.0 1.0
@@ -461,7 +496,7 @@
         TransformComponent: !<DICT>
           rotation: !<VALUE> 0.0 0.7071068286895752 -0.0 0.7071067094802856
           scale: !<VALUE> 13.115518569946289 13.100000381469727 13.100000381469727
-          translation: !<VALUE> 12.263769149780273 4.503538131713867 4.551912784576416
+          translation: !<VALUE> 11.676254272460938 6.3644232749938965 4.551912784576416
       name: !<VALUE> OTB_ZFan_2
     !<DICT>
       components: !<DICT>

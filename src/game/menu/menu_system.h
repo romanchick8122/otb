@@ -13,6 +13,7 @@ static void init(otb::World*);
 
 static void collect_events(otb::World*);
 static void subworld_update_fixed(otb::World*);
+static void collect_subworld_events(otb::World*);
 static void process_events(otb::World*);
 
 static void render_menu(otb::World*, float);
