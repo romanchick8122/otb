@@ -12,6 +12,7 @@
 #include "game/box/box_system.h"
 #include "game/character/character_system.h"
 #include "game/character/input_system.h"
+#include "game/inventory/inventory_system.h"
 #include "game/menu/menu_system.h"
 #include "game/ui/hud_system.h"
 
@@ -29,9 +30,9 @@ std::unique_ptr<otb::World> create_world(otb::InternedString world_asset)
     // -------- INITIAL ------
     BoxSystem::create_components(world);
     FanSystem::init(world);
+    InventorySystem::init(world);
 
     // -------- FIXED --------
-
     world->add_fixed_system(InputSystem::clear_input);
     world->add_fixed_system(InputSystem::collect_input_kb_mouse);
     world->add_fixed_system(InputSystem::update_action_queue);

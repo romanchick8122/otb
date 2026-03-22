@@ -11,6 +11,7 @@
 #include "game/box/box_component.h"
 #include "game/character/character_component.h"
 #include "game/character/input_receiver_component.h"
+#include "game/inventory/inventory_component.h"
 
 #include <raymath.h>
 
@@ -141,15 +142,18 @@ namespace
 
     static constexpr float ROTATION_SLERP_FACTOR = 5.f;
 
+    static const otb::InternedString ABILITY_ITEM_THREAD_N_NEEDLE("thread_n_needle");
+
     struct StateUpdateContext
     {
         otb::World* world;
+        BoxComponent* box_component;
         CharacterComponent* character_component;
         const InputReceiverComponent* input_receiver_component;
+        const InventoryComponent* inventory_component;
         otb::ModelComponent* model_component;
         otb::TransformComponent* transform_component;
         otb::VelocityComponent* velocity_component;
-        BoxComponent* box_component;
     };
 
     void set_state(StateUpdateContext& ctx, CharacterComponent::MovementState new_state)
@@ -251,7 +255,8 @@ namespace
             ctx.model_component->request_animation(JUMP_ANIMATION, true);
             ctx.model_component->set_animation_speed(GLOBAL_ANIMATION_SPEED);
         }
-        else if (ctx.input_receiver_component->extra_actions.contains(InputReceiverComponent::ActionNames::aim))
+        else if (ctx.input_receiver_component->extra_actions.contains(InputReceiverComponent::ActionNames::aim) &&
+                 ctx.inventory_component->active_item == ABILITY_ITEM_THREAD_N_NEEDLE)
         {
             set_state(ctx, CharacterComponent::MovementState::AIMING);
         } 
@@ -377,12 +382,13 @@ void CharacterSystem::update_state(otb::World* world)
         StateUpdateContext ctx {
             .world = world,
             
+            .box_component = it->entity->get_component<BoxComponent>(),
             .character_component = &*it,
             .input_receiver_component = it->entity->get_component<InputReceiverComponent>(),
+            .inventory_component = it->entity->get_component<InventoryComponent>(),
             .model_component = it->entity->get_component<otb::ModelComponent>(),
             .transform_component = it->entity->get_component<TransformComponent>(),
             .velocity_component = it->entity->get_component<otb::VelocityComponent>(),
-            .box_component = it->entity->get_component<BoxComponent>(),
         };
         switch(it->movement_state)
         {
