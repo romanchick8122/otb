@@ -15,8 +15,6 @@
 
 #include <raymath.h>
 
-#include <iostream>
-
 namespace game
 {
 void CharacterSystem::update_camera(otb::World* world, float dt)
@@ -149,6 +147,7 @@ namespace
     static constexpr float ROTATION_SLERP_FACTOR = 5.f;
 
     static constexpr float PUSHING_MAX_OVERHANG_SIZE = 1.f;
+    static constexpr float PUSHING_MAX_ANGLE_RAD = 45.f * DEG2RAD;
 
     static const otb::InternedString ABILITY_ITEM_THREAD_N_NEEDLE("thread_n_needle");
 
@@ -279,13 +278,28 @@ namespace
             {
                 return false;
             }
-            const Vector3 pushing_ort { -ctx.character_component->pushing_direction.z, ctx.character_component->pushing_direction.y, ctx.character_component->pushing_direction.x };
-            const Transform& target_transform = ctx.character_component->pushing_obj->entity->get_component<TransformComponent>()->transform;
-            const float box_edge_size = abs(Vector3DotProduct(target_transform.scale, pushing_ort));
-            const float distance_to_edge_center = abs(Vector3DotProduct(target_transform.translation - ctx.transform_component->transform.translation, pushing_ort));
-            const float character_edge_size = ctx.transform_component->transform.scale.z;
-            const float overhang = distance_to_edge_center - (box_edge_size - character_edge_size) / 2.f;
-            return overhang < PUSHING_MAX_OVERHANG_SIZE;
+
+            {
+                const Vector3 character_forward = Vector3RotateByQuaternion({1, 0, 0}, ctx.transform_component->transform.rotation);
+                const float push_angle = abs(acos(Clamp(Vector3DotProduct(character_forward, ctx.character_component->pushing_direction), -1.f, 1.f)));
+                if (push_angle > PUSHING_MAX_ANGLE_RAD)
+                {
+                    return false;
+                }
+            }
+            {
+                const Vector3 pushing_ort { -ctx.character_component->pushing_direction.z, ctx.character_component->pushing_direction.y, ctx.character_component->pushing_direction.x };
+                const Transform& target_transform = ctx.character_component->pushing_obj->entity->get_component<TransformComponent>()->transform;
+                const float box_edge_size = abs(Vector3DotProduct(target_transform.scale, pushing_ort));
+                const float distance_to_edge_center = abs(Vector3DotProduct(target_transform.translation - ctx.transform_component->transform.translation, pushing_ort));
+                const float character_edge_size = ctx.transform_component->transform.scale.z;
+                const float overhang = distance_to_edge_center - (box_edge_size - character_edge_size) / 2.f;
+                if (overhang > PUSHING_MAX_OVERHANG_SIZE)
+                {
+                    return false;
+                }
+            }
+            return true;
         }())
         {
             set_state(ctx, CharacterComponent::MovementState::PREPARE_PUSHING);
@@ -350,7 +364,6 @@ namespace
         OTB_ASSERT(std::holds_alternative<CharacterComponent::StateDataAIMING>(ctx.character_component->state_data));
         auto& state_data = std::get<CharacterComponent::StateDataAIMING>(ctx.character_component->state_data);
 
-        std::cerr << state_data.aim_direction.x << " " << state_data.aim_direction.y << "\n";
         state_data.aim_direction -= ctx.input_receiver_component->secondary_analog_input * ctx.world->fixed_frame_time;
         state_data.aim_direction = Vector2Clamp(state_data.aim_direction, AIM_LIMIT_MIN, AIM_LIMIT_MAX);
 
