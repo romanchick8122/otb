@@ -146,8 +146,8 @@ namespace
 
     static constexpr float ROTATION_SLERP_FACTOR = 5.f;
 
-    static constexpr float PUSHING_MAX_OVERHANG_SIZE = 1.f;
-    static constexpr float PUSHING_MAX_ANGLE_RAD = 45.f * DEG2RAD;
+    static constexpr float PUSHING_MAX_OVERHANG_SIZE = 0.85f;
+    static constexpr float PUSHING_MAX_ANGLE_RAD = 40.f * DEG2RAD;
 
     static const otb::InternedString ABILITY_ITEM_THREAD_N_NEEDLE("thread_n_needle");
 
