@@ -42,7 +42,7 @@
         TransformComponent: !<DICT>
           rotation: !<VALUE> 0.0 0.0 -0.0 1.0
           scale: !<VALUE> 3.3333001136779785 1.4919999837875366 3.3333001136779785
-          translation: !<VALUE> -5.864440026925877e-07 2.533938407897949 22.18668556213379
+          translation: !<VALUE> -5.892823082831455e-07 2.533938407897949 22.18668556213379
       name: !<VALUE> Man
     !<DICT>
       components: !<DICT>
@@ -149,8 +149,8 @@
         EventTriggerComponent: !<VALUE> go_main_menu
         TransformComponent: !<DICT>
           rotation: !<VALUE> 0.0 0.0 -0.0 1.0
-          scale: !<VALUE> 13.828391075134277 2.0 12.011902809143066
-          translation: !<VALUE> -24.99871826171875 20.73896598815918 -20.217304229736328
+          scale: !<VALUE> 5.18156623840332 5.425079822540283 5.640209197998047
+          translation: !<VALUE> -20.309329986572266 22.451505661010742 -23.40315055847168
       name: !<VALUE> OTB_Finish
     !<DICT>
       components: !<DICT>
@@ -199,7 +199,7 @@
         TransformComponent: !<DICT>
           rotation: !<VALUE> 0.0 0.0 -0.0 1.0
           scale: !<VALUE> 27.198802947998047 8.871175765991211 5.405669689178467
-          translation: !<VALUE> -2.401888132095337 5.553906440734863 16.295717239379883
+          translation: !<VALUE> -2.401883602142334 5.553906440734863 16.295717239379883
       name: !<VALUE> OTB_S_Cube.002
     !<DICT>
       components: !<DICT>
@@ -468,7 +468,7 @@
         TransformComponent: !<DICT>
           rotation: !<VALUE> 0.0 0.0 -0.0 1.0
           scale: !<VALUE> 67.3547592163086 42.629302978515625 16.00344467163086
-          translation: !<VALUE> -0.6326589584350586 19.55443000793457 41.61882400512695
+          translation: !<VALUE> -0.6326160430908203 19.55443000793457 41.61882400512695
       name: !<VALUE> OTB_S_Floor.005
     !<DICT>
       components: !<DICT>
@@ -485,7 +485,7 @@
         FanComponent: !<VALUE> 60.0
         ModelComponent: !<VALUE> /models/spiral.glb
         TransformComponent: !<DICT>
-          rotation: !<VALUE> 0.500000536441803 0.5000004768371582 0.499999463558197 0.4999994933605194
+          rotation: !<VALUE> 0.5000005960464478 0.500000536441803 0.49999940395355225 0.49999943375587463
           scale: !<VALUE> 20.60651397705078 5.300000190734863 4.675706386566162
           translation: !<VALUE> -11.721636772155762 12.077731132507324 -23.430734634399414
       name: !<VALUE> OTB_ZFan_1
@@ -503,7 +503,7 @@
         FanComponent: !<VALUE> 60.0
         ModelComponent: !<VALUE> /models/spiral.glb
         TransformComponent: !<DICT>
-          rotation: !<VALUE> 0.500000536441803 0.5000004768371582 0.499999463558197 0.4999994933605194
+          rotation: !<VALUE> 0.5000005960464478 0.500000536441803 0.49999940395355225 0.49999943375587463
           scale: !<VALUE> 10.148107528686523 5.300000190734863 4.675706386566162
           translation: !<VALUE> 21.400217056274414 6.742220878601074 26.13370704650879
       name: !<VALUE> OTB_ZFan_3
