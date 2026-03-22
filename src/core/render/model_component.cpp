@@ -90,4 +90,14 @@ InternedString ModelComponent::get_playing_animation() const
     }
     return asset->animation_names[playing_animation_index];
 }
+
+void ModelComponent::hide()
+{
+    is_hidden = true;
+}
+
+void ModelComponent::show()
+{
+    is_hidden = false;
+}
 }

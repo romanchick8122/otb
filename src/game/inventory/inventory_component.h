@@ -13,6 +13,6 @@ class InventoryComponent : public otb::Component
     ~InventoryComponent() override = default;
 
     std::unordered_set<otb::InternedString> items;
-    otb::InternedString active_item = otb::InternedString("thread_n_needle");
+    otb::InternedString active_item = otb::InternedString::get_empty();
 };
 }

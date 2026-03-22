@@ -21,6 +21,9 @@ class ModelComponent : public Component
     void set_forced_material_index(size_t);
     InternedString get_playing_animation() const;
 
+    void hide();
+    void show();
+
   private:
     Asset<ModelAsset> asset;
     Transform model_space_collider;
@@ -37,6 +40,8 @@ class ModelComponent : public Component
     size_t request_animation_index = std::string::npos;
 
     size_t forced_material_index = std::string::npos;
+
+    bool is_hidden = false;
 
     friend struct MeshSystem;
 };

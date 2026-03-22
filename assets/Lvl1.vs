@@ -129,6 +129,15 @@
       name: !<VALUE> OTB_D_BOX4.006
     !<DICT>
       components: !<DICT>
+        ItemPickupComponent: !<VALUE> thread_n_needle
+        ModelComponent: !<VALUE> /models/items/Needle_n_thread_icon.glb
+        TransformComponent: !<DICT>
+          rotation: !<VALUE> 0.0 0.0 -0.0 1.0
+          scale: !<VALUE> 2.0 2.0 2.0
+          translation: !<VALUE> 12.36550521850586 13.927578926086426 38.27861785888672
+      name: !<VALUE> OTB_PICKUP_THREAD_N_NEEDLE
+    !<DICT>
+      components: !<DICT>
         BoxComponent: !<DICT>
           type: !<VALUE> STATIC
         ModelComponent: !<VALUE> /models/boxes/carton_box.glb
@@ -225,7 +234,7 @@
         TransformComponent: !<DICT>
           rotation: !<VALUE> 0.0 0.0 -0.0 1.0
           scale: !<VALUE> 74.46820831298828 0.15835915505886078 73.56425476074219
-          translation: !<VALUE> -7.852260589599609 -0.9584569931030273 6.240928649902344
+          translation: !<VALUE> -7.852280616760254 -0.9584569931030273 6.240928649902344
       name: !<VALUE> OTB_S_Floor
     !<DICT>
       components: !<DICT>
@@ -235,7 +244,7 @@
         TransformComponent: !<DICT>
           rotation: !<VALUE> 0.0 0.0 -0.0 1.0
           scale: !<VALUE> 71.46820831298828 0.15835915505886078 73.56425476074219
-          translation: !<VALUE> -7.852270126342773 35.858455657958984 6.240928649902344
+          translation: !<VALUE> -7.852291107177734 35.858455657958984 6.240928649902344
       name: !<VALUE> OTB_S_Floor.001
     !<DICT>
       components: !<DICT>
@@ -275,7 +284,7 @@
         TransformComponent: !<DICT>
           rotation: !<VALUE> 0.0 0.0 -0.0 1.0
           scale: !<VALUE> 71.62064361572266 36.62211608886719 1.3180240392684937
-          translation: !<VALUE> -7.4479875564575195 17.410043716430664 -30.723276138305664
+          translation: !<VALUE> -7.448012351989746 17.410043716430664 -30.723276138305664
       name: !<VALUE> OTB_S_WALL1.002
     !<DICT>
       components: !<DICT>

@@ -23,6 +23,8 @@ class OTBWorldExportOperator(bpy.types.Operator, ExportHelper):
                     "enabled": str(obj["fan_control_button_state"]),
                     "animated_entities": obj["fan_control_animated_entities"],
                 }
+            if "item_pickup" in obj:
+                result["ItemPickupComponent"] = obj["item_pickup"]
             return result
 
         def add_transfrom_component(obj, dimensions):

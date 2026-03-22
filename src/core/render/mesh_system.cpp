@@ -80,6 +80,11 @@ void MeshSystem::render_meshes(World* world, float)
 {
     for (auto it = world->components_begin<ModelComponent>(); it != world->components_end<ModelComponent>(); ++it)
     {
+        if (it->is_hidden)
+        {
+            continue;
+        }
+
         const TransformComponent* transform_component = it->entity->get_component<TransformComponent>();
         OTB_ASSERT(transform_component != nullptr);
 
