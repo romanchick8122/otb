@@ -5,6 +5,7 @@
 
 #include "game/menu/menu_button_component.h"
 #include "game/menu/menu_layer_component.h"
+#include "game/menu/upstream_interaction_component.h"
 #include "game/world_creator.h"
 
 #include <raylib.h>
@@ -63,6 +64,18 @@ void MenuSystem::subworld_update_fixed(otb::World* world)
         menu_component->sub_world->fixed_update();
 }
 
+void MenuSystem::collect_subworld_events(otb::World* world)
+{
+    auto* menu_component = world->get_world_entity()->get_component<MenuControllerComponent>();
+
+    if (menu_component->sub_world != nullptr)
+    {
+        auto* sub_events = menu_component->sub_world->get_world_entity()->get_component<UpstreamInteractionComponent>();
+        std::copy(sub_events->events.begin(), sub_events->events.end(), std::back_inserter(menu_component->events));
+        sub_events->events.clear();
+    }
+}
+
 void MenuSystem::process_events(otb::World* world)
 {
     using namespace otb;
@@ -71,6 +84,7 @@ void MenuSystem::process_events(otb::World* world)
 
     static const InternedString LVL_1_EVENT("go_level.lvl1");
     static const InternedString LVL_2_EVENT("go_level.lvl2");
+    static const InternedString GO_MAIN_MENU_EVENT("go_main_menu");
     static const InternedString LVL_1_ASSET("/lvl1.vs");
     static const InternedString LVL_2_ASSET("/lvl2.vs");
 
@@ -85,6 +99,10 @@ void MenuSystem::process_events(otb::World* world)
         {
             menu_component->sub_world = create_world(LVL_2_ASSET);
             menu_component->sub_world_path = LVL_2_ASSET;
+        }
+        else if (event == GO_MAIN_MENU_EVENT)
+        {
+            menu_component->sub_world = nullptr;
         }
     }
     if (IsKeyPressed(KEY_R) && menu_component->sub_world)

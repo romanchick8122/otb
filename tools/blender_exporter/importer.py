@@ -33,6 +33,8 @@ class OTBWorldImportOperator(bpy.types.Operator, ImportHelper):
                 context.object["fan_control_animated_entities"] = components["FanControlButtonComponent"]["animated_entities"]
             if "ItemPickupComponent" in components:
                 context.object["item_pickup"] = components["ItemPickupComponent"]
+            if "EventTriggerComponent" in components:
+                context.object["event_trigger"] = components["EventTriggerComponent"]
 
         World = load(self.filepath)
         bpy.context.scene["_world"] = World["entities"][0]["components"]

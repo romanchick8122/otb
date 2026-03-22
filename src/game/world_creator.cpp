@@ -13,7 +13,9 @@
 #include "game/character/character_system.h"
 #include "game/character/input_system.h"
 #include "game/inventory/inventory_system.h"
+#include "game/menu/event_trigger_system.h"
 #include "game/menu/menu_system.h"
+#include "game/menu/upstream_interaction_component.h"
 #include "game/ui/hud_system.h"
 
 namespace game
@@ -26,6 +28,8 @@ std::unique_ptr<otb::World> create_world(otb::InternedString world_asset)
     ValueStorage vs;
     vs.load(AssetUtils::get_asset_file_path(world_asset).c_str());
     world->deserialize(vs);
+
+    world->get_world_entity()->add_component(new UpstreamInteractionComponent());
 
     // -------- INITIAL ------
     BoxSystem::create_components(world);
@@ -55,6 +59,7 @@ std::unique_ptr<otb::World> create_world(otb::InternedString world_asset)
     world->add_fixed_system(FanSystem::update_controllers);
     world->add_fixed_system(FanSystem::update_fan_visibility);
 
+    world->add_fixed_system(EventTriggerSystem::fixed_update);
     world->add_fixed_system(CharacterSystem::update_state);
 
     world->add_fixed_system(BoxSystem::late_update_velocity);
@@ -78,6 +83,7 @@ std::unique_ptr<otb::World> create_world(otb::InternedString world_asset)
 
     return std::unique_ptr<World>(world);
 }
+
 std::unique_ptr<otb::World> create_menu_world()
 {
     using namespace otb;
@@ -93,6 +99,7 @@ std::unique_ptr<otb::World> create_menu_world()
     // -------- FIXED --------
     world->add_fixed_system(MenuSystem::collect_events);
     world->add_fixed_system(MenuSystem::subworld_update_fixed);
+    world->add_fixed_system(MenuSystem::collect_subworld_events);
 
     world->add_fixed_system(MenuSystem::process_events);
 

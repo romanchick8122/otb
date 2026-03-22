@@ -9,6 +9,7 @@
 #include "game/character/character_component.h"
 #include "game/character/input_receiver_component.h"
 #include "game/inventory/item_pickup_component.h"
+#include "game/menu/event_trigger_component.h"
 #include "game/menu/menu_button_component.h"
 #include "game/menu/menu_layer_component.h"
 
@@ -19,6 +20,7 @@ void run_static_initializer()
     REGISTER_COMPONENT_TYPE(BoxComponent);
     REGISTER_COMPONENT_TYPE(BoxSingleComponent);
     REGISTER_COMPONENT_TYPE(CharacterComponent);
+    REGISTER_COMPONENT_TYPE(EventTriggerComponent);
     REGISTER_COMPONENT_TYPE(InputReceiverComponent);
     REGISTER_COMPONENT_TYPE(ItemPickupComponent);
     REGISTER_COMPONENT_TYPE(FanComponent);
