@@ -102,7 +102,7 @@ void InputSystem::apply_input(otb::World* world)
     using namespace otb;
 
     static constexpr float MOVEMENT_SPEED = 10.f;
-    static constexpr float ROTATION_SPEED = 3.f;
+    static constexpr float ROTATION_SPEED = 10.f;
     
     static std::array<bool, std::to_underlying(CharacterComponent::MovementState::COUNT)> apply_movement;
     static std::array<bool, std::to_underlying(CharacterComponent::MovementState::COUNT)> apply_rotation;
@@ -119,6 +119,7 @@ void InputSystem::apply_input(otb::World* world)
     apply_rotation[std::to_underlying(CharacterComponent::MovementState::FLYING)] = true;
 
     block_non_forward[std::to_underlying(CharacterComponent::MovementState::PREPARE_PUSHING)] = true;
+    block_non_forward[std::to_underlying(CharacterComponent::MovementState::PULLING)] = true;
     block_non_forward[std::to_underlying(CharacterComponent::MovementState::PUSHING)] = true;
     block_non_forward[std::to_underlying(CharacterComponent::MovementState::STOP_PUSHING)] = true;
 

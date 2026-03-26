@@ -80,7 +80,7 @@ std::unique_ptr<otb::World> create_world(otb::InternedString world_asset)
     world->add_normal_system(RenderControlSystem::render_end);
 
     world->fixed_frame_time = 1 / 60.f;
-    world->max_fixed_frames = 2;
+    world->max_fixed_frames = 1;
 
     return std::unique_ptr<World>(world);
 }
@@ -111,7 +111,7 @@ std::unique_ptr<otb::World> create_menu_world()
     world->add_normal_system(MenuSystem::subworld_update);
 
     world->fixed_frame_time = 1 / 60.f;
-    world->max_fixed_frames = 2;
+    world->max_fixed_frames = 1;
     
     return std::unique_ptr<World>(world);
 }

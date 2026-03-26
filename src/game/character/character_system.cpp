@@ -374,16 +374,15 @@ namespace
 
     void update_state_AIMING(StateUpdateContext& ctx)
     {
+        if (ctx.character_component->entity->get_component<BoxAttachmentAbilityComponent>()->attached_box != nullptr)
+        {
+            set_state(ctx, CharacterComponent::MovementState::PULLING);
+            ctx.model_component->request_animation(THROW_ANIMATION, false);
+            return;
+        }
         if (!ctx.input_receiver_component->extra_actions.contains(InputReceiverComponent::ActionNames::aim))
         {
-            if (ctx.character_component->entity->get_component<BoxAttachmentAbilityComponent>()->attached_box != nullptr)
-            {
-                set_state(ctx, CharacterComponent::MovementState::PULLING);
-            }
-            else
-            {
-                set_state(ctx, CharacterComponent::MovementState::GROUNDED);
-            }
+            set_state(ctx, CharacterComponent::MovementState::GROUNDED);
             return;
         }
         OTB_ASSERT(std::holds_alternative<CharacterComponent::StateDataAIMING>(ctx.character_component->state_data));
@@ -391,11 +390,6 @@ namespace
 
         state_data.aim_direction -= ctx.input_receiver_component->secondary_analog_input * ctx.world->fixed_frame_time;
         state_data.aim_direction = Vector2Clamp(state_data.aim_direction, AIM_LIMIT_MIN, AIM_LIMIT_MAX);
-
-        if (ctx.character_component->entity->get_component<BoxAttachmentAbilityComponent>()->attached_box != nullptr)
-        {
-            ctx.model_component->request_animation(THROW_ANIMATION, true);
-        }
     }
 
     void update_state_PULLING(StateUpdateContext& ctx)
