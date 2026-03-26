@@ -59,6 +59,7 @@ std::unique_ptr<otb::World> create_world(otb::InternedString world_asset)
     world->add_fixed_system(FanSystem::update_controllers);
     world->add_fixed_system(FanSystem::update_fan_visibility);
 
+    world->add_fixed_system(CharacterSystem::update_camera_fixed);
     world->add_fixed_system(EventTriggerSystem::fixed_update);
     world->add_fixed_system(CharacterSystem::update_state);
 
@@ -102,6 +103,8 @@ std::unique_ptr<otb::World> create_menu_world()
     world->add_fixed_system(MenuSystem::collect_subworld_events);
 
     world->add_fixed_system(MenuSystem::process_events);
+
+    world->add_fixed_system(MenuSystem::reset_curstor);
 
     // -------- NORMAL -------
     world->add_normal_system(MenuSystem::render_menu);

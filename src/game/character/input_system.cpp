@@ -1,6 +1,7 @@
 #include "input_system.h"
 
 #include "core/ecs/world.h"
+#include "core/math/math_utils.h"
 #include "core/render/model_component.h"
 #include "core/world/physics/velocity_component.h"
 #include "core/world/transform_component.h"
@@ -105,7 +106,7 @@ void InputSystem::apply_input(otb::World* world)
     
     static std::array<bool, std::to_underlying(CharacterComponent::MovementState::COUNT)> apply_movement;
     static std::array<bool, std::to_underlying(CharacterComponent::MovementState::COUNT)> apply_rotation;
-    static std::array<bool, std::to_underlying(CharacterComponent::MovementState::COUNT)> block_backwards;
+    static std::array<bool, std::to_underlying(CharacterComponent::MovementState::COUNT)> block_non_forward;
 
     apply_movement[std::to_underlying(CharacterComponent::MovementState::GROUNDED)] = true;
     apply_movement[std::to_underlying(CharacterComponent::MovementState::FLYING)] = true;
@@ -117,9 +118,9 @@ void InputSystem::apply_input(otb::World* world)
     apply_rotation[std::to_underlying(CharacterComponent::MovementState::PREPARING_JUMP)] = true;
     apply_rotation[std::to_underlying(CharacterComponent::MovementState::FLYING)] = true;
 
-    block_backwards[std::to_underlying(CharacterComponent::MovementState::PREPARE_PUSHING)] = true;
-    block_backwards[std::to_underlying(CharacterComponent::MovementState::PUSHING)] = true;
-    block_backwards[std::to_underlying(CharacterComponent::MovementState::STOP_PUSHING)] = true;
+    block_non_forward[std::to_underlying(CharacterComponent::MovementState::PREPARE_PUSHING)] = true;
+    block_non_forward[std::to_underlying(CharacterComponent::MovementState::PUSHING)] = true;
+    block_non_forward[std::to_underlying(CharacterComponent::MovementState::STOP_PUSHING)] = true;
 
 
     for(auto it = world->components_begin<InputReceiverComponent>(); it != world->components_end<InputReceiverComponent>(); ++it)
@@ -136,23 +137,27 @@ void InputSystem::apply_input(otb::World* world)
         }
 
         auto* transform_component = it->entity->get_component<TransformComponent>();
+        const Vector3 character_forward = Vector3RotateByQuaternion({1, 0, 0}, transform_component->transform.rotation);
 
         if (apply_movement[std::to_underlying(character_component->movement_state)])
         {
-            const float x_movement = std::max(it->analog_input.x, block_backwards[std::to_underlying(character_component->movement_state)] ? 0.f : -1.f);
-            const Vector3 oriented_move_vector = Vector3RotateByQuaternion(
-                {x_movement, 0, 0},
-                transform_component->transform.rotation
-            );
+            Vector3 oriented_move_vector = Vector3RotateByAxisAngle({it->analog_input.x, 0, -it->analog_input.y}, {0, 1, 0}, character_component->yaw);
+            if (block_non_forward[std::to_underlying(character_component->movement_state)])
+            {
+                oriented_move_vector = Vector3Project(oriented_move_vector, character_forward);
+            }
             velocity_component->velocity += Vector3Scale(oriented_move_vector, MOVEMENT_SPEED * character_component->movement_speed_multiplier);
         }
         if (apply_rotation[std::to_underlying(character_component->movement_state)])
         {
-            const Quaternion added_rotation = QuaternionFromAxisAngle(
-                {0, 1, 0},
-                it->analog_input.y * ROTATION_SPEED * world->fixed_frame_time
-            );
-            transform_component->transform.rotation = QuaternionMultiply(transform_component->transform.rotation, added_rotation);
+            const Vector3 flat_velocity{ velocity_component->velocity.x, 0.f, velocity_component->velocity.z };
+            if (!Vector3Equals(flat_velocity, {0.f, 0.f, 0.f}))
+            {
+                const float velocity_angle = Vector3Angle(character_forward, flat_velocity);
+                const float slerp_coeff = std::min(ROTATION_SPEED * world->fixed_frame_time / velocity_angle, 1.f);
+                const Quaternion velocity_rotation = MathUtils::get_rotation_from_to({1, 0, 0}, Vector3Normalize(flat_velocity));
+                transform_component->transform.rotation = QuaternionSlerp(transform_component->transform.rotation, velocity_rotation, slerp_coeff);
+            }
         }
     }
 }

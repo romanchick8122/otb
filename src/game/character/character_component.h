@@ -20,8 +20,13 @@ class CharacterComponent : public otb::Component
     // Serializable
     float camera_follow_distance = 0.f;
     float camera_follow_offset = 0.f;
+    Vector3 get_camera_forward() const;
+    
 
     // Runtime
+    float pitch = 0.f;
+    float yaw = 0.f;
+
     enum class MovementState : uint8_t {
         WAKING_UP,
         GROUNDED,
@@ -53,7 +58,6 @@ class CharacterComponent : public otb::Component
     const BoxComponent* pushing_obj = nullptr;
     Vector3 pushing_direction;
     
-
     float movement_speed_multiplier = 1.f;
 };
 }

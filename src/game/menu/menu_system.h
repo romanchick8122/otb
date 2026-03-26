@@ -11,6 +11,7 @@ struct MenuSystem
 {
 static void init(otb::World*);
 
+static void reset_curstor(otb::World*);
 static void collect_events(otb::World*);
 static void subworld_update_fixed(otb::World*);
 static void collect_subworld_events(otb::World*);

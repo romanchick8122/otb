@@ -33,6 +33,15 @@ void MenuSystem::init(otb::World* world)
     world->get_world_entity()->add_component(new MenuControllerComponent());
 }
 
+void MenuSystem::reset_curstor(otb::World* world)
+{
+    auto* menu_component = world->get_world_entity()->get_component<MenuControllerComponent>();
+    if (menu_component->sub_world != nullptr)
+    {
+        SetMousePosition(GetRenderWidth() / 2, GetRenderHeight() / 2);
+    }
+}
+
 void MenuSystem::collect_events(otb::World* world)
 {
     HideCursor();

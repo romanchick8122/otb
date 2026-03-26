@@ -21,7 +21,7 @@ void CharacterSystem::update_camera(otb::World* world, float dt)
 {
     using namespace otb;
 
-    static constexpr auto get_camera_behind_back = [](const CharacterComponent* character)
+    [[maybe_unused]] static constexpr auto get_camera_behind_back = [](const CharacterComponent* character)
     {
         const Transform& character_transform = character->entity->get_component<TransformComponent>()->transform;
         Vector3 desired_position =
@@ -52,6 +52,18 @@ void CharacterSystem::update_camera(otb::World* world, float dt)
             .projection = CAMERA_PERSPECTIVE,
         };
     };
+    static constexpr auto get_ds_camera = [](const CharacterComponent* character)
+    {
+        const Transform& character_transform = character->entity->get_component<TransformComponent>()->transform;
+        const Vector3 desired_position = character_transform.translation - character->get_camera_forward() * character->camera_follow_distance;
+        return Camera3D {
+            .position = desired_position,
+            .target = character_transform.translation,
+            .up = {0, 1, 0},
+            .fovy = 90,
+            .projection = CAMERA_PERSPECTIVE,
+        };
+    };
 
     const Camera3D desired_camera = [world]
     {
@@ -68,7 +80,7 @@ void CharacterSystem::update_camera(otb::World* world, float dt)
         }
         else
         {
-            return get_camera_behind_back(character);
+            return get_ds_camera(character);
         }
     }();
 
@@ -111,6 +123,19 @@ void CharacterSystem::update_camera(otb::World* world, float dt)
     }
     camera->camera.up = desired_camera.up;
     camera->camera.projection = desired_camera.projection;
+}
+
+void CharacterSystem::update_camera_fixed(otb::World* world)
+{
+    auto* character_component = &*world->components_begin<CharacterComponent>();
+    if (character_component->movement_state == CharacterComponent::MovementState::AIMING)
+    {
+        return;
+    }
+
+    const auto* input_receiver_component = character_component->entity->get_component<InputReceiverComponent>();
+    character_component->yaw -= input_receiver_component->secondary_analog_input.x * world->fixed_frame_time / character_component->camera_follow_distance;
+    character_component->pitch -= input_receiver_component->secondary_analog_input.y * world->fixed_frame_time / character_component->camera_follow_distance;
 }
 
 namespace

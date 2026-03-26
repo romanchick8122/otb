@@ -40,4 +40,9 @@ otb::Component* CharacterComponent::deserialize(const otb::ValueStorage& vs)
     result->camera_follow_offset = ValueStorageUtils::deserialize<float>(dict.at(CAMERA_FOLLOW_OFFSET_FIELD));
     return result;
 }
+
+Vector3 CharacterComponent::get_camera_forward() const
+{
+    return Vector3RotateByAxisAngle(Vector3RotateByAxisAngle({1, 0, 0}, {0, 0, 1}, pitch), {0, 1, 0}, yaw);
+}
 }
