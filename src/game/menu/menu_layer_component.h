@@ -22,5 +22,7 @@ class MenuLayerComponent : public otb::Component
     float target_height = 0;
 
     Vector2 texture_size_override;
+
+    otb::InternedString group = otb::InternedString::get_empty();
 };
 }

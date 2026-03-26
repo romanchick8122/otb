@@ -17,6 +17,8 @@ namespace game
 {
 namespace
 {
+static const otb::InternedString MAIN_MENU_GROUP("main_menu");
+
 struct MenuControllerComponent : public otb::Component
 {
     ~MenuControllerComponent() override = default;
@@ -25,6 +27,7 @@ struct MenuControllerComponent : public otb::Component
     otb::InternedString sub_world_path = otb::InternedString::get_empty();
 
     std::vector<otb::InternedString> events;
+    otb::InternedString group = MAIN_MENU_GROUP;
 };
 }
 
@@ -42,14 +45,27 @@ void MenuSystem::reset_curstor(otb::World* world)
     }
 }
 
+namespace
+{
+static const otb::InternedString RESTART_LEVEL_EVENT("restart_level");
+}
+
 void MenuSystem::collect_events(otb::World* world)
 {
     HideCursor();
 
     auto* menu_component = world->get_world_entity()->get_component<MenuControllerComponent>();
+
+    // Always active events
+    if (menu_component->sub_world != nullptr && IsKeyPressed(KEY_R))
+    {
+        menu_component->events.push_back(RESTART_LEVEL_EVENT);
+    }
+
     if (menu_component->sub_world != nullptr)
         return;
 
+    // Menu only events
     if (!IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
         return;
     
@@ -57,6 +73,10 @@ void MenuSystem::collect_events(otb::World* world)
     {
         const auto* layer = it->entity->get_component<MenuLayerComponent>();
         OTB_ASSERT(layer != nullptr);
+        if (layer->group != menu_component->group)
+        {
+            continue;
+        }
         const Rectangle rect = layer->get_screen_space_rect();
         const Vector2 mouse_pos = GetMousePosition();
         if (mouse_pos.x > rect.x && mouse_pos.y > rect.y && mouse_pos.x < rect.x + rect.width && mouse_pos.y < rect.y + rect.height)
@@ -91,33 +111,30 @@ void MenuSystem::process_events(otb::World* world)
 
     auto* menu_component = world->get_world_entity()->get_component<MenuControllerComponent>();
 
-    static const InternedString LVL_1_EVENT("go_level.lvl1");
-    static const InternedString LVL_2_EVENT("go_level.lvl2");
     static const InternedString GO_MAIN_MENU_EVENT("go_main_menu");
-    static const InternedString LVL_1_ASSET("/lvl1.vs");
-    static const InternedString LVL_2_ASSET("/lvl2.vs");
 
     for (const auto event : std::exchange(menu_component->events, {}))
     {
-        if (event == LVL_1_EVENT)
+        std::string_view event_view(event.c_str());
+        if (event_view.starts_with("set_menu_group."))
         {
-            menu_component->sub_world = create_world(LVL_1_ASSET);
-            menu_component->sub_world_path = LVL_1_ASSET;
+            menu_component->group = InternedString(event.c_str() + 15);
         }
-        else if (event == LVL_2_EVENT)
+        else if (event_view.starts_with("go_level."))
         {
-            menu_component->sub_world = create_world(LVL_2_ASSET);
-            menu_component->sub_world_path = LVL_2_ASSET;
+            menu_component->sub_world_path = InternedString(std::format("/levels/{}.vs", event.c_str() + 9).c_str());
+            menu_component->sub_world = create_world(menu_component->sub_world_path);
         }
         else if (event == GO_MAIN_MENU_EVENT)
         {
             menu_component->sub_world = nullptr;
+            menu_component->group = MAIN_MENU_GROUP;
         }
-    }
-    if (IsKeyPressed(KEY_R) && menu_component->sub_world)
-    {
-        menu_component->sub_world.reset();
-        menu_component->sub_world = create_world(menu_component->sub_world_path);
+        else if (event == RESTART_LEVEL_EVENT)
+        {
+            menu_component->sub_world.reset();
+            menu_component->sub_world = create_world(menu_component->sub_world_path);
+        }
     }
 }
 
@@ -132,8 +149,8 @@ void MenuSystem::render_menu(otb::World* world, float)
     BeginDrawing();
 
     std::vector<std::reference_wrapper<const MenuLayerComponent>> layers;
-    std::transform(world->components_begin<MenuLayerComponent>(), world->components_end<MenuLayerComponent>(), std::back_inserter(layers), [](const auto& v) {
-        return std::cref(v);
+    std::copy_if(world->components_begin<MenuLayerComponent>(), world->components_end<MenuLayerComponent>(), std::back_inserter(layers), [menu_component](const MenuLayerComponent& v) {
+        return v.group == menu_component->group;
     });
     std::sort(layers.begin(), layers.end(), [](const auto... l){
         return (l.get().z_order < ...);

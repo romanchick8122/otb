@@ -14,6 +14,7 @@ namespace
     static const otb::InternedString POSITION_FIELD("position");
     static const otb::InternedString TARGET_HEIGHT_FIELD("target_height");
     static const otb::InternedString TEXTURE_SIZE_OVERRIDE_FIELD("texture_size_override");
+    static const otb::InternedString GROUP_FIELD("group");
 }
 
 otb::ValueStorage MenuLayerComponent::serialize() const
@@ -25,6 +26,7 @@ otb::ValueStorage MenuLayerComponent::serialize() const
         { POSITION_FIELD, ValueStorageUtils::serialize(position) },
         { TARGET_HEIGHT_FIELD, ValueStorageUtils::serialize(position) },
         { TEXTURE_SIZE_OVERRIDE_FIELD, ValueStorageUtils::serialize(texture_size_override) },
+        { GROUP_FIELD, std::string(group.c_str()) },
     };
 }
 
@@ -51,6 +53,7 @@ otb::Component* MenuLayerComponent::deserialize(const otb::ValueStorage& vs)
         result->texture_size_override = { static_cast<float>(result->texture->texture.width), static_cast<float>(result->texture->texture.height) };
     }
 
+    result->group = InternedString(std::get<std::string>(dict.at(GROUP_FIELD).storage).c_str());
     return result;
 }
 
