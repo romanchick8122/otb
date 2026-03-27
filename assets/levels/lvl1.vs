@@ -106,8 +106,8 @@
         EventTriggerComponent: !<VALUE> go_level.lvl2
         TransformComponent: !<DICT>
           rotation: !<VALUE> 0.0 0.0 -0.0 1.0
-          scale: !<VALUE> 3.928068161010742 4.407695770263672 6.345741271972656
-          translation: !<VALUE> -40.521026611328125 11.194219589233398 30.120996475219727
+          scale: !<VALUE> 5.244073867797852 4.407695770263672 7.387705326080322
+          translation: !<VALUE> -39.86302185058594 11.194219589233398 29.600013732910156
       name: !<VALUE> OTB_Finish
     !<DICT>
       components: !<DICT>
@@ -216,7 +216,7 @@
         TransformComponent: !<DICT>
           rotation: !<VALUE> 0.0 0.0 -0.0 1.0
           scale: !<VALUE> 74.46820831298828 0.15835915505886078 73.56425476074219
-          translation: !<VALUE> -7.852411270141602 -0.9584569931030273 6.240928649902344
+          translation: !<VALUE> -7.85243034362793 -0.9584569931030273 6.240928649902344
       name: !<VALUE> OTB_S_Floor
     !<DICT>
       components: !<DICT>
@@ -226,7 +226,7 @@
         TransformComponent: !<DICT>
           rotation: !<VALUE> 0.0 0.0 -0.0 1.0
           scale: !<VALUE> 71.46820831298828 0.15835915505886078 73.56425476074219
-          translation: !<VALUE> -7.852425575256348 35.858455657958984 6.240928649902344
+          translation: !<VALUE> -7.852445602416992 35.858455657958984 6.240928649902344
       name: !<VALUE> OTB_S_Floor.001
     !<DICT>
       components: !<DICT>
@@ -286,7 +286,7 @@
         TransformComponent: !<DICT>
           rotation: !<VALUE> 0.0 0.0 -0.0 1.0
           scale: !<VALUE> 71.62064361572266 36.62211608886719 18.63031005859375
-          translation: !<VALUE> -7.448189735412598 17.410043716430664 -39.379417419433594
+          translation: !<VALUE> -7.448215484619141 17.410043716430664 -39.379417419433594
       name: !<VALUE> OTB_S_WALL1.002
     !<DICT>
       components: !<DICT>
