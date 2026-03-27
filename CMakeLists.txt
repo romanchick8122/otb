@@ -21,21 +21,43 @@ FetchContent_Declare(
 
 FetchContent_MakeAvailable(raylib)
 
-file(GLOB_RECURSE PROJECT_SOURCES CONFIGURE_DEPENDS "${CMAKE_SOURCE_DIR}/src/*.c" "${CMAKE_SOURCE_DIR}/src/*.cpp")
+file(GLOB_RECURSE PROJECT_SOURCES CONFIGURE_DEPENDS
+    "${CMAKE_SOURCE_DIR}/src/*.c"
+    "${CMAKE_SOURCE_DIR}/src/*.cpp")
 set(PROJECT_INCLUDE "${CMAKE_CURRENT_LIST_DIR}/src/")
 
 set_target_properties(raylib PROPERTIES INTERFACE_SYSTEM_INCLUDE_DIRECTORIES $<TARGET_PROPERTY:raylib,INTERFACE_INCLUDE_DIRECTORIES>)
 
+if (${CMAKE_BUILD_TYPE} STREQUAL "Release")
+    set(wwise_libdir "$ENV{WWISESDK}/x64_vc170/release/lib")
+else()
+    set(wwise_libdir "$ENV{WWISESDK}/x64_vc170/debug/lib")
+endif()
+
+set (wwise_libraries
+    AkMemoryMgr
+    AkSoundEngine
+    AkStreamMgr
+    CommunicationCentral
+)
+foreach(wwise_lib ${wwise_libraries})
+    add_library(${wwise_lib} STATIC IMPORTED)
+    set_target_properties(${wwise_lib} PROPERTIES IMPORTED_LOCATION "${wwise_libdir}/${wwise_lib}.lib")
+endforeach()
+
 add_executable(${PROJECT_NAME})
 target_sources(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCES})
 target_include_directories(${PROJECT_NAME} PRIVATE ${PROJECT_INCLUDE})
+target_include_directories(${PROJECT_NAME} SYSTEM PRIVATE "$ENV{WWISESDK}/include")
 if (${CMAKE_BUILD_TYPE} STREQUAL "Release")
     target_compile_definitions(${PROJECT_NAME} PUBLIC OTB_ASSETS_DIRECTORY="/assets")
 else()
     target_compile_definitions(${PROJECT_NAME} PUBLIC OTB_ASSETS_DIRECTORY=\"${CMAKE_CURRENT_LIST_DIR}/assets\")
     target_compile_definitions(${PROJECT_NAME} PUBLIC OTB_DEBUG)
 endif()
-target_link_libraries(${PROJECT_NAME} PUBLIC raylib)
+
+target_link_libraries(${PROJECT_NAME} PRIVATE raylib ${wwise_libraries})
+
 if(MSVC)
   target_compile_options(${PROJECT_NAME} PRIVATE /W4 /WX)
 else()
