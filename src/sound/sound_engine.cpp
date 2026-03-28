@@ -11,8 +11,6 @@
 #include <AK/SoundEngine/Common/AkSoundEngine.h>
 #include <AK/SoundEngine/Common/AkStreamMgrModule.h>
 
-#include "../assets/sound/Wwise_IDs.h"
-
 namespace otb
 {
 namespace
@@ -69,18 +67,7 @@ SoundEngine::SoundEngine()
         OTB_ASSERT(false, "Failed to init AK::SoundEngine");
     }
 
-    AkGameObjectID default_listener = 0;
-    AK::SoundEngine::RegisterGameObj(default_listener, "Listener");
-    AK::SoundEngine::SetPosition(default_listener, AkSoundPosition{
-        .orientationFront = { 1, 0, 0 },
-        .orientationTop = {0, 1, 0},
-        .position = {},
-    });
-    
-    AK::SoundEngine::SetDefaultListeners(&default_listener, 1);
-
     AK::SoundEngine::LoadBank(L"Init.bnk", INIT_BANK_ID);
-    AK::SoundEngine::RegisterGameObj(1, "DefaultPlayer");
 }
 
 SoundEngine::~SoundEngine()
@@ -93,9 +80,6 @@ SoundEngine::~SoundEngine()
 
 void SoundEngine::update() const
 {
-    static int t = 0;
-    if (t++ % 50 == 0)
-        AK::SoundEngine::PostEvent(AK::EVENTS::PLAY_JUMP, 1);
     AK::SoundEngine::RenderAudio();
 }
 

@@ -2,12 +2,14 @@
 
 #include "core/interned_string.h"
 
+#include <AK/SoundEngine/Common/AkTypedefs.h>
+
 namespace otb
 {
 class SoundEngine
 {
     SoundEngine();
-    size_t free_id = 1;
+    AkUInt64 free_id = 1;
 
   public:
     ~SoundEngine();
@@ -15,7 +17,7 @@ class SoundEngine
     void update() const;
 
     void load_bank(InternedString bank_name);
-    size_t create_game_object();
+    AkUInt64 create_game_object();
 
     static SoundEngine* instance();
 };

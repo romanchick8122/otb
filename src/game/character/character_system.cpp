@@ -13,10 +13,24 @@
 #include "game/character/input_receiver_component.h"
 #include "game/inventory/inventory_component.h"
 
+#include "sound/world/sound_listener_component.h"
+#include "sound/world/sound_player_component.h"
+
 #include <raymath.h>
+
+#include "../assets/sound/Wwise_IDs.h"
 
 namespace game
 {
+void CharacterSystem::init(otb::World* world)
+{
+    using namespace otb;
+
+    const auto* character_component = &*world->components_begin<CharacterComponent>();
+    character_component->entity->add_component(new SoundListenerComponent());
+    character_component->entity->add_component(new SoundPlayerComponent());
+}
+
 void CharacterSystem::update_camera(otb::World* world, float dt)
 {
     using namespace otb;
@@ -184,6 +198,7 @@ namespace
         const InputReceiverComponent* input_receiver_component;
         const InventoryComponent* inventory_component;
         otb::ModelComponent* model_component;
+        otb::SoundPlayerComponent* sound_player_component;
         otb::TransformComponent* transform_component;
         otb::VelocityComponent* velocity_component;
     };
@@ -290,6 +305,7 @@ namespace
         else if (ctx.input_receiver_component->extra_actions.contains(InputReceiverComponent::ActionNames::jump))
         {
             set_state(ctx, CharacterComponent::MovementState::PREPARING_JUMP);
+            ctx.sound_player_component->play_event(AK::EVENTS::PLAY_JUMP);
             ctx.model_component->request_animation(JUMP_ANIMATION, true);
             ctx.model_component->set_animation_speed(GLOBAL_ANIMATION_SPEED);
         }
@@ -461,6 +477,7 @@ void CharacterSystem::update_state(otb::World* world)
             .input_receiver_component = it->entity->get_component<InputReceiverComponent>(),
             .inventory_component = it->entity->get_component<InventoryComponent>(),
             .model_component = it->entity->get_component<otb::ModelComponent>(),
+            .sound_player_component = it->entity->get_component<otb::SoundPlayerComponent>(),
             .transform_component = it->entity->get_component<TransformComponent>(),
             .velocity_component = it->entity->get_component<otb::VelocityComponent>(),
         };
