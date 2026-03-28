@@ -160,6 +160,7 @@ namespace
 
     static const otb::InternedString WAKING_UP_ANIMATION("WakingUp");
     static const otb::InternedString IDLE_ANIMATION("Idle");
+    static const otb::InternedString IDLE_ACTION_ANIMATION("IdleAction");
     static const otb::InternedString JUMP_ANIMATION("Jump");
     static const otb::InternedString FLYING_ANIMATION("Flying");
     static const otb::InternedString LANDING_ON_PLACE_ANIMATION("LandingOnPlace");
@@ -169,6 +170,10 @@ namespace
     static const otb::InternedString PULL_ANIMATION("PullCycle");
     static const otb::InternedString LOW_PUSH_ANIMATION("LowPushingCycle");
     static const otb::InternedString HIGH_PUSH_ANIMATION("HighPushingCycle");
+    static const otb::InternedString UMBRELLA_UNLEASH_ANIMATION("UmbrellaUnleash");
+    static const otb::InternedString UMBRELLA_SHEATH_ANIMATION("UmbrellaSheathe");
+    static constexpr float TIME_TO_TRIGGER_IDLE_ANIMATION = 5.0f;
+    static constexpr float TIME_OFFSET = -3.0f;
     static constexpr float WALKING_SPEED = 3.36408f;
     static constexpr float PULL_SPEED = -3.1307f;
     static constexpr float HIGH_PUSHING_SPEED = 1.10695f;
@@ -208,6 +213,9 @@ namespace
         using namespace otb;
         ctx.character_component->movement_state = new_state;
         switch (ctx.character_component->movement_state) {
+            case CharacterComponent::MovementState::GROUNDED:
+                ctx.character_component->state_data = CharacterComponent::StateDataGrounded{};
+                break;
             case CharacterComponent::MovementState::AIMING:
                 ctx.character_component->state_data = CharacterComponent::StateDataAIMING{};
                 break;
@@ -321,6 +329,14 @@ namespace
     void update_state_GROUNDED(StateUpdateContext& ctx)
     {
         using namespace otb;
+        if(ctx.model_component->get_playing_animation() == IDLE_ANIMATION || ctx.model_component->get_playing_animation() == IDLE_ACTION_ANIMATION)
+        {
+            std::get<CharacterComponent::StateDataGrounded>(ctx.character_component->state_data).time_in_idle += ctx.world->fixed_frame_time;
+        } else 
+        {
+            std::get<CharacterComponent::StateDataGrounded>(ctx.character_component->state_data).time_in_idle = 0;
+        }
+        
         if (ctx.box_component->rests_on == nullptr)
         {
             set_state(ctx, CharacterComponent::MovementState::FLYING);
@@ -372,6 +388,11 @@ namespace
             if (std::get<CharacterComponent::StateDataPUSHING>(ctx.character_component->state_data).high_push)
             ctx.model_component->request_animation(HIGH_PUSH_ANIMATION, true);
             else ctx.model_component->request_animation(LOW_PUSH_ANIMATION, true);
+        }
+        else if (std::get<CharacterComponent::StateDataGrounded>(ctx.character_component->state_data).time_in_idle > TIME_TO_TRIGGER_IDLE_ANIMATION)
+        {
+            ctx.model_component->request_animation(IDLE_ACTION_ANIMATION, false);
+            std::get<CharacterComponent::StateDataGrounded>(ctx.character_component->state_data).time_in_idle = TIME_OFFSET;
         }
         else
         {

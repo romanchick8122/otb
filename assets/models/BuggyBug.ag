@@ -9,6 +9,12 @@
     HighPushingReady: !<VALUE> 0.1
     Neutral: !<VALUE> 0.1
     LowPushingReady: !<VALUE> 0.01
+  IdleAction: !<DICT>
+    Idle: !<VALUE> -1
+    WalkingCycle: !<VALUE> 0.1
+    JumpReady: !<VALUE> 0.2
+    LowPushingReady: !<VALUE> 0.01
+    UmbrellaUnleash: !<VALUE> 0.1
   JumpReady: !<DICT>
     Jump: !<VALUE> -1
   Jump: !<DICT>
@@ -30,6 +36,7 @@
     Flying: !<VALUE> 0.2
     UmbrellaUnleash: !<VALUE> 0.2
   Neutral: !<DICT>
+    UmbrellaUnleash: !<VALUE> -1
     Idle: !<VALUE> -1
     WalkingCycle: !<VALUE> 0.3
     JumpReady: !<VALUE> -1

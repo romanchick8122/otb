@@ -27,7 +27,8 @@ class CharacterComponent : public otb::Component
     float pitch = 0.f;
     float yaw = 0.f;
 
-    enum class MovementState : uint8_t {
+    enum class MovementState : uint8_t 
+    {
         WAKING_UP,
         GROUNDED,
         PREPARING_JUMP,
@@ -41,18 +42,24 @@ class CharacterComponent : public otb::Component
         COUNT,
     } movement_state = MovementState::WAKING_UP;
 
-    struct StateDataAIMING {
+    struct StateDataAIMING 
+    {
         Vector2 aim_direction;
     };
-    struct StateDataPUSHING {
+    struct StateDataPUSHING 
+    {
         Vector3 pushing_direction;
         bool high_push = false;
     };
-    
+    struct StateDataGrounded 
+    {
+        float time_in_idle = 0;
+    };
     std::variant<
         std::monostate,
         StateDataAIMING,
-        StateDataPUSHING
+        StateDataPUSHING,
+        StateDataGrounded
     > state_data;
 
     const BoxComponent* pushing_obj = nullptr;
