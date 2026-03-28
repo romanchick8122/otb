@@ -174,9 +174,10 @@ namespace
     static const otb::InternedString LOW_PUSH_ANIMATION("LowPushingCycle");
     static const otb::InternedString HIGH_PUSH_ANIMATION("HighPushingCycle");
     static const otb::InternedString UMBRELLA_UNLEASH_ANIMATION("UmbrellaUnleash");
+    static const otb::InternedString UMBRELLA_FLYING_ANIMATION("UmbrellaFlying");
     static const otb::InternedString UMBRELLA_SHEATH_ANIMATION("UmbrellaSheathe");
     static constexpr float TIME_TO_TRIGGER_IDLE_ANIMATION = 5.0f;
-    static constexpr float IDLE_ACTION_ANIMATION_TIMER_OFFSET = 3.0f;
+    static constexpr float IDLE_ACTION_ANIMATION_TIMER_OFFSET = 2.5f;
     static constexpr float WALKING_SPEED = 3.36408f;
     static constexpr float PULL_SPEED = -3.1307f;
     static constexpr float HIGH_PUSHING_SPEED = 1.10695f;
@@ -450,7 +451,7 @@ namespace
         {
             set_state(ctx, CharacterComponent::MovementState::UMBRELLA_FLYING);
             ctx.box_component->drag_coefficient_override = UMBRRELLA_AIR_DRAG;
-            // TODO: switch to flying umbrella animation
+            ctx.model_component->request_animation(UMBRELLA_FLYING_ANIMATION, true);
             return;
         }
     }
@@ -560,7 +561,7 @@ namespace
         {
             set_state(ctx, CharacterComponent::MovementState::FLYING);
             ctx.box_component->drag_coefficient_override.reset();
-            // TODO: switch to regular flyng animation
+            ctx.model_component->request_animation(FLYING_ANIMATION, true);
             return;
         }
     }
