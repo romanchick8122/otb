@@ -39,7 +39,14 @@ void SoundLowLevelIOHook::BatchOpen(AkUInt32 file_count, [[maybe_unused]] AkAsyn
             .deviceID = device_id,
         };
         std::wstring w_asset_name(pp_items[i]->pszFileName);
+        #if defined(MSVC)
+        #pragma warning(push)
+        #pragma warning(disable:4244)
+        #endif 
         std::string asset_name(w_asset_name.begin(), w_asset_name.end());
+        #if defined(MSVC)
+        #pragma warning(pop)
+        #endif
         const std::string asset_path = std::format("/sound/{}", asset_name.c_str());
 
         const DWORD desired_access = [&]()->DWORD
