@@ -200,7 +200,7 @@ namespace
     static const otb::InternedString ABILITY_ITEM_THREAD_N_NEEDLE("thread_n_needle");
     static const otb::InternedString ABILITY_ITEM_UMBRELLA("umbrella");
 
-    static constexpr float UMBRRELLA_AIR_DRAG = 0.f;
+    static constexpr float UMBRRELLA_AIR_DRAG = 0.0001f;
 
     struct StateUpdateContext
     {
