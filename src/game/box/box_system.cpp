@@ -238,6 +238,7 @@ void BoxSystem::push_back_chain(otb::World* world)
         if (box_sc->chain[i].parent_index != std::string::npos && box_sc->chain[box_sc->chain[i].parent_index].filtered)
         {
             box_sc->chain[i].filtered = true;
+            box_sc->chain[i].displacement = {};
             continue;
         }
 
@@ -267,6 +268,7 @@ void BoxSystem::push_back_chain(otb::World* world)
     }
     if (box_sc->chain[0].filtered)
     {
+        character_component->entity->get_component<VelocityComponent>()->velocity = {};
         for (size_t i = 1; i < box_sc->chain.size(); ++i)
         {
             box_sc->chain[i].displacement = {};

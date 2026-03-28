@@ -117,6 +117,7 @@ void InputSystem::apply_input(otb::World* world)
     apply_rotation[std::to_underlying(CharacterComponent::MovementState::GROUNDED)] = true;
     apply_rotation[std::to_underlying(CharacterComponent::MovementState::PREPARING_JUMP)] = true;
     apply_rotation[std::to_underlying(CharacterComponent::MovementState::FLYING)] = true;
+    apply_rotation[std::to_underlying(CharacterComponent::MovementState::LANDING)] = true; 
 
     block_non_forward[std::to_underlying(CharacterComponent::MovementState::PREPARE_PUSHING)] = true;
     block_non_forward[std::to_underlying(CharacterComponent::MovementState::PULLING)] = true;
