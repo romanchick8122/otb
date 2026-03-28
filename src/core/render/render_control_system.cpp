@@ -11,7 +11,6 @@ namespace otb
 {
 void RenderControlSystem::render_begin(World* world, float)
 {
-    BeginDrawing();
     ClearBackground(DARKGRAY);
 
     CameraComponent* camera = world->get_world_entity()->get_component<CameraComponent>();
@@ -27,6 +26,5 @@ void RenderControlSystem::render_stop_3d_start_2d(World*, float)
 
 void RenderControlSystem::render_end(World*, float)
 {
-    EndDrawing();
 }
 }

@@ -46,7 +46,10 @@ int main()
                 ToggleBorderlessWindowed();
             }
         #endif
+        
+        BeginDrawing();
         world->update();
+        EndDrawing();
         sound_engine->update();
     }
     CloseWindow();

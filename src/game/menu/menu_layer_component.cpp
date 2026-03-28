@@ -14,6 +14,7 @@ namespace
     static const otb::InternedString POSITION_FIELD("position");
     static const otb::InternedString TARGET_HEIGHT_FIELD("target_height");
     static const otb::InternedString TEXTURE_SIZE_OVERRIDE_FIELD("texture_size_override");
+    static const otb::InternedString ANCHOR_FIELD("anchor");
     static const otb::InternedString GROUP_FIELD("group");
 }
 
@@ -26,6 +27,7 @@ otb::ValueStorage MenuLayerComponent::serialize() const
         { POSITION_FIELD, ValueStorageUtils::serialize(position) },
         { TARGET_HEIGHT_FIELD, ValueStorageUtils::serialize(position) },
         { TEXTURE_SIZE_OVERRIDE_FIELD, ValueStorageUtils::serialize(texture_size_override) },
+        { ANCHOR_FIELD, ValueStorageUtils::serialize(anchor) },
         { GROUP_FIELD, std::string(group.c_str()) },
     };
 }
@@ -53,6 +55,8 @@ otb::Component* MenuLayerComponent::deserialize(const otb::ValueStorage& vs)
         result->texture_size_override = { static_cast<float>(result->texture->texture.width), static_cast<float>(result->texture->texture.height) };
     }
 
+    result->anchor = ValueStorageUtils::deserialize<Vector2>(dict.at(ANCHOR_FIELD));
+
     result->group = InternedString(std::get<std::string>(dict.at(GROUP_FIELD).storage).c_str());
     return result;
 }
@@ -62,7 +66,8 @@ Rectangle MenuLayerComponent::get_screen_space_rect() const
     using namespace otb;
     const float target_width = UIUtils::get_norm_target_width(texture_size_override, target_height);
     const Vector2 offset { target_width, target_height };
-    const Rectangle norm_rect = UIUtils::rect_from_min_max(position - offset / 2, position + offset / 2);
+    const Vector2 anchor_offset = anchor * offset / texture_size_override;
+    const Rectangle norm_rect = UIUtils::rect_from_min_max(position - anchor_offset, position - anchor_offset + offset);
     return UIUtils::normalized_to_screen(norm_rect);
 }
 }

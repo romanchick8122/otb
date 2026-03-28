@@ -10,6 +10,7 @@
           z_order: !<VALUE> 0
           position: !<VALUE> 0 0
           target_height: !<VALUE> 2
+          anchor: !<VALUE> 2650 1080
           group: !<VALUE> main_menu
       name: !<VALUE> main_menu
     !<DICT>
@@ -20,6 +21,7 @@
           position: !<VALUE> 0 -0.1
           target_height: !<VALUE> 0.237
           texture_size_override: !<VALUE> 400 128
+          anchor: !<VALUE> 200 64
           group: !<VALUE> main_menu
         MenuButtonComponent: !<VALUE> go_level.lvl1
       name: !<VALUE> lvl1_button
@@ -31,6 +33,7 @@
           position: !<VALUE> 0 0.276
           target_height: !<VALUE> 0.237
           texture_size_override: !<VALUE> 400 128
+          anchor: !<VALUE> 200 64
           group: !<VALUE> main_menu
         MenuButtonComponent: !<VALUE> go_level.lvl2
       name: !<VALUE> lvl2_button

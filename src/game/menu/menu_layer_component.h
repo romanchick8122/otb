@@ -23,6 +23,8 @@ class MenuLayerComponent : public otb::Component
 
     Vector2 texture_size_override;
 
+    Vector2 anchor;
+
     otb::InternedString group = otb::InternedString::get_empty();
 };
 }

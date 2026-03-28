@@ -108,8 +108,8 @@ std::unique_ptr<otb::World> create_menu_world()
     world->add_fixed_system(MenuSystem::reset_curstor);
 
     // -------- NORMAL -------
-    world->add_normal_system(MenuSystem::render_menu);
     world->add_normal_system(MenuSystem::subworld_update);
+    world->add_normal_system(MenuSystem::render_menu);
 
     world->fixed_frame_time = 1 / 60.f;
     world->max_fixed_frames = 1;

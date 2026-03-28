@@ -89,7 +89,7 @@ void MenuSystem::collect_events(otb::World* world)
 void MenuSystem::subworld_update_fixed(otb::World* world)
 {
     const auto* menu_component = world->get_world_entity()->get_component<MenuControllerComponent>();
-    if (menu_component->sub_world != nullptr)
+    if (menu_component->sub_world != nullptr && menu_component->group == otb::InternedString::get_empty())
         menu_component->sub_world->fixed_update();
 }
 
@@ -124,6 +124,7 @@ void MenuSystem::process_events(otb::World* world)
         {
             menu_component->sub_world_path = InternedString(std::format("/levels/{}.vs", event.c_str() + 9).c_str());
             menu_component->sub_world = create_world(menu_component->sub_world_path);
+            menu_component->group = InternedString::get_empty();
         }
         else if (event == GO_MAIN_MENU_EVENT)
         {
@@ -143,10 +144,10 @@ void MenuSystem::render_menu(otb::World* world, float)
     using namespace otb;
 
     const auto* menu_component = world->get_world_entity()->get_component<MenuControllerComponent>();
-    if (menu_component->sub_world != nullptr)
+    if (menu_component->group == InternedString::get_empty())
+    {
         return;
-
-    BeginDrawing();
+    }
 
     std::vector<std::reference_wrapper<const MenuLayerComponent>> layers;
     std::copy_if(world->components_begin<MenuLayerComponent>(), world->components_end<MenuLayerComponent>(), std::back_inserter(layers), [menu_component](const MenuLayerComponent& v) {
@@ -174,14 +175,12 @@ void MenuSystem::render_menu(otb::World* world, float)
         const Rectangle destination_rect {mouse_pos.x - MOUSE_CURSOR_SIZE / 2.f, mouse_pos.y - MOUSE_CURSOR_SIZE / 2.f, MOUSE_CURSOR_SIZE, MOUSE_CURSOR_SIZE };
         DrawTexturePro(cursor->texture, source_rect, destination_rect, {}, 0, WHITE);
     }
-
-    EndDrawing();
 }
 
 void MenuSystem::subworld_update(otb::World* world, float dt)
 {
     const auto* menu_component = world->get_world_entity()->get_component<MenuControllerComponent>();
     if (menu_component->sub_world != nullptr)
-        menu_component->sub_world->normal_update(dt);
+        menu_component->sub_world->normal_update(menu_component->group == otb::InternedString::get_empty() ? dt : 0.f);
 }
 }
