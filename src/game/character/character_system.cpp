@@ -13,10 +13,24 @@
 #include "game/character/input_receiver_component.h"
 #include "game/inventory/inventory_component.h"
 
+#include "sound/world/sound_listener_component.h"
+#include "sound/world/sound_player_component.h"
+
 #include <raymath.h>
+
+#include "../assets/sound/Wwise_IDs.h"
 
 namespace game
 {
+void CharacterSystem::init(otb::World* world)
+{
+    using namespace otb;
+
+    const auto* character_component = &*world->components_begin<CharacterComponent>();
+    character_component->entity->add_component(new SoundListenerComponent());
+    character_component->entity->add_component(new SoundPlayerComponent());
+}
+
 void CharacterSystem::update_camera(otb::World* world, float dt)
 {
     using namespace otb;
@@ -175,7 +189,7 @@ namespace
     static constexpr float PUSHING_MAX_ANGLE_RAD = 40.f * DEG2RAD;
 
     static const otb::InternedString ABILITY_ITEM_THREAD_N_NEEDLE("thread_n_needle");
-
+    
     struct StateUpdateContext
     {
         otb::World* world;
@@ -184,6 +198,7 @@ namespace
         const InputReceiverComponent* input_receiver_component;
         const InventoryComponent* inventory_component;
         otb::ModelComponent* model_component;
+        otb::SoundPlayerComponent* sound_player_component;
         otb::TransformComponent* transform_component;
         otb::VelocityComponent* velocity_component;
     };
@@ -233,25 +248,49 @@ namespace
         float forward_speed_scale,
         otb::InternedString anim_neutral,
         otb::InternedString anim_backward,
-        float backward_speed_scale
+        float backward_speed_scale,
+
+        AkUniqueID forward_sound_event,
+        AkUniqueID neutral_sound_event,
+        AkUniqueID backwards_sound_event
     )
     {
+        // TODO: move looping restriction to WWISE
+        static int tmp_sound_filter = 0;
+        tmp_sound_filter++;
+        if (tmp_sound_filter > 40)
+        {
+            tmp_sound_filter = 0;
+        }
+
         const Vector3 character_forward_vector = Vector3RotateByQuaternion({1, 0, 0}, ctx.transform_component->transform.rotation);
         const float forward_projected_speed = Vector3DotProduct(character_forward_vector, ctx.velocity_component->velocity);
         if (forward_projected_speed > forward_eps)
         {
             ctx.model_component->request_animation(anim_forward, true);
             ctx.model_component->set_animation_speed(GLOBAL_ANIMATION_SPEED * (forward_speed_scale == 0 ? 1 : forward_projected_speed * forward_speed_scale));
+            if (forward_sound_event != 0 && tmp_sound_filter == 0)
+            {
+                ctx.sound_player_component->play_event(forward_sound_event);
+            }
             return;
         }
         if (forward_projected_speed < -backward_eps)
         {
             ctx.model_component->request_animation(anim_backward, true);
             ctx.model_component->set_animation_speed(GLOBAL_ANIMATION_SPEED * (backward_speed_scale == 0 ? 1 : forward_projected_speed * backward_speed_scale));
+            if (backwards_sound_event != 0 && tmp_sound_filter == 0)
+            {
+                ctx.sound_player_component->play_event(backwards_sound_event);
+            }
             return;
         }
         ctx.model_component->request_animation(anim_neutral, true);
         ctx.model_component->set_animation_speed(GLOBAL_ANIMATION_SPEED);
+        if (neutral_sound_event != 0 && tmp_sound_filter == 0)
+        {
+            ctx.sound_player_component->play_event(neutral_sound_event);
+        }
     }
 
     void set_desired_rotation(StateUpdateContext& ctx, Quaternion rotation)
@@ -267,6 +306,7 @@ namespace
         {
             ctx.model_component->request_animation(WAKING_UP_ANIMATION, false);
             ctx.model_component->set_animation_speed(GLOBAL_ANIMATION_SPEED);
+            ctx.sound_player_component->play_event(AK::EVENTS::PLAY_AWAKENING);
         }
         else if (ctx.model_component->get_playing_animation() == WAKING_UP_ANIMATION)
         {
@@ -290,6 +330,7 @@ namespace
         else if (ctx.input_receiver_component->extra_actions.contains(InputReceiverComponent::ActionNames::jump))
         {
             set_state(ctx, CharacterComponent::MovementState::PREPARING_JUMP);
+            ctx.sound_player_component->play_event(AK::EVENTS::PLAY_JUMP);
             ctx.model_component->request_animation(JUMP_ANIMATION, true);
             ctx.model_component->set_animation_speed(GLOBAL_ANIMATION_SPEED);
         }
@@ -334,7 +375,7 @@ namespace
         }
         else
         {
-            select_animation_from_movement_speed(ctx, WALKING_ANIM_EPS, WALKING_ANIM_EPS, WALKING_ANIMATION, 1 / WALKING_SPEED, IDLE_ANIMATION, WALKING_ANIMATION, 1 / WALKING_SPEED);
+            select_animation_from_movement_speed(ctx, WALKING_ANIM_EPS, WALKING_ANIM_EPS, WALKING_ANIMATION, 1 / WALKING_SPEED, IDLE_ANIMATION, WALKING_ANIMATION, 1 / WALKING_SPEED, AK::EVENTS::PLAY_WALKING_LOOP, AK::EVENTS::PLAY_IDLE_BREATHING_LOOP, AK::EVENTS::PLAY_WALKING_LOOP);
         }
     }
 
@@ -356,6 +397,7 @@ namespace
             const Vector3 character_forward_vector = Vector3RotateByQuaternion({1, 0, 0}, ctx.transform_component->transform.rotation);
             const float forward_projected_speed = Vector3DotProduct(character_forward_vector, ctx.velocity_component->velocity);
             ctx.model_component->request_animation(FloatEquals(forward_projected_speed, SPEED_FOR_NOT_SLIDING) ? LANDING_ON_PLACE_ANIMATION : LANDING_ON_MOVE_ANIMATION, false);
+            ctx.sound_player_component->play_event(AK::EVENTS::PLAY_LANDING_);
         }
     }
 
@@ -378,6 +420,7 @@ namespace
         {
             set_state(ctx, CharacterComponent::MovementState::PULLING);
             ctx.model_component->request_animation(THROW_ANIMATION, false);
+            ctx.sound_player_component->play_event(AK::EVENTS::PLAY_NEEDLE_LAUNCH);
             return;
         }
         if (!ctx.input_receiver_component->extra_actions.contains(InputReceiverComponent::ActionNames::aim))
@@ -405,7 +448,7 @@ namespace
         Vector3 to_box = attached_box->entity->get_component<TransformComponent>()->transform.translation - ctx.transform_component->transform.translation;
         to_box.y = 0;
         ctx.transform_component->transform.rotation = MathUtils::get_rotation_from_to({1, 0, 0}, Vector3Normalize(to_box));
-        select_animation_from_movement_speed(ctx, WALKING_ANIM_EPS, WALKING_ANIM_EPS, WALKING_ANIMATION, 1 / WALKING_SPEED, IDLE_ANIMATION, PULL_ANIMATION, 1 / PULL_SPEED);
+        select_animation_from_movement_speed(ctx, WALKING_ANIM_EPS, WALKING_ANIM_EPS, WALKING_ANIMATION, 1 / WALKING_SPEED, IDLE_ANIMATION, PULL_ANIMATION, 1 / PULL_SPEED, AK::EVENTS::PLAY_WALKING_LOOP, AK::EVENTS::PLAY_IDLE_BREATHING_LOOP, AK::EVENTS::PLAY_PULLING_LOOP);
     }
 
     void update_state_PREPARE_PUSHING(StateUpdateContext& ctx)
@@ -428,11 +471,11 @@ namespace
         } 
         if (std::get<CharacterComponent::StateDataPUSHING>(ctx.character_component->state_data).high_push)
         {
-            select_animation_from_movement_speed(ctx, WALKING_ANIM_EPS, WALKING_ANIM_EPS, HIGH_PUSH_ANIMATION, 1 / HIGH_PUSHING_SPEED, IDLE_ANIMATION, WALKING_ANIMATION, 1 / WALKING_SPEED);    
+            select_animation_from_movement_speed(ctx, WALKING_ANIM_EPS, WALKING_ANIM_EPS, HIGH_PUSH_ANIMATION, 1 / HIGH_PUSHING_SPEED, IDLE_ANIMATION, WALKING_ANIMATION, 1 / WALKING_SPEED, AK::EVENTS::PLAY_PUSHING_LOOP, AK::EVENTS::PLAY_IDLE_BREATHING_LOOP, 0);    
         }
         else
         {
-            select_animation_from_movement_speed(ctx, WALKING_ANIM_EPS, WALKING_ANIM_EPS, LOW_PUSH_ANIMATION, 1 / LOW_PUSHING_SPEED, IDLE_ANIMATION, WALKING_ANIMATION, 1 / WALKING_SPEED);
+            select_animation_from_movement_speed(ctx, WALKING_ANIM_EPS, WALKING_ANIM_EPS, LOW_PUSH_ANIMATION, 1 / LOW_PUSHING_SPEED, IDLE_ANIMATION, WALKING_ANIMATION, 1 / WALKING_SPEED, AK::EVENTS::PLAY_PUSHING_LOOP, AK::EVENTS::PLAY_IDLE_BREATHING_LOOP, 0);
         }
         set_desired_rotation(ctx, otb::MathUtils::get_rotation_from_to({1, 0, 0}, ctx.character_component->pushing_direction));
     }
@@ -461,6 +504,7 @@ void CharacterSystem::update_state(otb::World* world)
             .input_receiver_component = it->entity->get_component<InputReceiverComponent>(),
             .inventory_component = it->entity->get_component<InventoryComponent>(),
             .model_component = it->entity->get_component<otb::ModelComponent>(),
+            .sound_player_component = it->entity->get_component<otb::SoundPlayerComponent>(),
             .transform_component = it->entity->get_component<TransformComponent>(),
             .velocity_component = it->entity->get_component<otb::VelocityComponent>(),
         };

@@ -1,13 +1,15 @@
 #include <cassert>
 
-#include <raylib.h>
+namespace otb
+{
+void handle_assert();
+}
 
 #if defined(OTB_DEBUG)
-#define OTB_ASSERT(EXPR) \
+#define OTB_ASSERT(EXPR, ...) \
 do { if (!(EXPR)) [[unlikely]] \
 { \
-    if (IsWindowState(FLAG_BORDERLESS_WINDOWED_MODE)) ToggleBorderlessWindowed(); \
-    __debugbreak(); \
+    ::otb::handle_assert(); \
     assert(EXPR); \
 }}while(0)
 #else

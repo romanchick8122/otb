@@ -35,6 +35,7 @@ std::unique_ptr<otb::World> create_world(otb::InternedString world_asset)
     BoxSystem::create_components(world);
     FanSystem::init(world);
     InventorySystem::init(world);
+    CharacterSystem::init(world);
 
     // -------- FIXED --------
     world->add_fixed_system(InputSystem::clear_input);

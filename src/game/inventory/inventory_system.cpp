@@ -10,7 +10,11 @@
 #include "game/inventory/inventory_component.h"
 #include "game/inventory/item_pickup_component.h"
 
+#include "sound/world/sound_player_component.h"
+
 #include <raymath.h>
+
+#include "../assets/sound/Wwise_IDs.h"
 
 namespace game
 {
@@ -63,6 +67,7 @@ void InventorySystem::process_item_pickup(otb::World* world)
                 inventory_it->items.emplace_back(pickup_it->item);
                 pickup_it->pickup_active = false;
                 pickup_it->entity->get_component<ModelComponent>()->hide();
+                inventory_it->entity->get_component<SoundPlayerComponent>()->play_event(AK::EVENTS::PLAY_ITEM_PICK_UP);
             }
         }
     }

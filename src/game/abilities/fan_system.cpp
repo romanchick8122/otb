@@ -11,7 +11,11 @@
 #include "game/box/box_component.h"
 #include "game/character/character_component.h"
 
+#include "sound/world/sound_player_component.h"
+
 #include <raymath.h>
+
+#include "../assets/sound/Wwise_IDs.h"
 
 namespace game
 {
@@ -47,6 +51,8 @@ void FanSystem::init(otb::World* world)
             model_component->request_animation(anim_name, true);
             model_component->set_animation_speed(ANIMATION_SPEED);
         }
+
+        it->entity->add_component(new SoundPlayerComponent());
     }
 }
 
@@ -71,6 +77,8 @@ void FanSystem::update_controllers(otb::World* world)
             model_component->request_animation(anim_name, true);
             model_component->set_animation_speed(ANIMATION_SPEED);
         }
+
+        this_frame_pressed->entity->get_component<SoundPlayerComponent>()->play_event(AK::EVENTS::PLAY_EXTENDER_CLICK);
     }
 
     for (auto it = world->components_begin<FanControlButtonComponent>(); it != world->components_end<FanControlButtonComponent>(); ++it)
@@ -95,6 +103,7 @@ void FanSystem::apply_velocity(otb::World* world)
     const auto* character_component = &*world->components_begin<CharacterComponent>();
     auto* character_velocity = character_component->entity->get_component<VelocityComponent>();
     const auto* character_transform = character_component->entity->get_component<TransformComponent>();
+    bool is_affected = false;
     for (auto it = world->components_begin<FanComponent>(); it != world->components_end<FanComponent>(); ++it)
     {
         if (it->controller != nullptr && !it->controller->enabled)
@@ -118,6 +127,20 @@ void FanSystem::apply_velocity(otb::World* world)
         character_velocity->velocity.x += fan_forward.x;
         character_velocity->velocity.y += fan_forward.y * world->fixed_frame_time;
         character_velocity->velocity.z += fan_forward.z;
+
+        is_affected = true;
+    }
+
+    // TODO: move looping restriction to WWISE
+    static int tmp_sound_filter = 0;
+    tmp_sound_filter++;
+    if (tmp_sound_filter > 40)
+    {
+        tmp_sound_filter = 0;
+    }
+    if (is_affected && tmp_sound_filter == 0)
+    {
+        character_component->entity->get_component<SoundPlayerComponent>()->play_event(AK::EVENTS::PLAY_AIR_FAN);
     }
 }
 }

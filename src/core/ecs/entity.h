@@ -22,7 +22,7 @@ class Entity final
     }
 
     template<typename T>
-    T* get_component()
+    const T* get_component() const
     {
         if (const auto it = components.find(std::type_index(typeid(T)));
             it != components.end())
@@ -30,6 +30,12 @@ class Entity final
             return component_cast<T*>(it->second.get());
         }
         return nullptr;
+    }
+
+    template<typename T>
+    T* get_component()
+    {
+        return const_cast<T*>(const_cast<const Entity*>(this)->get_component<T>());
     }
 
     ValueStorage serialize() const;
