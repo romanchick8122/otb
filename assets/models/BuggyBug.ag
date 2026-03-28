@@ -22,7 +22,7 @@
   Flying: !<DICT>
     LandingOnMove: !<VALUE> 0.001
     LandingOnPlace: !<VALUE> 0.001
-    UmbrellaUnleash: !<VALUE> 0.2
+    UmbrellaUnleash: !<VALUE> 0.01
   LandingOnMove: !<DICT>
     Neutral: !<VALUE> -1
   LandingOnPlace: !<DICT>
