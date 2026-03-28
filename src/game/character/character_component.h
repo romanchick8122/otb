@@ -39,6 +39,10 @@ class CharacterComponent : public otb::Component
         PREPARE_PUSHING,
         PUSHING,
         STOP_PUSHING,
+
+        UMBRELLA_GROUNDED,
+        UMBRELLA_FLYING,
+
         COUNT,
     } movement_state = MovementState::WAKING_UP;
 

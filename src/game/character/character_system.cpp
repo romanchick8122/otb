@@ -173,7 +173,7 @@ namespace
     static const otb::InternedString UMBRELLA_UNLEASH_ANIMATION("UmbrellaUnleash");
     static const otb::InternedString UMBRELLA_SHEATH_ANIMATION("UmbrellaSheathe");
     static constexpr float TIME_TO_TRIGGER_IDLE_ANIMATION = 5.0f;
-    static constexpr float TIME_OFFSET = -3.0f;
+    static constexpr float IDLE_ACTION_ANIMATION_TIMER_OFFSET = 3.0f;
     static constexpr float WALKING_SPEED = 3.36408f;
     static constexpr float PULL_SPEED = -3.1307f;
     static constexpr float HIGH_PUSHING_SPEED = 1.10695f;
@@ -194,7 +194,10 @@ namespace
     static constexpr float PUSHING_MAX_ANGLE_RAD = 40.f * DEG2RAD;
 
     static const otb::InternedString ABILITY_ITEM_THREAD_N_NEEDLE("thread_n_needle");
-    
+    static const otb::InternedString ABILITY_ITEM_UMBRELLA("umbrella");
+
+    static constexpr float UMBRRELLA_AIR_DRAG = 0.f;
+
     struct StateUpdateContext
     {
         otb::World* world;
@@ -216,6 +219,15 @@ namespace
             case CharacterComponent::MovementState::GROUNDED:
                 ctx.character_component->state_data = CharacterComponent::StateDataGrounded{};
                 break;
+            case CharacterComponent::MovementState::LANDING:
+            {
+                ctx.character_component->state_data = std::monostate{};
+                const Vector3 character_forward_vector = Vector3RotateByQuaternion({1, 0, 0}, ctx.transform_component->transform.rotation);
+                const float forward_projected_speed = Vector3DotProduct(character_forward_vector, ctx.velocity_component->velocity);
+                ctx.model_component->request_animation(FloatEquals(forward_projected_speed, SPEED_FOR_NOT_SLIDING) ? LANDING_ON_PLACE_ANIMATION : LANDING_ON_MOVE_ANIMATION, false);
+                ctx.sound_player_component->play_event(AK::EVENTS::PLAY_LANDING_);
+                break;
+            }
             case CharacterComponent::MovementState::AIMING:
                 ctx.character_component->state_data = CharacterComponent::StateDataAIMING{};
                 break;
@@ -329,12 +341,16 @@ namespace
     void update_state_GROUNDED(StateUpdateContext& ctx)
     {
         using namespace otb;
+
+        auto& state_data = std::get<CharacterComponent::StateDataGrounded>(ctx.character_component->state_data);
+
         if(ctx.model_component->get_playing_animation() == IDLE_ANIMATION || ctx.model_component->get_playing_animation() == IDLE_ACTION_ANIMATION)
         {
-            std::get<CharacterComponent::StateDataGrounded>(ctx.character_component->state_data).time_in_idle += ctx.world->fixed_frame_time;
-        } else 
+            state_data.time_in_idle += ctx.world->fixed_frame_time;
+        }
+        else 
         {
-            std::get<CharacterComponent::StateDataGrounded>(ctx.character_component->state_data).time_in_idle = 0;
+            state_data.time_in_idle = 0;
         }
         
         if (ctx.box_component->rests_on == nullptr)
@@ -389,14 +405,24 @@ namespace
             ctx.model_component->request_animation(HIGH_PUSH_ANIMATION, true);
             else ctx.model_component->request_animation(LOW_PUSH_ANIMATION, true);
         }
-        else if (std::get<CharacterComponent::StateDataGrounded>(ctx.character_component->state_data).time_in_idle > TIME_TO_TRIGGER_IDLE_ANIMATION)
-        {
-            ctx.model_component->request_animation(IDLE_ACTION_ANIMATION, false);
-            std::get<CharacterComponent::StateDataGrounded>(ctx.character_component->state_data).time_in_idle = TIME_OFFSET;
-        }
         else
         {
-            select_animation_from_movement_speed(ctx, WALKING_ANIM_EPS, WALKING_ANIM_EPS, WALKING_ANIMATION, 1 / WALKING_SPEED, IDLE_ANIMATION, WALKING_ANIMATION, 1 / WALKING_SPEED, AK::EVENTS::PLAY_WALKING_LOOP, AK::EVENTS::PLAY_IDLE_BREATHING_LOOP, AK::EVENTS::PLAY_WALKING_LOOP);
+            const InternedString idle_animation = [&]
+            {
+                if (state_data.time_in_idle > TIME_TO_TRIGGER_IDLE_ANIMATION)
+                {
+                    if (state_data.time_in_idle > TIME_TO_TRIGGER_IDLE_ANIMATION + IDLE_ACTION_ANIMATION_TIMER_OFFSET)
+                    {
+                        state_data.time_in_idle = 0;
+                    }
+                    return IDLE_ACTION_ANIMATION;
+                }
+                else
+                {
+                    return IDLE_ANIMATION;
+                }
+            }();
+            select_animation_from_movement_speed(ctx, WALKING_ANIM_EPS, WALKING_ANIM_EPS, WALKING_ANIMATION, 1 / WALKING_SPEED, idle_animation, WALKING_ANIMATION, 1 / WALKING_SPEED, AK::EVENTS::PLAY_WALKING_LOOP, AK::EVENTS::PLAY_IDLE_BREATHING_LOOP, AK::EVENTS::PLAY_WALKING_LOOP);
         }
     }
 
@@ -415,10 +441,14 @@ namespace
         if (ctx.box_component->rests_on != nullptr)
         {
             set_state(ctx, CharacterComponent::MovementState::LANDING);
-            const Vector3 character_forward_vector = Vector3RotateByQuaternion({1, 0, 0}, ctx.transform_component->transform.rotation);
-            const float forward_projected_speed = Vector3DotProduct(character_forward_vector, ctx.velocity_component->velocity);
-            ctx.model_component->request_animation(FloatEquals(forward_projected_speed, SPEED_FOR_NOT_SLIDING) ? LANDING_ON_PLACE_ANIMATION : LANDING_ON_MOVE_ANIMATION, false);
-            ctx.sound_player_component->play_event(AK::EVENTS::PLAY_LANDING_);
+        }
+
+        if (ctx.inventory_component->active_item == ABILITY_ITEM_UMBRELLA && ctx.input_receiver_component->extra_actions.contains(InputReceiverComponent::ActionNames::ability))
+        {
+            set_state(ctx, CharacterComponent::MovementState::UMBRELLA_FLYING);
+            ctx.box_component->drag_coefficient_override = UMBRRELLA_AIR_DRAG;
+            // TODO: switch to flying umbrella animation
+            return;
         }
     }
 
@@ -508,6 +538,29 @@ namespace
             set_state(ctx, CharacterComponent::MovementState::GROUNDED);
         }
     }
+
+    void update_state_UMBRELLA_GROUNDED([[maybe_unused]] StateUpdateContext& ctx)
+    {
+
+    }
+
+    void update_state_UMBRELLA_FLYING(StateUpdateContext& ctx)
+    {
+        if (ctx.box_component->rests_on != nullptr)
+        {
+            set_state(ctx, CharacterComponent::MovementState::LANDING);
+            ctx.box_component->drag_coefficient_override.reset();
+            return;
+        }
+
+        if (ctx.input_receiver_component->extra_actions.contains(InputReceiverComponent::ActionNames::ability))
+        {
+            set_state(ctx, CharacterComponent::MovementState::FLYING);
+            ctx.box_component->drag_coefficient_override.reset();
+            // TODO: switch to regular flyng animation
+            return;
+        }
+    }
 }
 
 void CharacterSystem::update_state(otb::World* world)
@@ -541,6 +594,8 @@ void CharacterSystem::update_state(otb::World* world)
             case CharacterComponent::MovementState::PREPARE_PUSHING: update_state_PREPARE_PUSHING(ctx); break;
             case CharacterComponent::MovementState::PUSHING: update_state_PUSHING(ctx); break;
             case CharacterComponent::MovementState::STOP_PUSHING: update_state_STOP_PUSHING(ctx); break;
+            case CharacterComponent::MovementState::UMBRELLA_GROUNDED: update_state_UMBRELLA_GROUNDED(ctx); break;
+            case CharacterComponent::MovementState::UMBRELLA_FLYING: update_state_UMBRELLA_FLYING(ctx); break;
             default: OTB_ASSERT(false); break;
         }
     }

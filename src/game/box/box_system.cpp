@@ -95,7 +95,16 @@ void BoxSystem::update_from_velocity(otb::World* world)
             box_velocity->velocity.y = 0;
         }
         box_transform->transform.translation += box_velocity->velocity * world->fixed_frame_time;
-        box_velocity->velocity.y *= velocity_multiplier;
+
+        if (it->drag_coefficient_override.has_value())
+        {
+            box_velocity->velocity.y *= pow(*it->drag_coefficient_override, world->fixed_frame_time);
+        }
+        else
+        {
+            box_velocity->velocity.y *= velocity_multiplier;
+        }
+
     }
 }
 

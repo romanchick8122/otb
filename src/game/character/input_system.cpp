@@ -113,11 +113,15 @@ void InputSystem::apply_input(otb::World* world)
     apply_movement[std::to_underlying(CharacterComponent::MovementState::PULLING)] = true;
     apply_movement[std::to_underlying(CharacterComponent::MovementState::LANDING)] = true; 
     apply_movement[std::to_underlying(CharacterComponent::MovementState::PUSHING)] = true;
+    apply_movement[std::to_underlying(CharacterComponent::MovementState::UMBRELLA_FLYING)] = true;
+    apply_movement[std::to_underlying(CharacterComponent::MovementState::UMBRELLA_GROUNDED)] = true;
    
     apply_rotation[std::to_underlying(CharacterComponent::MovementState::GROUNDED)] = true;
     apply_rotation[std::to_underlying(CharacterComponent::MovementState::PREPARING_JUMP)] = true;
     apply_rotation[std::to_underlying(CharacterComponent::MovementState::FLYING)] = true;
     apply_rotation[std::to_underlying(CharacterComponent::MovementState::LANDING)] = true; 
+    apply_rotation[std::to_underlying(CharacterComponent::MovementState::UMBRELLA_FLYING)] = true;
+    apply_rotation[std::to_underlying(CharacterComponent::MovementState::UMBRELLA_GROUNDED)] = true;
 
     block_non_forward[std::to_underlying(CharacterComponent::MovementState::PREPARE_PUSHING)] = true;
     block_non_forward[std::to_underlying(CharacterComponent::MovementState::PULLING)] = true;

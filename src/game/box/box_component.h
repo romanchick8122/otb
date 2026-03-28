@@ -2,6 +2,8 @@
 
 #include "core/ecs/component.h"
 
+#include <optional>
+
 namespace game
 {
 class BoxComponent : public otb::Component
@@ -19,5 +21,7 @@ class BoxComponent : public otb::Component
 
     // Runtime
     BoxComponent* rests_on;
+
+    std::optional<float> drag_coefficient_override = std::nullopt;
 };
 }
