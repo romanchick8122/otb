@@ -18,6 +18,8 @@
 
 #include <raymath.h>
 
+#include <algorithm>
+
 #include "../assets/sound/Wwise_IDs.h"
 
 namespace game
@@ -150,6 +152,7 @@ void CharacterSystem::update_camera_fixed(otb::World* world)
     const auto* input_receiver_component = character_component->entity->get_component<InputReceiverComponent>();
     character_component->yaw -= input_receiver_component->secondary_analog_input.x * world->fixed_frame_time / character_component->camera_follow_distance;
     character_component->pitch -= input_receiver_component->secondary_analog_input.y * world->fixed_frame_time / character_component->camera_follow_distance;
+    character_component->pitch = std::clamp(character_component->pitch, -PI / 2.f + 0.1f, PI / 2.f - 0.1f);
 }
 
 namespace
