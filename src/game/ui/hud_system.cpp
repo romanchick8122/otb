@@ -4,6 +4,7 @@
 #include "core/render/texture_asset.h"
 #include "core/ui/ui_utils.h"
 
+#include "game/abilities/box_attachment_ability_component.h"
 #include "game/character/character_component.h"
 #include "game/inventory/inventory_component.h"
 
@@ -14,13 +15,15 @@ namespace game
 {
 namespace
 {
-void render_scope()
+void render_scope(const otb::Entity* character)
 {
     static const auto scope = otb::AssetUtils::get_asset<otb::TextureAsset>("/ui/scope.png");
-    static constexpr float SCOPE_TEXTURE_SIZE = 581;
+    static const auto active_scope = otb::AssetUtils::get_asset<otb::TextureAsset>("/ui/scope_hit.png");
+
     static constexpr float SCOPE_TARGET_SIZE = 100;
 
-    DrawTextureEx(scope->texture, Vector2{GetScreenWidth() / 2.f, GetScreenHeight() / 2.f} - (Vector2{SCOPE_TARGET_SIZE, SCOPE_TARGET_SIZE} * 0.5f), 0, SCOPE_TARGET_SIZE / SCOPE_TEXTURE_SIZE, WHITE);
+    const Texture2D& target_texture = character->get_component<BoxAttachmentAbilityComponent>()->can_attach_if_shot ? active_scope->texture : scope->texture;
+    DrawTextureEx(target_texture, Vector2{GetScreenWidth() / 2.f, GetScreenHeight() / 2.f} - (Vector2{SCOPE_TARGET_SIZE, SCOPE_TARGET_SIZE} * 0.5f), 0, SCOPE_TARGET_SIZE / static_cast<float>(target_texture.height), WHITE);
 }
 
 auto& get_item_icons()
@@ -123,7 +126,7 @@ void HudSystem::render_hud(otb::World* world, float)
     const CharacterComponent* character_component = &*world->components_begin<CharacterComponent>();
     if (character_component->movement_state == CharacterComponent::MovementState::AIMING)
     {
-        render_scope();
+        render_scope(character_component->entity);
     }
     render_inventory(character_component->entity->get_component<InventoryComponent>());
 }

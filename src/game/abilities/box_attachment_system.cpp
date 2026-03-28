@@ -18,9 +18,52 @@
 
 namespace game
 {
+namespace
+{
+static constexpr float MAX_ATTACHMENT_DISTANCE = 22.f;
+
+std::pair<BoxComponent*, Vector3> get_box_and_local_space_attachment(otb::World* world, otb::Entity* character)
+{
+    using namespace otb;
+
+    const otb::CameraComponent* camera = world->get_world_entity()->get_component<CameraComponent>();
+    const Ray camera_ray {
+        .position = camera->camera.position,
+        .direction = Vector3Normalize(camera->camera.target - camera->camera.position),
+    };
+
+    std::pair<RayCollision, BoxComponent*> best_hit{ {}, nullptr };
+    for (auto box_it = world->components_begin<BoxComponent>(); box_it != world->components_end<BoxComponent>(); ++box_it)
+    {
+        if (box_it->entity == character)
+        {
+            continue;
+        }
+
+        const BoundingBox box = TransformUtils::get_box(box_it->entity->get_component<TransformComponent>()->transform);
+        RayCollision collision = GetRayCollisionBox(camera_ray, box);
+        if (!collision.hit)
+        {
+            continue;
+        }
+        if (best_hit.second == nullptr || best_hit.first.distance > collision.distance)
+        {
+            best_hit = { collision, &*box_it};
+        }
+    }
+    if (best_hit.second != nullptr && best_hit.second->type == BoxComponent::BoxType::DYNAMIC && best_hit.first.distance < MAX_ATTACHMENT_DISTANCE)
+    {
+        return { best_hit.second, TransformUtils::apply_inverse_transform(best_hit.second->entity->get_component<TransformComponent>()->transform, best_hit.first.point) };
+    }
+    else
+    {
+        return { nullptr, {} };
+    }
+}
+}
+
 void BoxAttachmentSystem::process_ability_activation(otb::World* world)
 {    
-    static constexpr float MAX_ATTACHMENT_DISTANCE = 22.f;
 
     using namespace otb;
 
@@ -32,6 +75,9 @@ void BoxAttachmentSystem::process_ability_activation(otb::World* world)
         ability = new BoxAttachmentAbilityComponent();
         character_input_receiver->entity->add_component(ability);
     }
+
+    const auto [aimed_at_box, local_space_attachment] = get_box_and_local_space_attachment(world, character_component->entity);
+    ability->can_attach_if_shot = aimed_at_box != nullptr;
 
     if (character_input_receiver->extra_actions.count(InputReceiverComponent::ActionNames::ability) == 0)
     {
@@ -51,36 +97,8 @@ void BoxAttachmentSystem::process_ability_activation(otb::World* world)
     }
 
     // Attach
-    const otb::CameraComponent* camera = world->get_world_entity()->get_component<CameraComponent>();
-    const Ray camera_ray {
-        .position = camera->camera.position,
-        .direction = Vector3Normalize(camera->camera.target - camera->camera.position),
-    };
-
-    std::pair<RayCollision, BoxComponent*> best_hit{ {}, nullptr };
-    for (auto box_it = world->components_begin<BoxComponent>(); box_it != world->components_end<BoxComponent>(); ++box_it)
-    {
-        if (box_it->entity == character_input_receiver->entity)
-        {
-            continue;
-        }
-
-        const BoundingBox box = TransformUtils::get_box(box_it->entity->get_component<TransformComponent>()->transform);
-        RayCollision collision = GetRayCollisionBox(camera_ray, box);
-        if (!collision.hit)
-        {
-            continue;
-        }
-        if (best_hit.second == nullptr || best_hit.first.distance > collision.distance)
-        {
-            best_hit = { collision, &*box_it};
-        }
-    }
-    if (best_hit.second != nullptr && best_hit.second->type == BoxComponent::BoxType::DYNAMIC && best_hit.first.distance < MAX_ATTACHMENT_DISTANCE)
-    {
-        ability->attached_box = best_hit.second;
-        ability->local_space_attachment_position = TransformUtils::apply_inverse_transform(best_hit.second->entity->get_component<TransformComponent>()->transform, best_hit.first.point);
-    }
+    ability->attached_box = aimed_at_box;
+    ability->local_space_attachment_position = local_space_attachment;
 }
 
 void BoxAttachmentSystem::process_ability(otb::World* world)
